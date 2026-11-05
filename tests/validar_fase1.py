@@ -136,6 +136,24 @@ def main():
               f"arcos segmento {seg_arcs}, realce {hl_arcs}")
         check("   Tarjetas de la lista con radio original", radius == 10, f"radio {radius}px")
 
+        # 8. Magnificación al hover: el segmento bajo el puntero crece más que sus vecinos
+        page.mouse.move(cx - 150, cy)  # sobre el segmento a las 9 en punto
+        wait_settle(page)
+        m = page.evaluate("({ mags, idx: mod(Math.round(target), N) })")
+        hovered = (m["idx"] + 4) % 8
+        prev_, next_ = (hovered - 1) % 8, (hovered + 1) % 8
+        far = (hovered + 4) % 8
+        mags = m["mags"]
+        check("8. Magnificación: hover > vecinos > lejanos",
+              mags[hovered] > mags[prev_] > 1.0 and abs(mags[prev_] - mags[next_]) < 1e-3
+              and abs(mags[far] - 1.0) < 1e-3,
+              f"hover {mags[hovered]:.3f}, vecinos {mags[prev_]:.3f}/{mags[next_]:.3f}, opuesto {mags[far]:.3f}")
+        page.locator("#dial").screenshot(path=str(SHOTS / "dial_magnificacion.png"))
+        page.mouse.move(5, 5)  # fuera del dial
+        wait_settle(page)
+        rest = page.evaluate("mags.every(v => v === 1) && hlMag === 1")
+        check("   Al salir del anillo vuelve a escala 1", rest)
+
         # 6. Móvil 390 px sin scroll horizontal
         page.set_viewport_size({"width": 390, "height": 844})
         wait_settle(page)

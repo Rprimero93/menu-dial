@@ -36,12 +36,22 @@ const CX = 50 + RING_C, CY = 100 + RING_C; // centro del dial en coordenadas del
 const R_IN = 122, R_OUT = 188, R_ICON = 155;
 const LIST_R = 300;                // radio del arco por el que corre la lista
 const LIST_ARC = 15;               // grados entre opciones de la lista
+const R_MID = (R_IN + R_OUT) / 2;  // radio del centro de cada segmento (origen del zoom)
+const HL_MID = (R_IN - 4 + R_OUT + 8) / 2; // ídem para el realce
+
+// Magnificación (estilo Dock): el segmento bajo el puntero crece y los vecinos menos
+const MAG_MAX = 0.14;              // crecimiento máximo (+14 %)
+const MAG_SPREAD = STEP * 1.6;     // alcance angular del efecto a cada lado del puntero
+const MAG_LERP = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0.2;
 
 // ===== Estado =====
 let target = 0;      // posición objetivo (entera salvo durante el arrastre)
 let current = 0;     // posición animada (flotante)
 let lastRendered = null;
 const INITIAL_INDEX = 0; // opción a la que vuelven ✕ y Esc
+let pointerAngle = null;          // ángulo del puntero sobre el anillo, o null si está fuera
+let mags = new Array(N).fill(1);  // escala animada de cada segmento
+let hlMag = 1;                    // escala animada del realce
 
 const $ = (id) => document.getElementById(id);
 const mod = (n, m) => ((n % m) + m) % m;
@@ -115,12 +125,30 @@ function render() {
   $('segments').setAttribute('transform', `rotate(${rot} ${RING_C} ${RING_C})`);
   $('ridges').style.transform = `rotate(${rot}deg)`;
 
-  // Íconos del anillo: se posicionan sin rotar para que queden derechos
+  // Segmentos: zoom desde su propio centro (en coordenadas del grupo rotado)
+  const segs = $('segments').children;
+  let top = 0;
+  [...segs].forEach((seg) => {
+    const i = Number(seg.dataset.index);
+    const a = rad(i * STEP);
+    const mx = RING_C + R_MID * Math.cos(a);
+    const my = RING_C + R_MID * Math.sin(a);
+    seg.setAttribute('transform', `translate(${mx} ${my}) scale(${mags[i]}) translate(${-mx} ${-my})`);
+    if (mags[i] > mags[top]) top = i;
+  });
+  // El segmento más grande se pinta encima de sus vecinos
+  const topSeg = $('segments').querySelector(`[data-index="${top}"]`);
+  if (mags[top] > 1.001 && segs[segs.length - 1] !== topSeg) $('segments').appendChild(topSeg);
+
+  const hx = RING_C + HL_MID;
+  $('highlight').setAttribute('transform', `translate(${hx} ${RING_C}) scale(${hlMag}) translate(${-hx} ${-RING_C})`);
+
+  // Íconos del anillo: se posicionan sin rotar para que queden derechos y crecen con su segmento
   [...$('icons').children].forEach((g, i) => {
     const a = rad(i * STEP + rot);
     const x = RING_C + R_ICON * Math.cos(a);
     const y = RING_C + R_ICON * Math.sin(a);
-    g.setAttribute('transform', `translate(${x} ${y})`);
+    g.setAttribute('transform', `translate(${x} ${y}) scale(${mags[i]})`);
     g.classList.toggle('active', i === mod(Math.round(current), N));
   });
 
@@ -158,10 +186,36 @@ function render() {
   $('knob').setAttribute('aria-valuetext', ITEMS[mod(Math.round(current), N)].label);
 }
 
+// Peso de la magnificación según la distancia angular al puntero (curva coseno suave)
+function magWeight(angle) {
+  if (pointerAngle === null) return 0;
+  let d = angle - pointerAngle;
+  d = Math.abs(d - 360 * Math.round(d / 360));
+  return d >= MAG_SPREAD ? 0 : (1 + Math.cos((Math.PI * d) / MAG_SPREAD)) / 2;
+}
+
+// Acerca un valor a su objetivo; devuelve el nuevo valor
+function ease(value, goal, k) {
+  const next = value + (goal - value) * k;
+  return Math.abs(goal - next) < 0.0005 ? goal : next;
+}
+
 function tick() {
   const diff = target - current;
   current = Math.abs(diff) < 0.0005 ? target : current + diff * 0.16;
-  if (current !== lastRendered) {
+  let changed = current !== lastRendered;
+
+  const rot = -current * STEP;
+  for (let i = 0; i < N; i++) {
+    const next = ease(mags[i], 1 + MAG_MAX * magWeight(i * STEP + rot), MAG_LERP);
+    if (next !== mags[i]) changed = true;
+    mags[i] = next;
+  }
+  const nextHl = ease(hlMag, 1 + MAG_MAX * magWeight(0), MAG_LERP);
+  if (nextHl !== hlMag) changed = true;
+  hlMag = nextHl;
+
+  if (changed) {
     render();
     lastRendered = current;
   }
@@ -218,8 +272,23 @@ function initDrag() {
     dial.classList.add('dragging');
   });
 
+  // Magnificación: ubica el puntero sobre el anillo (se apaga durante el arrastre)
+  const trackPointer = (e) => {
+    const r = dial.getBoundingClientRect();
+    const k = 400 / r.width; // de píxeles de pantalla a coordenadas del SVG
+    const x = (e.clientX - r.left) * k - RING_C;
+    const y = (e.clientY - r.top) * k - RING_C;
+    const dist = Math.hypot(x, y);
+    pointerAngle = dist > R_IN - 12 && dist < R_OUT + 24 ? (Math.atan2(y, x) * 180) / Math.PI : null;
+  };
+  dial.addEventListener('pointerleave', () => (pointerAngle = null));
+
   dial.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
+    if (!dragging) {
+      if (e.pointerType === 'mouse' || e.pointerType === 'pen') trackPointer(e);
+      return;
+    }
+    pointerAngle = null;
     const a = angleOf(e);
     let delta = a - lastAngle;
     delta -= 360 * Math.round(delta / 360); // evita saltos al cruzar ±180°
