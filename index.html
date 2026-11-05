@@ -20,7 +20,7 @@
 
           <header class="head">
             <h1>Personaliza tu Dial</h1>
-            <p>Gira el dial para elegir un acceso rápido.</p>
+            <p id="headHint">Gira el dial para elegir un acceso rápido.</p>
           </header>
 
           <!-- Anillo con segmentos + perilla central -->
@@ -80,6 +80,18 @@
           </aside>
         </div>
       </div>
+
+      <!-- Panel de contenido de la opción (fuera del escenario para poder pasar debajo en móvil) -->
+      <section class="panel" id="panel" role="region" aria-live="polite" aria-labelledby="panelTitle">
+        <header class="panel-head">
+          <span class="panel-ico" id="panelIcon"></span>
+          <div>
+            <h2 id="panelTitle"></h2>
+            <p id="panelDesc"></p>
+          </div>
+        </header>
+        <div class="panel-body" id="panelBody"></div>
+      </section>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </main>

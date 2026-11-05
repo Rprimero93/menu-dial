@@ -101,6 +101,10 @@ def main():
         page.click(".option[data-index='5']")
         wait_settle(page)
         check("4a. Clic en opción de la lista", active_label(page) == "Ajustes", active_label(page))
+        # Desde la Fase 2 el clic en una tarjeta también abre su panel: se cierra para seguir con el dial completo
+        if page.evaluate("typeof isOpen !== 'undefined' && isOpen"):
+            page.keyboard.press("Escape")
+            wait_settle(page)
 
         # 4b. Clic en un segmento del anillo (el que está a las 9 en punto: opuesto al activo)
         page.mouse.click(cx - 150, cy)

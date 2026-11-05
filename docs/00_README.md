@@ -3,7 +3,7 @@ tecnologia: Web
 tipo: herramienta
 proyecto: Menu_Dial
 estado: pendiente
-estado_resumen: "Fase 0 cerrada — estado adoptado; Fase 1 por iniciar"
+estado_resumen: "Fase 2 construida — validación automática 11/11 OK, falta el visto bueno visual"
 stack: "HTML + CSS + JS vainilla, sin frameworks (fuente Inter de Google Fonts)"
 descripcion: "Menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco), con vista 3D y opciones de ejemplo"
 aliases: [Menu_Dial]
@@ -37,12 +37,13 @@ Menu_Dial/
 │   ├── 01_INDEX.md
 │   ├── 06_IMPLEMENTATION.md
 │   └── 07_PROGRESO_RESUMEN.md
-├── index.html   # estructura: anillo SVG, perilla, conector, lista, controles, acciones
-├── styles.css   # tokens en :root, escena 3D, perilla, lista, controles
-└── script.js    # opciones (ITEMS), íconos, geometría, render animado, arrastre/rueda/teclado
+├── index.html   # estructura: anillo SVG, perilla, conector, lista, controles, panel de contenido
+├── styles.css   # tokens en :root, dial, lista, controles, panel y sus contenidos, modo compacto
+├── script.js    # opciones (ITEMS), íconos, geometría, render animado, arrastre/rueda/teclado, panel
+└── tests/       # validar_fase1.py, validar_fase2.py (Playwright + Edge); capturas/ fuera de Git
 ```
 
-Las opciones se editan en el arreglo `ITEMS` al inicio de `script.js`; el anillo se recalcula solo según su cantidad.
+Las opciones se editan en el arreglo `ITEMS` al inicio de `script.js` (etiqueta, ícono, descripción y contenido del panel); el anillo se recalcula solo según su cantidad.
 
 ## Lecciones aprendidas
 

@@ -1,13 +1,71 @@
 // ===== Opciones de ejemplo del dial (el orden define la posición en el anillo) =====
+// `desc` y `content` alimentan el panel que se abre al elegir la opción (Fase 2)
 const ITEMS = [
-  { id: 'projects', label: 'Gestión de proyectos', icon: 'file' },
-  { id: 'notes', label: 'Notas de reunión', icon: 'fileText' },
-  { id: 'sales', label: 'Ventas y marketing', icon: 'sheet' },
-  { id: 'calendar', label: 'Calendario', icon: 'calendar' },
-  { id: 'contacts', label: 'Contactos', icon: 'user' },
-  { id: 'settings', label: 'Ajustes', icon: 'gear' },
-  { id: 'tasks', label: 'Tareas', icon: 'tasks' },
-  { id: 'chat', label: 'Chat de diseño', icon: 'hash' },
+  {
+    id: 'projects', label: 'Gestión de proyectos', icon: 'file',
+    desc: 'Avance de los proyectos en curso.',
+    content: { type: 'progress', rows: [['Rediseño del portal', 72], ['App de inventario', 45], ['Migración a la nube', 90], ['Campaña Q4', 30]] },
+  },
+  {
+    id: 'notes', label: 'Notas de reunión', icon: 'fileText',
+    desc: 'Últimas notas registradas por el equipo.',
+    content: {
+      type: 'notes', rows: [
+        ['Comité de calidad', '4 nov', 'Se aprobó el plan de auditoría interna.'],
+        ['Revisión de diseño', '3 nov', 'Ajustar el contraste de los botones secundarios.'],
+        ['Planeación 2027', '30 oct', 'Definir el presupuesto por área antes del cierre.'],
+      ],
+    },
+  },
+  {
+    id: 'sales', label: 'Ventas y marketing', icon: 'sheet',
+    desc: 'Indicadores del mes y ventas de los últimos 6 meses.',
+    content: {
+      type: 'kpis',
+      tiles: [['Ventas del mes', '$48,2 M', '+12 %', true], ['Clientes nuevos', '126', '+8 %', true], ['Conversión', '3,4 %', '−0,3 %', false]],
+      bars: [['Jun', 32], ['Jul', 38], ['Ago', 35], ['Sep', 41], ['Oct', 44], ['Nov', 48]],
+    },
+  },
+  {
+    id: 'calendar', label: 'Calendario', icon: 'calendar',
+    desc: 'Eventos del mes en curso.',
+    content: { type: 'calendar', events: { 6: 'Comité', 12: 'Entrega', 19: 'Auditoría', 26: 'Cierre' } },
+  },
+  {
+    id: 'contacts', label: 'Contactos', icon: 'user',
+    desc: 'Personas del equipo y su disponibilidad.',
+    content: {
+      type: 'people', rows: [
+        ['Laura Gómez', 'Diseño', 'online'], ['Andrés Ruiz', 'Desarrollo', 'away'],
+        ['Camila Torres', 'Calidad', 'online'], ['Julián Pérez', 'Ventas', 'offline'],
+      ],
+    },
+  },
+  {
+    id: 'settings', label: 'Ajustes', icon: 'gear',
+    desc: 'Preferencias generales del menú.',
+    content: { type: 'toggles', rows: [['Notificaciones', true], ['Modo compacto', false], ['Sonidos', true], ['Sincronizar al iniciar', true]] },
+  },
+  {
+    id: 'tasks', label: 'Tareas', icon: 'tasks',
+    desc: 'Pendientes de la semana.',
+    content: {
+      type: 'checklist', rows: [
+        ['Revisar propuesta de diseño', true], ['Actualizar inventario', false], ['Enviar informe semanal', false],
+        ['Preparar reunión de comité', true], ['Responder correos pendientes', false],
+      ],
+    },
+  },
+  {
+    id: 'chat', label: 'Chat de diseño', icon: 'hash',
+    desc: 'Conversación reciente del canal de diseño.',
+    content: {
+      type: 'chat', rows: [
+        ['Laura', '¿Revisaron la nueva paleta?', false], ['Tú', 'Sí, me gusta el azul del halo.', true],
+        ['Andrés', 'Subo la versión final en la tarde.', false], ['Tú', 'Perfecto, la reviso mañana.', true],
+      ],
+    },
+  },
 ];
 
 // Trazos de íconos (viewBox 24x24, estilo línea)
@@ -40,19 +98,23 @@ const LIST_ARC = 15;               // grados entre opciones de la lista
 const MAG_MAX = 0.16;              // crecimiento máximo de la tarjeta (+16 %)
 const MAG_SPREAD = LIST_ARC * 1.6; // alcance angular del efecto a cada lado del puntero
 const MAG_LERP = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0.2;
+const COMPACT_MAX = 700;           // por debajo de este ancho el panel va debajo del medio dial
 
 // ===== Estado =====
 let target = 0;      // posición objetivo (entera salvo durante el arrastre)
 let current = 0;     // posición animada (flotante)
 let lastRendered = null;
-const INITIAL_INDEX = 0; // opción a la que vuelven ✕ y Esc
+const INITIAL_INDEX = 0; // opción a la que vuelven ✕ y Esc (con el panel cerrado)
 let pointerAngle = null;          // ángulo del puntero alrededor del dial en la zona de la lista, o null
 let mags = new Array(N).fill(1);  // escala animada de cada tarjeta de la lista
 let hoveredSeg = null;            // segmento del anillo bajo el puntero (su ícono se ilumina)
+let isOpen = false;               // panel de contenido abierto (dial a la izquierda)
+let panelIndex = null;            // opción que muestra el panel
 
 const $ = (id) => document.getElementById(id);
 const mod = (n, m) => ((n % m) + m) % m;
 const rad = (deg) => (deg * Math.PI) / 180;
+const activeIndex = () => mod(Math.round(target), N);
 
 function svgIcon(name, size = 24) {
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor"
@@ -106,7 +168,8 @@ function build() {
     li.setAttribute('role', 'option');
     li.dataset.index = i;
     li.innerHTML = `<span class="ico">${svgIcon(item.icon)}</span><span class="label">${item.label}</span>`;
-    li.addEventListener('click', () => (mod(target, N) === i ? openItem() : goTo(i)));
+    // Clic en cualquier tarjeta: el dial gira hasta ella y abre su contenido
+    li.addEventListener('click', () => { goTo(i); openPanel(); });
     options.appendChild(li);
   });
 
@@ -207,6 +270,8 @@ function tick() {
     render();
     lastRendered = current;
   }
+  // Con el panel abierto, girar el medio dial cambia su contenido en vivo
+  if (isOpen && activeIndex() !== panelIndex) renderPanel(activeIndex());
   requestAnimationFrame(tick);
 }
 
@@ -222,14 +287,6 @@ function goTo(index) {
   target = Math.round(target) + d;
 }
 
-function selectedItem() {
-  return ITEMS[mod(Math.round(target), N)];
-}
-
-function openItem() {
-  toast(`Abriendo «${selectedItem().label}»`);
-}
-
 let toastTimer;
 function toast(msg) {
   const el = $('toast');
@@ -237,6 +294,148 @@ function toast(msg) {
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+// ===== Panel de contenido (Fase 2) =====
+function openPanel() {
+  if (isOpen) return;
+  isOpen = true;
+  pointerAngle = null; // la lista se oculta: sin magnificación
+  document.body.classList.add('panel-open');
+  $('scene').classList.add('open');
+  $('panel').classList.add('open');
+  $('panel').inert = false;
+  $('btnClose').setAttribute('aria-label', 'Cerrar el panel');
+  $('headHint').textContent = 'Gira el medio dial para cambiar de opción.';
+  renderPanel(activeIndex());
+  fit();
+}
+
+function closePanel() {
+  if (!isOpen) return;
+  isOpen = false;
+  document.body.classList.remove('panel-open');
+  $('scene').classList.remove('open');
+  $('panel').classList.remove('open');
+  $('panel').inert = true;
+  $('btnClose').setAttribute('aria-label', 'Volver a la opción inicial');
+  $('headHint').textContent = 'Gira el dial para elegir un acceso rápido.';
+  fit();
+}
+
+function renderPanel(index) {
+  panelIndex = index;
+  const item = ITEMS[index];
+  $('panelIcon').innerHTML = svgIcon(item.icon);
+  $('panelTitle').textContent = item.label;
+  $('panelDesc').textContent = item.desc;
+  // Un contenedor nuevo en cada cambio dispara la animación de entrada
+  const wrap = document.createElement('div');
+  wrap.className = 'panel-content';
+  wrap.dataset.type = item.content.type;
+  wrap.dataset.index = index;
+  wrap.innerHTML = RENDERERS[item.content.type](item.content);
+  $('panelBody').replaceChildren(wrap);
+}
+
+// Orden de aparición de barras: una por una, de mayor a menor
+function rankOrder(values) {
+  const order = values.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]);
+  const rank = [];
+  order.forEach(([, i], r) => (rank[i] = r));
+  return rank;
+}
+
+// Un renderizador por tipo de contenido; cada uno devuelve el HTML del cuerpo del panel
+const RENDERERS = {
+  progress: ({ rows }) => {
+    const rank = rankOrder(rows.map((r) => r[1]));
+    return rows.map(([name, pct], i) => `
+      <div class="p-row">
+        <div class="p-head"><span>${name}</span><span class="muted">${pct} %</span></div>
+        <div class="p-track"><div class="p-bar" style="--w:${pct}%; --d:${rank[i] * 90}ms"></div></div>
+      </div>`).join('');
+  },
+
+  notes: ({ rows }) => rows.map(([title, date, text]) => `
+    <article class="note">
+      <div class="note-head"><strong>${title}</strong><span class="muted">${date}</span></div>
+      <p>${text}</p>
+    </article>`).join(''),
+
+  kpis: ({ tiles, bars }) => {
+    const max = Math.max(...bars.map((b) => b[1]));
+    const rank = rankOrder(bars.map((b) => b[1]));
+    return `
+      <div class="kpi-grid">${tiles.map(([label, value, delta, up]) => `
+        <div class="kpi"><span class="muted">${label}</span><strong>${value}</strong>
+          <span class="delta ${up ? 'up' : 'down'}">${delta}</span></div>`).join('')}
+      </div>
+      <div class="bars">${bars.map(([m, v], i) => `
+        <div class="bar-col"><div class="bar" style="--h:${(v / max) * 100}%; --d:${rank[i] * 90}ms" title="${m}: ${v}"></div>
+          <span class="muted">${m}</span></div>`).join('')}
+      </div>`;
+  },
+
+  calendar: ({ events }) => {
+    const now = new Date();
+    const y = now.getFullYear(), m = now.getMonth();
+    const offset = (new Date(y, m, 1).getDay() + 6) % 7; // semana empieza en lunes
+    const days = new Date(y, m + 1, 0).getDate();
+    const title = now.toLocaleDateString('es', { month: 'long', year: 'numeric' });
+    const cells = [];
+    for (let i = 0; i < offset; i++) cells.push('<span></span>');
+    for (let d = 1; d <= days; d++) {
+      const cls = [d === now.getDate() ? 'today' : '', events[d] ? 'event' : ''].join(' ').trim();
+      cells.push(`<span class="${cls}" ${events[d] ? `title="${events[d]}"` : ''}>${d}</span>`);
+    }
+    const list = Object.entries(events).map(([d, e]) => `<li><span class="dot"></span>${d} — ${e}</li>`).join('');
+    return `
+      <div class="cal-title">${title}</div>
+      <div class="cal-grid">${['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'].map((d) => `<b>${d}</b>`).join('')}${cells.join('')}</div>
+      <ul class="cal-events">${list}</ul>`;
+  },
+
+  people: ({ rows }) => rows.map(([name, role, status]) => `
+    <div class="person">
+      <span class="avatar">${name.split(' ').map((w) => w[0]).join('')}<i class="status ${status}"></i></span>
+      <div><strong>${name}</strong><span class="muted">${role}</span></div>
+    </div>`).join(''),
+
+  toggles: ({ rows }) => rows.map(([label, on], i) => `
+    <label class="toggle"><span>${label}</span>
+      <input type="checkbox" data-row="${i}" ${on ? 'checked' : ''}><i class="switch"></i></label>`).join(''),
+
+  checklist: ({ rows }) => {
+    const done = rows.filter((r) => r[1]).length;
+    return `
+      <div class="muted check-count">${done} de ${rows.length} completadas</div>
+      ${rows.map(([label, ok], i) => `
+        <label class="check"><input type="checkbox" data-row="${i}" ${ok ? 'checked' : ''}><i class="box"></i>
+          <span>${label}</span></label>`).join('')}`;
+  },
+
+  chat: ({ rows }) => `
+    <div class="chat">${rows.map(([who, text, mine]) => `
+      <div class="msg ${mine ? 'mine' : ''}"><span class="muted">${who}</span><p>${text}</p></div>`).join('')}
+    </div>
+    <div class="chat-input muted">Escribe un mensaje…</div>`,
+};
+
+// Los interruptores y casillas guardan su estado en ITEMS para que se conserve al volver
+function initPanel() {
+  $('panel').inert = true;
+  $('panelBody').addEventListener('change', (e) => {
+    const input = e.target.closest('input[data-row]');
+    if (!input) return;
+    const item = ITEMS[panelIndex];
+    item.content.rows[Number(input.dataset.row)][1] = input.checked;
+    if (item.content.type === 'checklist') {
+      const rows = item.content.rows;
+      $('panelBody').querySelector('.check-count').textContent =
+        `${rows.filter((r) => r[1]).length} de ${rows.length} completadas`;
+    }
+  });
 }
 
 // ===== Arrastre para girar el dial =====
@@ -260,9 +459,10 @@ function initDrag() {
     dial.classList.add('dragging');
   });
 
-  // Magnificación de la lista: ubica el puntero en la franja del arco de tarjetas (se apaga al arrastrar)
+  // Magnificación de la lista: ubica el puntero en la franja del arco de tarjetas
+  // (se apaga al arrastrar y con el panel abierto, porque la lista está oculta)
   document.addEventListener('pointermove', (e) => {
-    if (dragging || e.pointerType === 'touch') { pointerAngle = null; return; }
+    if (dragging || isOpen || e.pointerType === 'touch') { pointerAngle = null; return; }
     const r = $('stage').getBoundingClientRect();
     const k = W / r.width; // de píxeles de pantalla a coordenadas del escenario
     const x = (e.clientX - r.left) * k - CX;
@@ -295,10 +495,10 @@ function initDrag() {
     dragging = false;
     dial.classList.remove('dragging');
     if (moved < 3) {
-      // Fue un clic: segmento → ir a él; perilla → abrir la opción activa
+      // Fue un clic: segmento → ir a él; perilla → abrir o cerrar el panel
       target = startTarget;
       if (downEl?.dataset?.index !== undefined) goTo(Number(downEl.dataset.index));
-      else if (downEl?.closest('.knob')) openItem();
+      else if (downEl?.closest('.knob')) (isOpen ? closePanel() : openPanel());
     } else {
       target = Math.round(target);
     }
@@ -321,18 +521,23 @@ function initDrag() {
 function initControls() {
   $('btnUp').addEventListener('click', () => step(-1));
   $('btnDown').addEventListener('click', () => step(1));
-  $('btnOpen').addEventListener('click', openItem);
-  $('btnClose').addEventListener('click', resetDial);
+  $('btnOpen').addEventListener('click', openPanel);
+  $('btnClose').addEventListener('click', closeOrReset);
 
   document.addEventListener('keydown', (e) => {
     if (['ArrowUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); step(-1); }
     else if (['ArrowDown', 'ArrowRight'].includes(e.key)) { e.preventDefault(); step(1); }
-    else if (e.key === 'Enter' && document.activeElement === $('knob')) openItem();
-    else if (e.key === 'Escape') resetDial();
+    else if (e.key === 'Enter' && document.activeElement === $('knob')) openPanel();
+    else if (e.key === 'Escape') closeOrReset();
   });
 }
 
-// Vuelve a la opción inicial
+// ✕ y Esc: con el panel abierto lo cierran; si no, vuelven a la opción inicial
+function closeOrReset() {
+  if (isOpen) closePanel();
+  else resetDial();
+}
+
 function resetDial() {
   goTo(INITIAL_INDEX);
   toast('Vuelto a la opción inicial');
@@ -340,13 +545,19 @@ function resetDial() {
 
 // ===== Ajuste al tamaño de la ventana =====
 function fit() {
+  const compact = innerWidth < COMPACT_MAX;
+  document.body.classList.toggle('compact', compact);
   const s = Math.min(1.15, (innerWidth - 32) / W, (innerHeight - 32) / H);
   $('stage').style.transform = `scale(${s})`;
   $('scaler').style.width = `${W * s}px`;
   $('scaler').style.height = `${H * s}px`;
+  $('scaler').style.setProperty('--s', s);
+  // En modo compacto el panel ocupa el alto que queda debajo del escenario
+  document.body.style.setProperty('--panel-max', `${innerHeight - H * s - 48}px`);
 }
 
 build();
+initPanel();
 initDrag();
 initControls();
 fit();
