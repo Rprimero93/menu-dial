@@ -31,6 +31,17 @@
                   <rect width="5" height="5" fill="#3b3d44"/>
                   <line x1="0" y1="0" x2="0" y2="5" stroke="#4b4e56" stroke-width="2.4"/>
                 </pattern>
+                <!-- Difuminado del halo; región en coordenadas del SVG para que no se recorte al arco fino -->
+                <filter id="glowBlur" filterUnits="userSpaceOnUse" x="240" y="90" width="140" height="220">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="near"/>
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="11" result="far"/>
+                  <feMerge>
+                    <feMergeNode in="far"/>
+                    <feMergeNode in="far"/>
+                    <feMergeNode in="near"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
                 <radialGradient id="trackGrad" cx="50%" cy="50%" r="50%">
                   <stop offset="70%" stop-color="#25272c"/>
                   <stop offset="100%" stop-color="#1e2024"/>
@@ -41,6 +52,7 @@
               <path id="highlight" class="highlight"/>
               <g id="icons"></g>
               <circle class="recess" cx="200" cy="200" r="114"/>
+              <path id="activeGlow" class="active-glow"/>
             </svg>
 
             <div class="knob" id="knob" role="slider" tabindex="0"

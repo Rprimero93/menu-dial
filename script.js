@@ -112,6 +112,12 @@ function build() {
   // El realce sobresale del anillo y queda fijo a las 3 en punto
   $('highlight').setAttribute('d', arcPath(R_IN - 4, R_OUT + 8, -STEP / 2 + 0.5, STEP / 2 - 0.5, 12, 6));
 
+  // Halo: arco sobre el borde interior del realce, sin las esquinas redondeadas
+  const hr = R_IN - 4;
+  const ha = STEP / 2 - 0.5 - (Math.asin(6 / (hr + 6)) * 180) / Math.PI;
+  const hp = (a) => `${RING_C + hr * Math.cos(rad(a))} ${RING_C + hr * Math.sin(rad(a))}`;
+  $('activeGlow').setAttribute('d', `M ${hp(-ha)} A ${hr} ${hr} 0 0 1 ${hp(ha)}`);
+
   document.querySelectorAll('[data-icon]').forEach((el) => (el.innerHTML = svgIcon(el.dataset.icon)));
 }
 

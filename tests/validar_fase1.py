@@ -132,8 +132,15 @@ def main():
         check("   Sin Guardar/Cancelar ni botón 3D", no_buttons)
         check("   Escena plana (sin 3D)", flat)
         hl_filter = page.eval_on_selector("#highlight", "el => getComputedStyle(el).filter")
-        check("   Resplandor azul solo en el segmento activo",
-              "rgba(64, 150, 255" in hl_filter and "rgba(64, 150, 255" not in glow)
+        glow_filter = page.eval_on_selector("#activeGlow", "el => getComputedStyle(el).filter + ' ' + getComputedStyle(el).stroke")
+        # El arco del halo debe quedar del lado izquierdo (interior) del realce: x máxima < centro del realce
+        glow_box = page.eval_on_selector("#activeGlow", "el => { const b = el.getBBox(); return { x: b.x, width: b.width }; }")
+        hl_box = page.eval_on_selector("#highlight", "el => { const b = el.getBBox(); return { x: b.x, width: b.width }; }")
+        left_side = glow_box["x"] + glow_box["width"] < hl_box["x"] + hl_box["width"] / 2
+        check("   Halo azul solo en el borde izquierdo del segmento activo",
+              "glowBlur" in glow_filter and "rgb(64, 150, 255)" in glow_filter and "rgba(64, 150, 255" not in hl_filter
+              and "rgba(64, 150, 255" not in glow and left_side,
+              f"halo x {glow_box['x']:.0f}-{glow_box['x'] + glow_box['width']:.0f}, realce x {hl_box['x']:.0f}-{hl_box['x'] + hl_box['width']:.0f}")
         check("   Segmentos y realce con esquinas redondeadas", seg_arcs == 6 and hl_arcs == 6,
               f"arcos segmento {seg_arcs}, realce {hl_arcs}")
         check("   Tarjetas de la lista con radio original", radius == 10, f"radio {radius}px")
