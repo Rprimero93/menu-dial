@@ -6,7 +6,7 @@
 const PORTFOLIO = {
   header: {
     title: 'PORTAFOLIO',
-    role: 'Ricardo Villamil Martínez· Automatización de procesos',
+    role: 'Ricardo Villamil Martínez · Automatización de procesos',
     hint: 'Gira el dial para explorar mi perfil.',
     hintOpen: 'Gira el medio dial para cambiar de sección.',
   },
@@ -19,8 +19,8 @@ const PORTFOLIO = {
         type: 'profile',
         initials: 'RV',
         name: 'Ricardo Villamil Martínez',
-        role: 'Experto en TI · Bogotá, Colombia',
-        text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo herramientas mediante micro aplicaciones de control, análisis y seguimiento para sectores públicos y privados.',
+        role: 'Automatización de procesos · Bogotá, Colombia',
+        text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo microaplicaciones de control, análisis y seguimiento para los sectores público y privado.',
         // Habilidades más relevantes (se muestran encima de las tarjetas de `facts`): reemplaza cada '' por el texto.
         // Mientras un espacio esté vacío se muestra como «Skill N» punteado.
         skillsTitle: 'Habilidades destacadas',
@@ -63,7 +63,7 @@ const PORTFOLIO = {
             ['Scrum Foundation Certification (SFC™)', 'SCRUMstudy'],
             ['Project Management Essentials (PME)', 'CertiProf'],
             ['Cyber Security Foundation', 'CertiProf'],
-            ['Lean Six Sigma White Belt Professional', 'CertiProf'], 
+            ['Lean Six Sigma White Belt Professional', 'CertiProf'],
           ]],
         ],
       },
@@ -87,7 +87,7 @@ const PORTFOLIO = {
             points: [
               'Diseñé e implementé 6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura (arrendamientos, comodatos y mantenimiento de sedes a nivel nacional).',
               'Monté tableros de seguimiento diario con indicadores de avance (incluido el SPI, índice de desempeño del cronograma) que sirvieron para priorizar estados de contratos pendientes.',
-              'Adapte el sistema de GLPI para solicitudes a nivel nacional sobre temas de mantenimiento locativo ',
+              'Adapté la herramienta GLPI para las solicitudes de mantenimiento locativo a nivel nacional.',
               'Implementé controles de acceso y respaldos de información siguiendo las buenas prácticas de ITIL 4 y la norma ISO 27001.',
               'Administré la información inmobiliaria de las sedes de la entidad en todo el país como fuente única para la toma de decisiones.',
             ],
