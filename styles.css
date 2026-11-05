@@ -249,6 +249,25 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .panel-head p { margin-top: 2px; font-size: 13px; color: var(--text-3); }
 
 .panel-body { flex: 1; overflow: auto; padding-top: 16px; font-size: 14px; color: var(--text-2); }
+
+/* Barra de desplazamiento del panel: fina, redondeada, carril transparente y pulgar que se ilumina */
+.panel-body {
+  margin-right: -10px;   /* la barra se ubica en el margen del panel, no encima del contenido */
+  padding-right: 10px;
+  scrollbar-gutter: stable;
+}
+/* Edge, Chrome y Safari: control total (sin flechas en los extremos) */
+.panel-body::-webkit-scrollbar { width: 6px; }
+.panel-body::-webkit-scrollbar-button { display: none; }
+.panel-body::-webkit-scrollbar-track { background: transparent; }
+.panel-body::-webkit-scrollbar-thumb { border-radius: 99px; background: rgba(255, 255, 255, 0.16); }
+.panel-body:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.28); }
+.panel-body::-webkit-scrollbar-thumb:hover,
+.panel-body::-webkit-scrollbar-thumb:active { background: rgba(var(--glow), 0.8); }
+/* Firefox: solo entiende las propiedades estándar (fina y con los mismos colores) */
+@-moz-document url-prefix() {
+  .panel-body { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.2) transparent; }
+}
 .panel-content { animation: content-in 0.28s var(--ease-out); }
 @keyframes content-in { from { opacity: 0; transform: translateY(8px); } }
 
