@@ -56,10 +56,11 @@ def main():
         page.on("pageerror", lambda e: errors.append(str(e)))
         page.goto(url, wait_until="networkidle")
         wait_settle(page)
+        L = page.evaluate("ITEMS.map(i => i.label)")  # etiquetas desde data.js
 
         # 1. Consola limpia
         check("1. Carga sin errores en consola", not errors, "; ".join(errors))
-        check("   Opción inicial activa", active_label(page) == "Gestión de proyectos", active_label(page))
+        check("   Opción inicial activa", active_label(page) == L[0], active_label(page))
         page.screenshot(path=str(SHOTS / "desktop_1440.png"))
         page.locator("#dial").screenshot(path=str(SHOTS / "dial_detalle.png"))
 
@@ -69,7 +70,7 @@ def main():
         page.mouse.move(cx, cy)
         page.mouse.wheel(0, 120)
         wait_settle(page)
-        check("2a. Rueda avanza una opción", active_label(page) == "Notas de reunión", active_label(page))
+        check("2a. Rueda avanza una opción", active_label(page) == L[1], active_label(page))
 
         # 2b. Arrastre: un cuarto de vuelta antihorario (≈ 2 segmentos) y ajuste a entero
         r = 160
@@ -82,25 +83,25 @@ def main():
         wait_settle(page)
         pos = page.evaluate("current")
         check("2b. Arrastre cambia la opción y ajusta a entero",
-              active_label(page) == "Calendario" and abs(pos - round(pos)) < 1e-6,
+              active_label(page) == L[3] and abs(pos - round(pos)) < 1e-6,
               f"{active_label(page)} (posición {pos:.3f})")
 
         # 3. Flechas en pantalla y teclado
         page.click("#btnUp")
         wait_settle(page)
-        up_ok = active_label(page) == "Ventas y marketing"
+        up_ok = active_label(page) == L[2]
         page.click("#btnDown")
         wait_settle(page)
-        down_ok = active_label(page) == "Calendario"
+        down_ok = active_label(page) == L[3]
         page.keyboard.press("ArrowDown")
         wait_settle(page)
-        key_ok = active_label(page) == "Contactos"
+        key_ok = active_label(page) == L[4]
         check("3. Flechas ↑/↓ y teclado", up_ok and down_ok and key_ok, active_label(page))
 
         # 4a. Clic en una opción de la lista (la siguiente, visible)
         page.click(".option[data-index='5']")
         wait_settle(page)
-        check("4a. Clic en opción de la lista", active_label(page) == "Ajustes", active_label(page))
+        check("4a. Clic en opción de la lista", active_label(page) == L[5], active_label(page))
         # Desde la Fase 2 el clic en una tarjeta también abre su panel: se cierra para seguir con el dial completo
         if page.evaluate("typeof isOpen !== 'undefined' && isOpen"):
             page.keyboard.press("Escape")
@@ -109,19 +110,19 @@ def main():
         # 4b. Clic en un segmento del anillo (el que está a las 9 en punto: opuesto al activo)
         page.mouse.click(cx - 150, cy)
         wait_settle(page)
-        check("4b. Clic en segmento del anillo", active_label(page) == "Notas de reunión", active_label(page))
+        check("4b. Clic en segmento del anillo", active_label(page) == L[1], active_label(page))
 
         # 5. ✕ y Esc vuelven a la opción inicial
         page.keyboard.press("ArrowDown")
         wait_settle(page)
         page.keyboard.press("Escape")
         wait_settle(page)
-        esc_ok = active_label(page) == "Gestión de proyectos"
+        esc_ok = active_label(page) == L[0]
         page.keyboard.press("ArrowDown")
         wait_settle(page)
         page.click("#btnClose")
         wait_settle(page)
-        x_ok = active_label(page) == "Gestión de proyectos"
+        x_ok = active_label(page) == L[0]
         check("5. ✕ y Esc vuelven a la opción inicial", esc_ok and x_ok)
 
         # Cambios pedidos: sin botones inferiores ni vista 3D, resplandor azul,

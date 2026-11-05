@@ -1,72 +1,5 @@
-// ===== Opciones de ejemplo del dial (el orden define la posición en el anillo) =====
-// `desc` y `content` alimentan el panel que se abre al elegir la opción (Fase 2)
-const ITEMS = [
-  {
-    id: 'projects', label: 'Gestión de proyectos', icon: 'file',
-    desc: 'Avance de los proyectos en curso.',
-    content: { type: 'progress', rows: [['Rediseño del portal', 72], ['App de inventario', 45], ['Migración a la nube', 90], ['Campaña Q4', 30]] },
-  },
-  {
-    id: 'notes', label: 'Notas de reunión', icon: 'fileText',
-    desc: 'Últimas notas registradas por el equipo.',
-    content: {
-      type: 'notes', rows: [
-        ['Comité de calidad', '4 nov', 'Se aprobó el plan de auditoría interna.'],
-        ['Revisión de diseño', '3 nov', 'Ajustar el contraste de los botones secundarios.'],
-        ['Planeación 2027', '30 oct', 'Definir el presupuesto por área antes del cierre.'],
-      ],
-    },
-  },
-  {
-    id: 'sales', label: 'Ventas y marketing', icon: 'sheet',
-    desc: 'Indicadores del mes y ventas de los últimos 6 meses.',
-    content: {
-      type: 'kpis',
-      tiles: [['Ventas del mes', '$48,2 M', '+12 %', true], ['Clientes nuevos', '126', '+8 %', true], ['Conversión', '3,4 %', '−0,3 %', false]],
-      bars: [['Jun', 32], ['Jul', 38], ['Ago', 35], ['Sep', 41], ['Oct', 44], ['Nov', 48]],
-    },
-  },
-  {
-    id: 'calendar', label: 'Calendario', icon: 'calendar',
-    desc: 'Eventos del mes en curso.',
-    content: { type: 'calendar', events: { 6: 'Comité', 12: 'Entrega', 19: 'Auditoría', 26: 'Cierre' } },
-  },
-  {
-    id: 'contacts', label: 'Contactos', icon: 'user',
-    desc: 'Personas del equipo y su disponibilidad.',
-    content: {
-      type: 'people', rows: [
-        ['Laura Gómez', 'Diseño', 'online'], ['Andrés Ruiz', 'Desarrollo', 'away'],
-        ['Camila Torres', 'Calidad', 'online'], ['Julián Pérez', 'Ventas', 'offline'],
-      ],
-    },
-  },
-  {
-    id: 'settings', label: 'Ajustes', icon: 'gear',
-    desc: 'Preferencias generales del menú.',
-    content: { type: 'toggles', rows: [['Notificaciones', true], ['Modo compacto', false], ['Sonidos', true], ['Sincronizar al iniciar', true]] },
-  },
-  {
-    id: 'tasks', label: 'Tareas', icon: 'tasks',
-    desc: 'Pendientes de la semana.',
-    content: {
-      type: 'checklist', rows: [
-        ['Revisar propuesta de diseño', true], ['Actualizar inventario', false], ['Enviar informe semanal', false],
-        ['Preparar reunión de comité', true], ['Responder correos pendientes', false],
-      ],
-    },
-  },
-  {
-    id: 'chat', label: 'Chat de diseño', icon: 'hash',
-    desc: 'Conversación reciente del canal de diseño.',
-    content: {
-      type: 'chat', rows: [
-        ['Laura', '¿Revisaron la nueva paleta?', false], ['Tú', 'Sí, me gusta el azul del halo.', true],
-        ['Andrés', 'Subo la versión final en la tarde.', false], ['Tú', 'Perfecto, la reviso mañana.', true],
-      ],
-    },
-  },
-];
+// ===== Opciones del dial: vienen de data.js (único archivo de contenido, Fase 3) =====
+const ITEMS = PORTFOLIO.items;
 
 // Trazos de íconos (viewBox 24x24, estilo línea)
 const ICONS = {
@@ -83,6 +16,16 @@ const ICONS = {
   up: 'M12 19V5 M6 11l6-6 6 6',
   down: 'M12 5v14 M6 13l6 6 6-6',
   square: 'M8 5h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z',
+  briefcase: 'M4 8h16v11H4z M9 8V5h6v3 M4 13h16',
+  trophy: 'M8 4h8v5a4 4 0 0 1-8 0z M8 6H5a3 3 0 0 0 3 4 M16 6h3a3 3 0 0 1-3 4 M12 13v4 M8 20h8 M10 17h4',
+  code: 'M8 7l-5 5 5 5 M16 7l5 5-5 5 M14 4l-4 16',
+  graduation: 'M2 9l10-5 10 5-10 5z M6 11v5c3 2 9 2 12 0v-5 M22 9v6',
+  award: 'M12 14a5 5 0 1 0 0-10a5 5 0 1 0 0 10z M8.5 13L7 21l5-3 5 3-1.5-8',
+  folder: 'M3 6h6l2 2h10v11H3z',
+  mail: 'M3 6h18v12H3z M3 7l9 6 9-6',
+  mapPin: 'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z M12 12.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 1 0 0 5z',
+  github: 'M9 19c-4 1.5-4-2-6-2.5 M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21',
+  external: 'M14 4h6v6 M20 4l-9 9 M18 14v5H5V6h5',
 };
 
 // ===== Geometría =====
@@ -155,6 +98,13 @@ function arcPath(r0, r1, a0, a1, rcOut = 0, rcIn = 0, c = RING_C) {
 
 // ===== Construcción =====
 function build() {
+  // Encabezado desde data.js
+  $('headTitle').textContent = PORTFOLIO.header.title;
+  $('headRole').textContent = PORTFOLIO.header.role;
+  $('headHint').textContent = PORTFOLIO.header.hint;
+  document.title = `${PORTFOLIO.header.title} — Dial`;
+  $('knob').setAttribute('aria-valuemax', N - 1);
+
   const segments = $('segments');
   const icons = $('icons');
   const options = $('options');
@@ -322,7 +272,7 @@ function openPanel() {
   $('panel').classList.add('open');
   $('panel').inert = false;
   $('btnClose').setAttribute('aria-label', 'Cerrar el panel');
-  $('headHint').textContent = 'Gira el medio dial para cambiar de opción.';
+  $('headHint').textContent = PORTFOLIO.header.hintOpen;
   renderPanel(activeIndex());
   fit();
   shiftTarget = openShift;
@@ -336,7 +286,7 @@ function closePanel() {
   $('panel').classList.remove('open');
   $('panel').inert = true;
   $('btnClose').setAttribute('aria-label', 'Volver a la opción inicial');
-  $('headHint').textContent = 'Gira el dial para elegir un acceso rápido.';
+  $('headHint').textContent = PORTFOLIO.header.hint;
   fit();
   shiftTarget = 0;
 }
@@ -364,96 +314,81 @@ function rankOrder(values) {
   return rank;
 }
 
+// Enlace externo seguro (nueva pestaña) o interno (mailto)
+const linkAttrs = (href) => (href.startsWith('http') ? `href="${href}" target="_blank" rel="noopener"` : `href="${href}"`);
+
 // Un renderizador por tipo de contenido; cada uno devuelve el HTML del cuerpo del panel
 const RENDERERS = {
-  progress: ({ rows }) => {
-    const rank = rankOrder(rows.map((r) => r[1]));
-    return rows.map(([name, pct], i) => `
-      <div class="p-row">
-        <div class="p-head"><span>${name}</span><span class="muted">${pct} %</span></div>
-        <div class="p-track"><div class="p-bar" style="--w:${pct}%; --d:${rank[i] * 90}ms"></div></div>
-      </div>`).join('');
-  },
+  profile: ({ initials, name, role, text, facts }) => `
+    <div class="profile">
+      <span class="profile-avatar">${initials}</span>
+      <div><strong class="profile-name">${name}</strong><span class="muted">${role}</span></div>
+    </div>
+    <p class="profile-text">${text}</p>
+    <div class="facts">${facts.map(([value, label]) => `
+      <div class="fact"><strong>${value}</strong><span class="muted">${label}</span></div>`).join('')}
+    </div>`,
 
-  notes: ({ rows }) => rows.map(([title, date, text]) => `
-    <article class="note">
-      <div class="note-head"><strong>${title}</strong><span class="muted">${date}</span></div>
-      <p>${text}</p>
-    </article>`).join(''),
+  timeline: ({ rows }) => `
+    <ol class="timeline">${rows.map(({ role, org, dates, points }) => `
+      <li class="tl-item">
+        <div class="tl-head"><strong>${role}</strong><span class="muted">${dates}</span></div>
+        <div class="tl-org">${org}</div>
+        <ul>${points.map((pt) => `<li>${pt}</li>`).join('')}</ul>
+      </li>`).join('')}
+    </ol>`,
 
-  kpis: ({ tiles, bars }) => {
-    const max = Math.max(...bars.map((b) => b[1]));
-    const rank = rankOrder(bars.map((b) => b[1]));
+  kpis: ({ tiles, compare }) => {
+    const max = Math.max(...compare.rows.map((r) => r[2]));
+    const rank = rankOrder(compare.rows.map((r) => r[2]));
     return `
-      <div class="kpi-grid">${tiles.map(([label, value, delta, up]) => `
-        <div class="kpi"><span class="muted">${label}</span><strong>${value}</strong>
-          <span class="delta ${up ? 'up' : 'down'}">${delta}</span></div>`).join('')}
+      <div class="kpi-grid">${tiles.map(([label, value, note]) => `
+        <div class="kpi"><span class="muted">${label}</span><strong>${value}</strong><span class="kpi-note">${note}</span></div>`).join('')}
       </div>
-      <div class="bars">${bars.map(([m, v], i) => `
-        <div class="bar-col"><div class="bar" style="--h:${(v / max) * 100}%; --d:${rank[i] * 90}ms" title="${m}: ${v}"></div>
-          <span class="muted">${m}</span></div>`).join('')}
+      <div class="compare">
+        <div class="compare-title muted">${compare.title}</div>
+        ${compare.rows.map(([label, text, v], i) => `
+          <div class="cmp-row">
+            <span class="cmp-label">${label}</span>
+            <div class="cmp-track"><div class="cmp-bar" style="--w:${(v / max) * 100}%; --d:${rank[i] * 120}ms"></div></div>
+            <span class="cmp-value">${text}</span>
+          </div>`).join('')}
       </div>`;
   },
 
-  calendar: ({ events }) => {
-    const now = new Date();
-    const y = now.getFullYear(), m = now.getMonth();
-    const offset = (new Date(y, m, 1).getDay() + 6) % 7; // semana empieza en lunes
-    const days = new Date(y, m + 1, 0).getDate();
-    const title = now.toLocaleDateString('es', { month: 'long', year: 'numeric' });
-    const cells = [];
-    for (let i = 0; i < offset; i++) cells.push('<span></span>');
-    for (let d = 1; d <= days; d++) {
-      const cls = [d === now.getDate() ? 'today' : '', events[d] ? 'event' : ''].join(' ').trim();
-      cells.push(`<span class="${cls}" ${events[d] ? `title="${events[d]}"` : ''}>${d}</span>`);
-    }
-    const list = Object.entries(events).map(([d, e]) => `<li><span class="dot"></span>${d} — ${e}</li>`).join('');
-    return `
-      <div class="cal-title">${title}</div>
-      <div class="cal-grid">${['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'].map((d) => `<b>${d}</b>`).join('')}${cells.join('')}</div>
-      <ul class="cal-events">${list}</ul>`;
-  },
-
-  people: ({ rows }) => rows.map(([name, role, status]) => `
-    <div class="person">
-      <span class="avatar">${name.split(' ').map((w) => w[0]).join('')}<i class="status ${status}"></i></span>
-      <div><strong>${name}</strong><span class="muted">${role}</span></div>
+  tags: ({ groups }) => groups.map(([title, tags]) => `
+    <div class="tag-group">
+      <div class="group-title">${title}</div>
+      <div class="chips">${tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
     </div>`).join(''),
 
-  toggles: ({ rows }) => rows.map(([label, on], i) => `
-    <label class="toggle"><span>${label}</span>
-      <input type="checkbox" data-row="${i}" ${on ? 'checked' : ''}><i class="switch"></i></label>`).join(''),
+  list: ({ sections }) => sections.map(([title, rows]) => `
+    ${title ? `<div class="group-title">${title}</div>` : ''}
+    <ul class="entries">${rows.map(([name, issuer, extra]) => `
+      <li class="entry"><span class="entry-dot"></span>
+        <div><strong>${name}</strong><span class="muted">${issuer}</span></div>
+        ${extra ? `<span class="badge">${extra}</span>` : ''}
+      </li>`).join('')}
+    </ul>`).join(''),
 
-  checklist: ({ rows }) => {
-    const done = rows.filter((r) => r[1]).length;
-    return `
-      <div class="muted check-count">${done} de ${rows.length} completadas</div>
-      ${rows.map(([label, ok], i) => `
-        <label class="check"><input type="checkbox" data-row="${i}" ${ok ? 'checked' : ''}><i class="box"></i>
-          <span>${label}</span></label>`).join('')}`;
-  },
+  projects: ({ rows }) => rows.map(({ name, text, tags, link }) => `
+    <article class="project">
+      <strong>${name}</strong>
+      <p>${text}</p>
+      <div class="chips">${tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
+      ${link ? `<a class="btn-link" ${linkAttrs(link[1])}>${link[0]} ${svgIcon('external', 14)}</a>` : ''}
+    </article>`).join(''),
 
-  chat: ({ rows }) => `
-    <div class="chat">${rows.map(([who, text, mine]) => `
-      <div class="msg ${mine ? 'mine' : ''}"><span class="muted">${who}</span><p>${text}</p></div>`).join('')}
-    </div>
-    <div class="chat-input muted">Escribe un mensaje…</div>`,
+  contact: ({ rows }) => rows.map(([icon, label, value, href]) => {
+    const body = `<span class="contact-ico">${svgIcon(icon, 18)}</span>
+      <div><span class="muted">${label}</span><strong>${value}</strong></div>`;
+    return href ? `<a class="contact-row is-link" ${linkAttrs(href)}>${body}${svgIcon('external', 14)}</a>`
+                : `<div class="contact-row">${body}</div>`;
+  }).join(''),
 };
 
-// Los interruptores y casillas guardan su estado en ITEMS para que se conserve al volver
 function initPanel() {
   $('panel').inert = true;
-  $('panelBody').addEventListener('change', (e) => {
-    const input = e.target.closest('input[data-row]');
-    if (!input) return;
-    const item = ITEMS[panelIndex];
-    item.content.rows[Number(input.dataset.row)][1] = input.checked;
-    if (item.content.type === 'checklist') {
-      const rows = item.content.rows;
-      $('panelBody').querySelector('.check-count').textContent =
-        `${rows.filter((r) => r[1]).length} de ${rows.length} completadas`;
-    }
-  });
 }
 
 // ===== Arrastre para girar el dial =====
