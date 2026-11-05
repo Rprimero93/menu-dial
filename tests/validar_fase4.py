@@ -5,6 +5,7 @@ conteos desde data.js, hoja a pantalla completa (←, Esc y Atrás), enlaces de 
 (file://), movimiento reducido y privacidad. Corre antes la validación de la Fase 3 (que incluye la 1 y la 2).
 Uso:  python tests/validar_fase4.py [--live]
 """
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -38,6 +39,24 @@ def settle(page, ms=500):
     page.wait_for_timeout(ms)
 
 
+def duplicate_keys(src):
+    """Claves repetidas en un mismo objeto de data.js: JS no avisa, la segunda pisa a la primera."""
+    src = re.sub(r"'(?:\\.|[^'\\\n])*'", "''", src)  # textos entre comillas simples
+    src = re.sub(r"//[^\n]*", "", src)                 # comentarios de línea
+    stack, dups = [], []
+    for m in re.finditer(r"[{}\[\]]|(\b[A-Za-z_]\w*)\s*:", src):
+        t = m.group(0)
+        if t in "{[":
+            stack.append(set() if t == "{" else None)
+        elif t in "}]":
+            stack.pop()
+        elif stack and stack[-1] is not None:
+            if m.group(1) in stack[-1]:
+                dups.append(f"{m.group(1)} (línea {src.count(chr(10), 0, m.start()) + 1})")
+            stack[-1].add(m.group(1))
+    return dups
+
+
 def sheet_open(page):
     return page.evaluate("sheetIndex !== null && document.getElementById('mSheet').classList.contains('open')")
 
@@ -51,6 +70,10 @@ def main():
     lines = (fase3.stdout or "").strip().splitlines()
     detail = next((l for l in reversed(lines) if "comprobaciones OK" in l), (fase3.stderr or "")[-300:])
     check("5. Validaciones de las Fases 1, 2 y 3 sin regresiones", fase3.returncode == 0, detail)
+
+    # 2c. data.js sin claves repetidas (una segunda `text` borraría la primera sin error visible)
+    dups = duplicate_keys((ROOT / "data.js").read_text(encoding="utf-8"))
+    check("2c. data.js sin claves repetidas en un mismo objeto", not dups, ", ".join(dups) or "—")
 
     # 6c. Privacidad de lo que se publica
     files = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split()

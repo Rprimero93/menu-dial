@@ -399,7 +399,8 @@ const RENDERERS = {
 
   // `points` (opcional): viñetas con el mismo estilo de las funciones de Experiencia
   // `logo` (opcional): [ruta de la imagen, texto alternativo], a la izquierda del título
-  projects: ({ rows }) => rows.map(({ name, logo, text, points, tags, link }) => `
+  // `note` (opcional): párrafo debajo de las viñetas
+  projects: ({ rows }) => rows.map(({ name, logo, text, points, note, tags, link }) => `
     <article class="project">
       <div class="project-head">
         ${logo ? `<span class="project-logo"><img src="${logo[0]}" alt="${logo[1]}"></span>` : ''}
@@ -407,6 +408,7 @@ const RENDERERS = {
       </div>
       <p>${text}</p>
       ${points ? `<ul class="project-points">${points.map((pt) => `<li>${pt}</li>`).join('')}</ul>` : ''}
+      ${note ? `<p class="project-note">${note}</p>` : ''}
       <div class="chips">${tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
       ${link ? `<a class="btn-link" ${linkAttrs(link[1])}>${link[0]} ${svgIcon('external', 14)}</a>` : ''}
     </article>`).join(''),

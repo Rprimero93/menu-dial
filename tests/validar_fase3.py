@@ -40,7 +40,7 @@ EXPECTED = {
         "Excel Avanzado", "Pontificia Universidad Javeriana",
         "Lean Six Sigma White Belt Professional"],  # agregada por el usuario (no está en la hoja de vida)
     # Proyectos: el usuario quitó Menu Dial y listó las 6 herramientas (2026-11-05)
-    "projects": ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos"],
+    "projects": ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos", "mantenimiento vehicular"],
     "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
 }
 COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 6), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
