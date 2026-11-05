@@ -28,16 +28,23 @@ const PORTFOLIO = {
         type: 'profile',
         initials: 'RV',
         name: 'Ricardo Villamil Martínez',
-        role: 'Automatización de procesos · Bogotá, Colombia',
+        role: 'Automatización de procesos',
+        location: 'Bogotá, Colombia',
         text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo microaplicaciones de control, análisis y seguimiento para los sectores público y privado.',
-        // Habilidades más relevantes (se muestran debajo del texto y encima de las tarjetas de `facts`): reemplaza cada '' por el texto.
-        // Mientras un espacio esté vacío se muestra como «Skill N» punteado.
+        // Cifras de la tarjeta: [valor, texto]; un valor '#<id>' se calcula contando esa sección
+        stats: [
+          ['+9', 'años de experiencia'],
+          ['#certifications', 'certificaciones'],
+          ['6', 'herramientas web'],
+        ],
+        // Botones: [texto, enlace, ícono]; el primero va relleno en azul y el segundo con borde
+        actions: [
+          ['Escríbeme', 'mailto:villamil76@gmail.com', 'mail'],
+          ['GitHub', 'https://github.com/Rprimero93', 'github'],
+        ],
+        // Habilidades más relevantes (debajo del texto). Mientras un espacio esté vacío ('') se muestra como «Skill N» punteado.
         skillsTitle: 'Habilidades destacadas',
         skills: ['Excel Avanzado · Pontificia Universidad Javeriana', 'Auditor ISO 27001 SGSI · CertiProf', 'Project Management Essentials · CertiProf'],
-        facts: [
-          ['+9 años', 'de experiencia en TI'],
-          ['8.º semestre', 'de Ingeniería de Sistemas'],
-        ],
       },
     },
     {

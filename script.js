@@ -319,23 +319,37 @@ function rankOrder(values) {
 // Enlace externo seguro (nueva pestaña) o interno (mailto)
 const linkAttrs = (href) => (href.startsWith('http') ? `href="${href}" target="_blank" rel="noopener"` : `href="${href}"`);
 
+// Cifra de la tarjeta de perfil: '#<id>' se reemplaza por cuántos elementos tiene esa sección
+function statValue(value) {
+  if (!String(value).startsWith('#')) return value;
+  const item = ITEMS.find((it) => it.id === value.slice(1));
+  return item ? itemCount(item.content) ?? '' : '';
+}
+
 // Un renderizador por tipo de contenido; cada uno devuelve el HTML del cuerpo del panel
 const RENDERERS = {
-  profile: ({ initials, name, role, text, facts, skillsTitle, skills = [] }) => `
-    <div class="profile">
+  // Tarjeta de perfil: portada curva con borde azul, avatar grande centrado, ubicación, cifras,
+  // dos botones (correo / GitHub), texto y habilidades destacadas
+  profile: ({ initials, name, role, location, text, stats = [], actions = [], skillsTitle, skills = [] }) => `
+    <div class="profile-card">
+      <div class="profile-cover"></div>
       <span class="profile-avatar">${initials}</span>
-      <div><strong class="profile-name">${name}</strong><span class="muted">${role}</span></div>
-    </div>
-    <p class="profile-text">${text}</p>
-    ${skills.length ? `
-      <div class="group-title skills-title">${skillsTitle || 'Skills'}</div>
-      <ol class="skills">${skills.map((s, i) => s
-        ? `<li class="skill"><span class="skill-n">${i + 1}</span>${s}</li>`
-        : `<li class="skill is-empty"><span class="skill-n">${i + 1}</span>Skill ${i + 1}</li>`).join('')}
-      </ol>` : ''}
-    <!-- Las tarjetas de datos van al final, debajo de las habilidades -->
-    <div class="facts">${facts.map(([value, label]) => `
-      <div class="fact"><strong>${value}</strong><span class="muted">${label}</span></div>`).join('')}
+      <strong class="profile-name">${name}</strong>
+      <span class="profile-role">${role}</span>
+      ${location ? `<span class="profile-loc">${svgIcon('mapPin', 15)}${location}</span>` : ''}
+      <div class="profile-stats">${stats.map(([value, label]) => `
+        <div class="stat"><strong>${statValue(value)}</strong><span>${label}</span></div>`).join('')}
+      </div>
+      <div class="profile-actions">${actions.map(([label, href, icon], i) => `
+        <a class="btn-pill${i === 0 ? ' is-primary' : ''}" ${linkAttrs(href)}>${svgIcon(icon, 16)}${label}</a>`).join('')}
+      </div>
+      <p class="profile-text">${text}</p>
+      ${skills.length ? `
+        <div class="group-title skills-title">${skillsTitle || 'Skills'}</div>
+        <ol class="skills">${skills.map((s, i) => s
+          ? `<li class="skill"><span class="skill-n">${i + 1}</span>${s}</li>`
+          : `<li class="skill is-empty"><span class="skill-n">${i + 1}</span>Skill ${i + 1}</li>`).join('')}
+        </ol>` : ''}
     </div>`,
 
   timeline: ({ rows }) => `

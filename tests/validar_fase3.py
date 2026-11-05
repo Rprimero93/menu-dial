@@ -22,8 +22,9 @@ results = []
 # Textos que deben aparecer en cada panel (por id, así no depende del orden de data.js),
 # tomados de HojaDeVida_Ricardo_Villamil_2026.pdf
 EXPECTED = {
-    # Sobre mí: redacción propia del usuario (2026-11-05); se comprueban las cifras y las skills
-    "about": ["más de 9 años", "+9 años", "8.º semestre"],
+    # Sobre mí: redacción propia del usuario (2026-11-05). Desde el ajuste de la Fase 4 es una tarjeta de
+    # perfil con cifras y botones (antes: "+9 años" y "8.º semestre" en tarjetas de datos)
+    "about": ["más de 9 años", "años de experiencia", "Bogotá, Colombia", "Escríbeme", "GitHub"],
     "experience": ["Coordinador Wallbox", "Los Coches S.A.S.", "Mar 2026 – Ago 2026",
         "Automatizador de Procesos", "Dic 2020 – Dic 2025", "Frontdesk", "Ene 2020 – May 2020",
         "Selcomp (Proyecto Capital Salud)", "Jun 2018 – Nov 2019",
@@ -42,7 +43,7 @@ EXPECTED = {
     "projects": ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos"],
     "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
 }
-COUNTS = {"experience": (".tl-item", 5), "projects": (".project-points li", 6), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
+COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 6), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
 # Huella SHA-256 de los 10 dígitos del teléfono: se compara la huella, el número no se escribe aquí
 PHONE_SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
 

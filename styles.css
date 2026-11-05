@@ -274,9 +274,17 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .muted { color: var(--text-3); font-size: 12px; }
 .panel-body strong { color: var(--text); font-weight: 600; }
 
-/* Sobre mí */
-.profile { display: flex; align-items: center; gap: 14px; }
-.profile div { display: flex; flex-direction: column; gap: 2px; }
+/* Sobre mí: tarjeta de perfil (portada curva, avatar centrado, cifras y botones) */
+.profile-card { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+/* Portada: banda del color del dial con el borde inferior curvo y brillo azul, como el arco del anillo */
+.profile-cover {
+  align-self: stretch;
+  height: 64px;
+  border-radius: 14px 14px 50% 50% / 14px 14px 100% 100%;
+  background: linear-gradient(160deg, var(--surface-hi), var(--surface));
+  border-bottom: 2px solid rgba(var(--glow), 0.85);
+  box-shadow: 0 8px 22px -8px rgba(var(--glow), 0.7);
+}
 .profile-avatar {
   display: grid; place-items: center; flex: none;
   width: 48px; height: 48px; border-radius: 50%;
@@ -284,12 +292,39 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   background: linear-gradient(145deg, rgba(var(--glow), 0.55), rgba(var(--glow), 0.2));
   box-shadow: inset 0 0 0 1px rgba(var(--glow), 0.5);
 }
-.profile-name { font-size: 16px; }
-.profile-text { margin: 10px 0 10px; line-height: 1.5; }
-/* Las tarjetas se reparten el ancho según cuántas haya en data.js */
-.facts { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; }
-.skills-title { margin-top: 4px; }
-.skills + .facts { margin-top: 10px; }
+.profile-card .profile-avatar {
+  width: 80px; height: 80px; margin-top: -42px; font-size: 26px;
+  background: linear-gradient(145deg, #3d6fb3, #23324a);
+  box-shadow: 0 0 0 4px #282a30, 0 0 0 5px rgba(var(--glow), 0.6), 0 10px 26px rgba(var(--glow), 0.35);
+}
+.profile-name { margin-top: 10px; font-size: 18px; }
+.profile-role { margin-top: 2px; font-size: 13px; color: var(--text-2); }
+.profile-loc { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 13px; color: rgb(120, 180, 255); }
+.profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; margin-top: 16px; }
+.stat { display: flex; flex-direction: column; gap: 2px; padding: 0 6px; }
+.stat + .stat { border-left: 1px solid var(--line); }
+.stat strong { font-size: 20px; color: #fff; }
+.stat span { font-size: 11px; color: var(--text-3); }
+.profile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 16px; }
+.btn-pill {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 38px; border-radius: 99px; font-size: 14px; font-weight: 500;
+  text-decoration: none; color: var(--text);
+  border: 1px solid var(--line-hi);
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-pill:hover { background: rgba(255, 255, 255, 0.05); }
+.btn-pill.is-primary { color: #fff; border-color: transparent; background: linear-gradient(180deg, rgba(var(--glow), 0.9), rgba(var(--glow), 0.65)); box-shadow: 0 8px 20px rgba(var(--glow), 0.3); }
+.btn-pill.is-primary:hover { background: rgb(var(--glow)); }
+.btn-pill:focus-visible { outline: 2px solid rgba(var(--glow), 0.8); outline-offset: 2px; }
+.profile-text { margin: 16px 0 4px; line-height: 1.55; }
+.profile-card .skills-title { align-self: stretch; margin-top: 14px; }
+.profile-card .skills { align-self: stretch; }
+.profile-card .skill { text-align: left; }
+/* En la hoja del celular hay más espacio: portada y avatar más grandes */
+.m-sheet-body .profile-cover { height: 92px; }
+.m-sheet-body .profile-card .profile-avatar { width: 104px; height: 104px; margin-top: -54px; font-size: 32px; }
+.m-sheet-body .profile-name { font-size: 20px; }
 /* Lista vertical: una habilidad por fila */
 .skills { list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .skill {
@@ -304,10 +339,7 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 }
 /* Espacio reservado sin texto todavía */
 .skill.is-empty { color: var(--text-3); border-style: dashed; border-color: var(--line-hi); background: transparent; }
-.fact, .kpi { display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); }
-.fact strong { font-size: 15px; }
-/* En Sobre mí la cifra y su texto van en una sola línea para dejar sitio a las skills */
-.facts .fact { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 6px; padding: 9px 12px; }
+.kpi { display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); }
 
 /* Experiencia: línea de tiempo */
 .timeline { list-style: none; position: relative; padding-left: 18px; }
@@ -401,7 +433,6 @@ body.compact .panel {
 }
 body.compact .panel.open { transform: none; }
 body.compact .panel:not(.open) { display: none; }
-body.compact .facts { grid-auto-flow: row; }
 
 /* ===== Versión móvil (Fase 4): tarjeta-menú, solo por debajo de 700 px ===== */
 .m-view, .m-sheet { display: none; }
