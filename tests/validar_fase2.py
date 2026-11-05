@@ -160,17 +160,17 @@ def main():
         check("5. ✕, Esc y perilla cierran el panel y mantienen la opción", x_ok and esc_ok and knob_close,
               f"✕={x_ok}, Esc={esc_ok}, perilla={knob_close}")
 
-        # 7. Móvil 390 px con el panel abierto: panel debajo del dial, sin scroll horizontal
+        # 7. Móvil 390 px: desde la Fase 4 el medio dial con el panel debajo se reemplaza por la
+        #    tarjeta-menú (su validación completa está en validar_fase4.py); aquí solo se comprueba
+        #    que el cambio de tamaño con el panel abierto deja la tarjeta visible y sin scroll horizontal.
+        #    Texto original: «7. 390 px: panel debajo del medio dial, dentro de la pantalla, sin scroll horizontal»
         page.set_viewport_size({"width": 390, "height": 844})
         wait_settle(page)
         overflow = page.evaluate("document.documentElement.scrollWidth > window.innerWidth")
-        pb = page.locator("#panel").bounding_box()
-        sb = page.locator("#scaler").bounding_box()
-        below = pb["y"] >= sb["y"] + sb["height"] - 1 and pb["x"] >= 0 and pb["x"] + pb["width"] <= 390
-        fits = pb["y"] + pb["height"] <= 844
+        card = page.locator(".m-card").is_visible() and not page.locator("#scaler").is_visible()
         page.screenshot(path=str(SHOTS / "panel_390.png"))
-        check("7. 390 px: panel debajo del medio dial, dentro de la pantalla, sin scroll horizontal",
-              below and fits and not overflow, f"panel y={pb['y']:.0f}-{pb['y'] + pb['height']:.0f}")
+        check("7. 390 px: tarjeta-menú de la Fase 4 en lugar del dial, sin scroll horizontal",
+              card and not overflow, f"tarjeta visible={card}")
         check("   Sin errores en consola", not errors, "; ".join(errors))
 
         browser.close()

@@ -95,6 +95,38 @@
         <div class="panel-body" id="panelBody"></div>
       </section>
     </div>
+    <!-- Versión móvil (Fase 4): tarjeta-menú por debajo de 700 px; se llena desde data.js -->
+    <div class="m-view" id="mView">
+      <div class="m-top">
+        <span class="m-pill" id="mPill"></span>
+        <span class="m-pill" id="mCount"></span>
+      </div>
+      <div class="m-stage">
+        <div class="m-hold">
+          <!-- Arco de luz: el borde del anillo del dial asomando por debajo de la tarjeta -->
+          <div class="m-arc" aria-hidden="true"></div>
+          <nav class="m-card" aria-label="Secciones del portafolio">
+            <header class="m-head" id="mHead"></header>
+            <ul class="m-list" id="mMain"></ul>
+            <ul class="m-list m-lower" id="mLower"></ul>
+          </nav>
+        </div>
+      </div>
+      <footer class="m-foot" id="mFoot"></footer>
+    </div>
+
+    <!-- Hoja a pantalla completa con el contenido de la sección tocada -->
+    <section class="m-sheet" id="mSheet" role="dialog" aria-modal="true" aria-labelledby="mSheetTitle">
+      <header class="m-sheet-head">
+        <button class="ctl-round" id="mBack" aria-label="Volver al menú" data-icon="back"></button>
+        <span class="panel-ico" id="mSheetIcon"></span>
+        <div>
+          <h2 id="mSheetTitle"></h2>
+          <p id="mSheetDesc"></p>
+        </div>
+      </header>
+      <div class="panel-body m-sheet-body" id="mSheetBody"></div>
+    </section>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </main>
   <script src="data.js"></script>

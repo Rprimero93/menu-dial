@@ -1,6 +1,6 @@
 ---
-fase_actual: 3
-estado_resumen: "Fases 1-3 cerradas y publicadas — pendiente el cierre del proyecto"
+fase_actual: 4
+estado_resumen: "Fase 4 (móvil) construida — falta republicar y el visto bueno"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---
@@ -15,6 +15,7 @@ fases_reabiertas: 0
 - Fase 1 (Validación en navegador y ajuste visual): **cerrada** el 2026-11-05 — resultado y validación en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 - Fase 2 (Panel de contenido con medio dial): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 - Fase 3 (Contenido real: portafolio desde la hoja de vida): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
+- Fase 4 (Versión móvil en tarjeta-menú): **construida, validación pendiente** `[~]` — falta republicar (criterio 7) y el visto bueno en el celular (criterio 8).
 
 ## Bloqueos
 
@@ -22,4 +23,4 @@ fases_reabiertas: 0
 
 ## Siguiente paso
 
-Cierre del proyecto (skill `cierre-proyecto`, Regla 4), con aprobación del usuario; incluye actualizar la fila de `INVENTARIO_Web.md`. Para republicar después de editar `data.js`: `bash scripts/publicar_github.sh`.
+Republicar (con confirmación del usuario) y visto bueno visual de la Fase 4 en el celular; luego el cierre del proyecto (skill `cierre-proyecto`, Regla 4), que incluye actualizar la fila de `INVENTARIO_Web.md`.

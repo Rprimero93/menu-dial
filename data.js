@@ -11,6 +11,15 @@ const PORTFOLIO = {
     hintOpen: 'Gira el medio dial para cambiar de sección.',
   },
 
+  // Versión móvil (Fase 4, por debajo de 700 px): tarjeta-menú. Nombre e iniciales salen de «Sobre mí».
+  mobile: {
+    pill: 'Portafolio',
+    subtitle: 'Automatización de procesos',
+    badge: '+9 años',
+    lower: ['skills', 'contact'], // ids que van en el grupo inferior (Contacto muestra sus enlaces directos)
+    footer: { handle: '@Rprimero93', role: 'Automatización de procesos', href: 'https://github.com/Rprimero93' },
+  },
+
   items: [
     {
       id: 'about', label: 'Sobre mí', icon: 'user',

@@ -26,6 +26,8 @@ const ICONS = {
   mapPin: 'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z M12 12.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 1 0 0 5z',
   github: 'M9 19c-4 1.5-4-2-6-2.5 M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21',
   external: 'M14 4h6v6 M20 4l-9 9 M18 14v5H5V6h5',
+  chevron: 'M9 6l6 6-6 6',
+  back: 'M15 6l-6 6 6 6',
 };
 
 // ===== Geometría =====
@@ -400,6 +402,96 @@ function initPanel() {
   $('panel').inert = true;
 }
 
+// ===== Versión móvil (Fase 4): tarjeta-menú + hoja a pantalla completa =====
+let sheetIndex = null; // sección que muestra la hoja, o null si está cerrada
+
+// Dato de la derecha de cada fila: cuántos elementos tiene la sección (solo listas y líneas de tiempo)
+function itemCount({ type, rows, sections }) {
+  if (type === 'timeline') return rows.length;
+  if (type === 'list') return sections.reduce((n, [, list]) => n + list.length, 0);
+  return null;
+}
+
+function buildMobile() {
+  const conf = PORTFOLIO.mobile;
+  const about = ITEMS.find((it) => it.content.type === 'profile')?.content || {};
+  $('mPill').innerHTML = `${svgIcon('folder', 14)}${conf.pill}`;
+  $('mCount').textContent = `${N} secciones`;
+  $('mHead').innerHTML = `
+    <span class="profile-avatar">${about.initials || ''}</span>
+    <div class="m-who"><strong>${about.name || ''}</strong><span>${conf.subtitle}</span></div>
+    ${conf.badge ? `<span class="m-badge">${conf.badge}</span>` : ''}`;
+
+  const row = (it, i) => {
+    // Contacto: sus enlaces van directos en la tarjeta, sin abrir la hoja
+    if (it.content.type === 'contact') {
+      return it.content.rows.filter((r) => r[3]).map(([icon, label, value, href]) => `
+        <li><a class="m-row" data-id="${it.id}" ${linkAttrs(href)}>
+          <span class="m-ico">${svgIcon(icon, 20)}</span>
+          <span class="m-label">${label}<small>${value}</small></span>
+          <span class="m-end">${svgIcon('external', 16)}</span>
+        </a></li>`).join('');
+    }
+    const n = itemCount(it.content);
+    return `
+      <li><button class="m-row" data-index="${i}" data-id="${it.id}">
+        <span class="m-ico">${svgIcon(it.icon, 20)}</span>
+        <span class="m-label">${it.label}</span>
+        <span class="m-end">${n !== null ? `<span class="m-count">${n}</span>` : svgIcon('chevron', 18)}</span>
+      </button></li>`;
+  };
+  $('mMain').innerHTML = ITEMS.map((it, i) => (conf.lower.includes(it.id) ? '' : row(it, i))).join('');
+  $('mLower').innerHTML = ITEMS.map((it, i) => (conf.lower.includes(it.id) ? row(it, i) : '')).join('');
+
+  const f = conf.footer;
+  $('mFoot').innerHTML = `
+    <a class="m-foot-link" ${linkAttrs(f.href)}>
+      <span class="m-foot-ico">${svgIcon('github', 18)}</span>
+      <span><strong>${f.handle}</strong><small>${f.role}</small></span>
+    </a>`;
+
+  document.querySelectorAll('button.m-row').forEach((b) =>
+    b.addEventListener('click', () => openSheet(Number(b.dataset.index))));
+  $('mBack').addEventListener('click', () => closeSheet());
+  // Atrás del navegador: cierra la hoja en lugar de salir del sitio
+  addEventListener('popstate', () => { if (sheetIndex !== null) closeSheet(false); });
+  $('mSheet').inert = true;
+}
+
+function openSheet(index) {
+  const item = ITEMS[index];
+  const wasOpen = sheetIndex !== null;
+  sheetIndex = index;
+  $('mSheetIcon').innerHTML = svgIcon(item.icon);
+  $('mSheetTitle').textContent = item.label;
+  $('mSheetDesc').textContent = item.desc;
+  const wrap = document.createElement('div');
+  wrap.className = 'panel-content';
+  wrap.dataset.type = item.content.type;
+  wrap.dataset.index = index;
+  wrap.innerHTML = RENDERERS[item.content.type](item.content);
+  $('mSheetBody').replaceChildren(wrap);
+  $('mSheetBody').scrollTop = 0;
+  document.querySelectorAll('.m-row').forEach((r) => r.classList.toggle('is-current', r.dataset.index === String(index)));
+  $('mSheet').inert = false;
+  $('mSheet').classList.add('open');
+  document.body.classList.add('sheet-open');
+  if (!wasOpen) history.pushState({ sheet: index }, '');
+  $('mBack').focus({ preventScroll: true });
+}
+
+// fromUi: cerrada con ← o Esc (hay que deshacer la entrada del historial); false: ya la quitó Atrás
+function closeSheet(fromUi = true) {
+  if (sheetIndex === null) return;
+  const index = sheetIndex;
+  sheetIndex = null;
+  $('mSheet').classList.remove('open');
+  $('mSheet').inert = true;
+  document.body.classList.remove('sheet-open');
+  if (fromUi && history.state?.sheet !== undefined) history.back();
+  document.querySelector(`button.m-row[data-index="${index}"]`)?.focus({ preventScroll: true });
+}
+
 // ===== Arrastre para girar el dial =====
 function initDrag() {
   const dial = $('dial');
@@ -487,6 +579,11 @@ function initControls() {
   $('btnClose').addEventListener('click', closeOrReset);
 
   document.addEventListener('keydown', (e) => {
+    // En la versión móvil el dial está oculto: el teclado solo cierra la hoja
+    if (document.body.classList.contains('compact')) {
+      if (e.key === 'Escape') closeSheet();
+      return;
+    }
     if (['ArrowUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); step(-1); }
     else if (['ArrowDown', 'ArrowRight'].includes(e.key)) { e.preventDefault(); step(1); }
     else if (e.key === 'Enter' && document.activeElement === $('knob')) openPanel();
@@ -507,8 +604,10 @@ function resetDial() {
 
 // ===== Ajuste al tamaño de la ventana =====
 function fit() {
-  const compact = innerWidth < COMPACT_MAX;
+  // Media query y no innerWidth: en un celular el escenario de 900 px aleja el zoom e infla innerWidth
+  const compact = matchMedia(`(max-width: ${COMPACT_MAX - 0.02}px)`).matches;
   document.body.classList.toggle('compact', compact);
+  if (!compact) closeSheet(); // al pasar a escritorio la hoja móvil no tiene sentido
   const s = Math.min(1.15, (innerWidth - 32) / W, (innerHeight - 32) / H);
   $('stage').style.transform = `scale(${s})`;
   $('scaler').style.width = `${W * s}px`;
@@ -530,6 +629,7 @@ function fit() {
 }
 
 build();
+buildMobile();
 initPanel();
 initDrag();
 initControls();
