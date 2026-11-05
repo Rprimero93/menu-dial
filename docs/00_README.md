@@ -3,9 +3,9 @@ tecnologia: Web
 tipo: herramienta
 proyecto: Menu_Dial
 estado: pendiente
-estado_resumen: "Fase 2 cerrada — Fase 3 (contenido real de los paneles) por planificar"
+estado_resumen: "Fase 3 construida — validación automática 10/10 OK; faltan republicar y el visto bueno"
 stack: "HTML + CSS + JS vainilla, sin frameworks (fuente Inter de Google Fonts)"
-descripcion: "Menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco) con panel de contenido por opción y medio dial, con opciones de ejemplo"
+descripcion: "Portafolio personal en forma de menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco) con panel de contenido por opción y medio dial; contenido en data.js"
 aliases: [Menu_Dial]
 ---
 
@@ -37,6 +37,7 @@ Menu_Dial/
 │   ├── 01_INDEX.md
 │   ├── 06_IMPLEMENTATION.md
 │   └── 07_PROGRESO_RESUMEN.md
+├── data.js      # contenido: encabezado y opciones del portafolio (Fase 3)
 ├── index.html   # estructura: anillo SVG, perilla, conector, lista, controles, panel de contenido
 ├── styles.css   # tokens en :root, dial, lista, controles, panel y sus contenidos, modo compacto
 ├── script.js    # opciones (ITEMS), íconos, geometría, render animado, arrastre/rueda/teclado, panel
@@ -44,7 +45,7 @@ Menu_Dial/
 └── scripts/     # publicar_github.sh (espejo en GitHub)
 ```
 
-Las opciones se editan en el arreglo `ITEMS` al inicio de `script.js` (etiqueta, ícono, descripción y contenido del panel); el anillo se recalcula solo según su cantidad.
+El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`: etiqueta, ícono, descripción y contenido del panel); el anillo se recalcula solo según la cantidad de opciones.
 
 ## Publicación (espejo en GitHub)
 
