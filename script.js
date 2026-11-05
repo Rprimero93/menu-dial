@@ -325,15 +325,16 @@ const RENDERERS = {
       <div><strong class="profile-name">${name}</strong><span class="muted">${role}</span></div>
     </div>
     <p class="profile-text">${text}</p>
-    <div class="facts">${facts.map(([value, label]) => `
-      <div class="fact"><strong>${value}</strong><span class="muted">${label}</span></div>`).join('')}
-    </div>
     ${skills.length ? `
       <div class="group-title skills-title">${skillsTitle || 'Skills'}</div>
       <ol class="skills">${skills.map((s, i) => s
         ? `<li class="skill"><span class="skill-n">${i + 1}</span>${s}</li>`
         : `<li class="skill is-empty"><span class="skill-n">${i + 1}</span>Skill ${i + 1}</li>`).join('')}
-      </ol>` : ''}`,
+      </ol>` : ''}
+    <!-- Las tarjetas de datos van al final, debajo de las habilidades -->
+    <div class="facts">${facts.map(([value, label]) => `
+      <div class="fact"><strong>${value}</strong><span class="muted">${label}</span></div>`).join('')}
+    </div>`,
 
   timeline: ({ rows }) => `
     <ol class="timeline">${rows.map(({ role, org, dates, points }) => `

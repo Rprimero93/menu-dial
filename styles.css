@@ -288,7 +288,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .profile-text { margin: 10px 0 10px; line-height: 1.5; }
 /* Las tarjetas se reparten el ancho según cuántas haya en data.js */
 .facts { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; }
-.skills-title { margin-top: 12px; }
+.skills-title { margin-top: 4px; }
+.skills + .facts { margin-top: 10px; }
 /* Lista vertical: una habilidad por fila */
 .skills { list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .skill {

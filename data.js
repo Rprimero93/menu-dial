@@ -21,14 +21,14 @@ const PORTFOLIO = {
         name: 'Ricardo Villamil Martínez',
         role: 'Experto en TI · Bogotá, Colombia',
         text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo herramientas mediante micro aplicaciones de control, análisis y seguimiento para sectores públicos y privados.',
+        // Habilidades más relevantes (se muestran encima de las tarjetas de `facts`): reemplaza cada '' por el texto.
+        // Mientras un espacio esté vacío se muestra como «Skill N» punteado.
+        skillsTitle: 'Habilidades destacadas',
+        skills: ['Excel Avanzado - Pontificia Universidad Javeriana', 'Auditor ISO 27001 SGSI - CertiProf', 'Project Management Essentials - CertiProf'],
         facts: [
           ['+9 años', 'de experiencia en TI'],
           ['8.º semestre', 'de Ingeniería de Sistemas'],
         ],
-        // Skills más relevantes (debajo de las tarjetas): reemplaza cada '' por el texto de la skill.
-        // Mientras un espacio esté vacío se muestra como «Skill N» punteado.
-        skillsTitle: 'Habilidades destacadas',
-        skills: ['Excel Avanzado - Pontificia Universidad Javeriana', 'Auditor ISO 27001 SGSI - CertiProf', 'Project Management Essentials - CertiProf'],
       },
     },
     {
@@ -57,12 +57,13 @@ const PORTFOLIO = {
         type: 'list',
         sections: [
           [null, [
+            ['Excel Avanzado', 'Pontificia Universidad Javeriana'],
             ['Auditor ISO 27001 SGSI', 'CertiProf'],
             ['ITIL 4 Foundation', 'PeopleCert'],
             ['Scrum Foundation Certification (SFC™)', 'SCRUMstudy'],
             ['Project Management Essentials (PME)', 'CertiProf'],
             ['Cyber Security Foundation', 'CertiProf'],
-            ['Excel Avanzado', 'Pontificia Universidad Javeriana'],
+            ['Lean Six Sigma White Belt Professional', 'CertiProf'], 
           ]],
         ],
       },
