@@ -131,7 +131,9 @@ def main():
         hl_arcs = page.eval_on_selector("#highlight", "el => (el.getAttribute('d').match(/A/g) || []).length")
         check("   Sin Guardar/Cancelar ni botón 3D", no_buttons)
         check("   Escena plana (sin 3D)", flat)
-        check("   Resplandor azul en la perilla", "rgba(64, 150, 255" in glow)
+        hl_filter = page.eval_on_selector("#highlight", "el => getComputedStyle(el).filter")
+        check("   Resplandor azul solo en el segmento activo",
+              "rgba(64, 150, 255" in hl_filter and "rgba(64, 150, 255" not in glow)
         check("   Segmentos y realce con esquinas redondeadas", seg_arcs == 6 and hl_arcs == 6,
               f"arcos segmento {seg_arcs}, realce {hl_arcs}")
         check("   Tarjetas de la lista con radio original", radius == 10, f"radio {radius}px")

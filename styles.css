@@ -74,10 +74,11 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 
 .highlight {
   fill: url(#hatch);
-  stroke: rgba(255, 255, 255, 0.12);
+  stroke: rgba(var(--glow), 0.55);
   stroke-width: 1;
   pointer-events: none;
-  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5));
+  /* Resplandor azul solo en el segmento activo */
+  filter: drop-shadow(0 0 10px rgba(var(--glow), 0.6)) drop-shadow(0 0 26px rgba(var(--glow), 0.35));
 }
 
 .ring-icon { pointer-events: none; color: var(--text-3); transition: color 0.25s; }
@@ -93,7 +94,6 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   box-shadow:
     0 26px 40px rgba(0, 0, 0, 0.6),
     0 4px 10px rgba(0, 0, 0, 0.4),
-    22px -20px 46px -10px rgba(var(--glow), 0.6),
     inset 0 -6px 14px rgba(0, 0, 0, 0.25),
     inset 0 3px 4px rgba(255, 255, 255, 0.9);
 }
