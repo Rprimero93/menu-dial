@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dial de acceso rápido</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="viewport">
+    <!-- El escalador ajusta el escenario fijo (900x620) al tamaño de la ventana -->
+    <div class="stage-scaler" id="scaler">
+      <div class="stage" id="stage">
+        <div class="scene" id="scene">
+          <div class="halo"></div>
+
+          <header class="head">
+            <h1>Personaliza tu Dial</h1>
+            <p>Elige el acceso rápido predeterminado.</p>
+          </header>
+
+          <!-- Anillo con segmentos + perilla central -->
+          <div class="dial" id="dial">
+            <svg class="ring" id="ring" viewBox="0 0 400 400" width="400" height="400" aria-hidden="true">
+              <defs>
+                <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <rect width="5" height="5" fill="#3b3d44"/>
+                  <line x1="0" y1="0" x2="0" y2="5" stroke="#4b4e56" stroke-width="2.4"/>
+                </pattern>
+                <radialGradient id="trackGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="70%" stop-color="#25272c"/>
+                  <stop offset="100%" stop-color="#1e2024"/>
+                </radialGradient>
+              </defs>
+              <circle class="ring-track" cx="200" cy="200" r="194"/>
+              <g id="segments"></g>
+              <path id="highlight" class="highlight"/>
+              <g id="icons"></g>
+              <circle class="recess" cx="200" cy="200" r="114"/>
+            </svg>
+
+            <div class="knob" id="knob" role="slider" tabindex="0"
+                 aria-label="Dial de opciones" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0">
+              <div class="knob-ridges" id="ridges"></div>
+              <div class="knob-face"><span data-icon="menu"></span></div>
+            </div>
+          </div>
+
+          <!-- Línea que une el segmento activo con la opción activa -->
+          <svg class="connector" viewBox="0 0 900 620" width="900" height="620" aria-hidden="true">
+            <path id="connectorPath"/>
+            <circle id="connectorDot" r="2.5"/>
+          </svg>
+
+          <ul class="options" id="options" role="listbox" aria-label="Opciones del dial"></ul>
+
+          <aside class="controls">
+            <button class="ctl-round" id="btnClose" aria-label="Volver al predeterminado" data-icon="x"></button>
+            <div class="ctl-pill">
+              <button id="btnUp" aria-label="Opción anterior" data-icon="up"></button>
+              <button id="btnOpen" aria-label="Abrir opción" data-icon="square"></button>
+              <button id="btnDown" aria-label="Opción siguiente" data-icon="down"></button>
+            </div>
+            <button class="ctl-flat" id="btnTilt" aria-label="Alternar vista 3D" data-icon="menu"></button>
+          </aside>
+
+          <footer class="actions">
+            <button class="btn-ghost" id="btnCancel">Cancelar</button>
+            <button class="btn-solid" id="btnSave">Guardar cambios</button>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
