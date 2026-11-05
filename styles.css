@@ -270,8 +270,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 /* Las tarjetas se reparten el ancho según cuántas haya en data.js */
 .facts { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; }
 .skills-title { margin-top: 12px; }
-/* Fichas que se acomodan en una o dos líneas para que entren las 5 sin desplazar el panel */
-.skills { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+/* Lista vertical: una habilidad por fila */
+.skills { list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .skill {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 5px 12px 5px 5px; border-radius: 99px; font-size: 13px;

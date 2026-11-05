@@ -19,27 +19,28 @@ from validar_fase1 import ROOT, SHOTS, serve, wait_settle  # noqa: E402
 LIVE_URL = "https://rprimero93.github.io/menu-dial/"
 results = []
 
-# Textos que deben aparecer en cada panel, tomados de HojaDeVida_Ricardo_Villamil_2026.pdf
+# Textos que deben aparecer en cada panel (por id, así no depende del orden de data.js),
+# tomados de HojaDeVida_Ricardo_Villamil_2026.pdf
 EXPECTED = {
     # Sobre mí: redacción propia del usuario (2026-11-05); se comprueban las cifras y las skills
-    0: ["más de 9 años", "+9 años", "8.º semestre", "Skills destacadas"],
-    1: ["Coordinador Wallbox", "Los Coches S.A.S.", "Mar 2026 – Ago 2026",
+    "about": ["más de 9 años", "+9 años", "8.º semestre"],
+    "experience": ["Coordinador Wallbox", "Los Coches S.A.S.", "Mar 2026 – Ago 2026",
         "Automatizador de Procesos", "Dic 2020 – Dic 2025", "Frontdesk", "Ene 2020 – May 2020",
         "Selcomp (Proyecto Capital Salud)", "Jun 2018 – Nov 2019",
         "Secretaría de Gobierno de Bogotá", "Dic 2016 – Abr 2018"],
-    2: ["87,5 %", "4 horas", "30 minutos", "21", "+9 años"],
-    3: ["Power Automate", "SharePoint", "VBA", "Power BI", "Python", "ITIL 4", "ISO 27001 (SGSI)",
+    "achievements": ["87,5 %", "4 horas", "30 minutos", "21", "+9 años"],
+    "skills": ["Power Automate", "SharePoint", "VBA", "Power BI", "Python", "ITIL 4", "ISO 27001 (SGSI)",
         "ISO 19011", "Scrum", "Seguimiento de cronograma (SPI)", "Interventoría"],
-    4: ["Ingeniería de Sistemas", "Fundación Universitaria San José", "8.º semestre",
+    "education": ["Ingeniería de Sistemas", "Fundación Universitaria San José", "8.º semestre",
         "Fundación Politécnica Tequendama (Fundesa)", "SENA", "Gerencia de Proyectos",
         "Interventoría y Auditoría de Proyectos", "ISO 19011:2018", "Politécnico de Colombia"],
-    5: ["Auditor ISO 27001 SGSI", "ITIL 4 Foundation", "PeopleCert", "Scrum Foundation Certification (SFC™)",
+    "certifications": ["Auditor ISO 27001 SGSI", "ITIL 4 Foundation", "PeopleCert", "Scrum Foundation Certification (SFC™)",
         "SCRUMstudy", "Project Management Essentials (PME)", "Cyber Security Foundation",
         "Excel Avanzado", "Pontificia Universidad Javeriana"],
-    6: ["Menu Dial", "6 herramientas web", "arrendamientos, comodatos y mantenimiento de sedes"],
-    7: ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
+    "projects": ["Menu Dial", "6 herramientas web", "arrendamientos, comodatos y mantenimiento de sedes"],
+    "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
 }
-COUNTS = {0: (".skill", 5), 1: (".tl-item", 5), 5: (".entry", 6), 4: (".entry", 6), 3: (".tag-group", 6)}
+COUNTS = {"experience": (".tl-item", 5), "certifications": (".entry", 6), "education": (".entry", 6), "skills": (".tag-group", 6)}
 # Huella SHA-256 de los 10 dígitos del teléfono: se compara la huella, el número no se escribe aquí
 PHONE_SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
 
@@ -104,27 +105,37 @@ def main():
         # 2. Fidelidad con la hoja de vida, opción por opción
         page.evaluate("openPanel()")
         missing = {}
-        for i, words in EXPECTED.items():
+        index = page.evaluate("Object.fromEntries(ITEMS.map((it, i) => [it.id, i]))")
+        for key, words in EXPECTED.items():
+            i = index[key]
             page.evaluate(f"goTo({i})")
             wait_settle(page)
             text = page.text_content("#panel")
             html = page.inner_html("#panelBody")
             miss = [w for w in words if w not in text and w not in html]
-            if i in COUNTS:
-                sel, n = COUNTS[i]
+            if key in COUNTS:
+                sel, n = COUNTS[key]
                 got = page.locator(f"#panelBody {sel}").count()
                 if got != n:
                     miss.append(f"{sel}={got}≠{n}")
             if miss:
-                missing[i] = miss
-            if i == 1:
+                missing[key] = miss
+            if key == "experience":
                 page.locator("#panel").screenshot(path=str(SHOTS / "panel_experiencia.png"))
+        # Habilidades de Sobre mí: tantas como haya en data.js, en lista vertical (una por fila)
+        page.evaluate(f"goTo({index['about']})")
+        wait_settle(page)
+        n_sk = page.evaluate("ITEMS.find(i => i.id === 'about').content.skills.length")
+        xs = page.eval_on_selector_all("#panelBody .skill", "els => els.map(e => Math.round(e.getBoundingClientRect().left))")
+        ys = page.eval_on_selector_all("#panelBody .skill", "els => els.map(e => Math.round(e.getBoundingClientRect().top))")
+        check("   Habilidades destacadas en lista vertical", len(xs) == n_sk and len(set(xs)) == 1 and ys == sorted(set(ys)),
+              f"{len(xs)} filas")
         labels = page.evaluate("ITEMS.map(i => i.label)")
         check("2. Las 8 opciones coinciden con la hoja de vida", not missing and len(labels) == 8,
               f"faltantes: {missing}" if missing else ", ".join(labels))
 
         # Enlaces de Contacto y Proyectos
-        page.evaluate("goTo(7)")
+        page.evaluate(f"goTo({index['contact']})")
         wait_settle(page)
         hrefs = page.eval_on_selector_all("#panelBody a", "els => els.map(a => a.getAttribute('href'))")
         check("   Contacto: correo y GitHub como enlaces",
@@ -172,7 +183,7 @@ def main():
         wait_settle(pg)
         pg.click(".option[data-index='1']")
         wait_settle(pg)
-        file_ok = pg.evaluate("isOpen") and pg.text_content("#panelTitle") == "Experiencia"
+        file_ok = pg.evaluate("isOpen") and pg.text_content("#panelTitle") == pg.evaluate("ITEMS[1].label")
         pg.close()
         check("3a. Funciona abriendo index.html con doble clic (file://)", file_ok and not errs, "; ".join(errs))
 
@@ -185,7 +196,7 @@ def main():
             pg.click(".option[data-index='1']")
             wait_settle(pg)
             live_ok = pg.text_content("#headTitle") == pg.evaluate("PORTFOLIO.header.title") and \
-                pg.text_content("#panelTitle") == "Experiencia" and "Coordinador Wallbox" in pg.text_content("#panel")
+                pg.text_content("#panelTitle") == pg.evaluate("ITEMS[1].label")
             live_priv = not has_phone(pg.content())
             pg.close()
             check("3b/7. GitHub Pages publicado con el contenido nuevo", live_ok and live_priv and not errs,

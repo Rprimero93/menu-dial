@@ -27,8 +27,44 @@ const PORTFOLIO = {
         ],
         // Skills más relevantes (debajo de las tarjetas): reemplaza cada '' por el texto de la skill.
         // Mientras un espacio esté vacío se muestra como «Skill N» punteado.
-        skillsTitle: 'Skills destacadas',
-        skills: ['', '', '', '', ''],
+        skillsTitle: 'Habilidades destacadas',
+        skills: ['Excel Avanzado - Pontificia Universidad Javeriana', 'Auditor ISO 27001 SGSI - CertiProf', 'Project Management Essentials - CertiProf'],
+      },
+    },
+    {
+      id: 'education', label: 'Formación', icon: 'graduation',
+      desc: 'Formación académica y diplomados.',
+      content: {
+        type: 'list',
+        sections: [
+          ['Formación académica', [
+            ['Ingeniería de Sistemas', 'Fundación Universitaria San José', 'En curso · 8.º semestre'],
+            ['Tecnólogo en Análisis de Sistemas y Programación de Computadores', 'Fundación Politécnica Tequendama (Fundesa)'],
+            ['Técnico en Mantenimiento de Equipos de Cómputo', 'SENA'],
+          ]],
+          ['Diplomados', [
+            ['Gerencia de Proyectos', 'Politécnico de Colombia'],
+            ['Interventoría y Auditoría de Proyectos', 'Politécnico de Colombia'],
+            ['Auditoría de Sistemas de Gestión ISO 19011:2018', 'Politécnico de Colombia'],
+          ]],
+        ],
+      },
+    },
+    {
+      id: 'certifications', label: 'Certificaciones', icon: 'award',
+      desc: 'Certificaciones profesionales.',
+      content: {
+        type: 'list',
+        sections: [
+          [null, [
+            ['Auditor ISO 27001 SGSI', 'CertiProf'],
+            ['ITIL 4 Foundation', 'PeopleCert'],
+            ['Scrum Foundation Certification (SFC™)', 'SCRUMstudy'],
+            ['Project Management Essentials (PME)', 'CertiProf'],
+            ['Cyber Security Foundation', 'CertiProf'],
+            ['Excel Avanzado', 'Pontificia Universidad Javeriana'],
+          ]],
+        ],
       },
     },
     {
@@ -78,6 +114,26 @@ const PORTFOLIO = {
       },
     },
     {
+      id: 'projects', label: 'Proyectos', icon: 'folder',
+      desc: 'Trabajo destacado.',
+      content: {
+        type: 'projects',
+        rows: [
+          {
+            name: 'Menu Dial',
+            text: 'Menú radial tipo dial en HTML, CSS y JavaScript vainilla: anillo giratorio, lista en arco con magnificación y panel de contenido con medio dial. Es esta misma página.',
+            tags: ['HTML', 'CSS', 'JavaScript'],
+            link: ['Ver en GitHub', 'https://github.com/Rprimero93/menu-dial'],
+          },
+          {
+            name: 'Herramientas de control operativo — ESAP',
+            text: '6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura (arrendamientos, comodatos y mantenimiento de sedes a nivel nacional).',
+            tags: ['Excel', 'SharePoint', 'Power Automate'],
+          },
+        ],
+      },
+    },
+    {
       id: 'achievements', label: 'Logros', icon: 'trophy',
       desc: 'Resultados medibles como Automatizador de Procesos en la ESAP.',
       content: {
@@ -106,62 +162,6 @@ const PORTFOLIO = {
           ['Gestión de servicios y gobierno de TI', ['ITIL 4', 'Herramientas ITSM', 'ANS', 'Gestión de incidentes']],
           ['Seguridad y auditoría', ['ISO 27001 (SGSI)', 'ISO 19011 (auditoría de sistemas de gestión)']],
           ['Gestión de proyectos', ['Scrum', 'Seguimiento de cronograma (SPI)', 'Gestión de riesgos', 'Interventoría']],
-        ],
-      },
-    },
-    {
-      id: 'education', label: 'Formación', icon: 'graduation',
-      desc: 'Formación académica y diplomados.',
-      content: {
-        type: 'list',
-        sections: [
-          ['Formación académica', [
-            ['Ingeniería de Sistemas', 'Fundación Universitaria San José', 'En curso · 8.º semestre'],
-            ['Tecnólogo en Análisis de Sistemas y Programación de Computadores', 'Fundación Politécnica Tequendama (Fundesa)'],
-            ['Técnico en Mantenimiento de Equipos de Cómputo', 'SENA'],
-          ]],
-          ['Diplomados', [
-            ['Gerencia de Proyectos', 'Politécnico de Colombia'],
-            ['Interventoría y Auditoría de Proyectos', 'Politécnico de Colombia'],
-            ['Auditoría de Sistemas de Gestión ISO 19011:2018', 'Politécnico de Colombia'],
-          ]],
-        ],
-      },
-    },
-    {
-      id: 'certifications', label: 'Certificaciones', icon: 'award',
-      desc: 'Certificaciones profesionales.',
-      content: {
-        type: 'list',
-        sections: [
-          [null, [
-            ['Auditor ISO 27001 SGSI', 'CertiProf'],
-            ['ITIL 4 Foundation', 'PeopleCert'],
-            ['Scrum Foundation Certification (SFC™)', 'SCRUMstudy'],
-            ['Project Management Essentials (PME)', 'CertiProf'],
-            ['Cyber Security Foundation', 'CertiProf'],
-            ['Excel Avanzado', 'Pontificia Universidad Javeriana'],
-          ]],
-        ],
-      },
-    },
-    {
-      id: 'projects', label: 'Proyectos', icon: 'folder',
-      desc: 'Trabajo destacado.',
-      content: {
-        type: 'projects',
-        rows: [
-          {
-            name: 'Menu Dial',
-            text: 'Menú radial tipo dial en HTML, CSS y JavaScript vainilla: anillo giratorio, lista en arco con magnificación y panel de contenido con medio dial. Es esta misma página.',
-            tags: ['HTML', 'CSS', 'JavaScript'],
-            link: ['Ver en GitHub', 'https://github.com/Rprimero93/menu-dial'],
-          },
-          {
-            name: 'Herramientas de control operativo — ESAP',
-            text: '6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura (arrendamientos, comodatos y mantenimiento de sedes a nivel nacional).',
-            tags: ['Excel', 'SharePoint', 'Power Automate'],
-          },
         ],
       },
     },
