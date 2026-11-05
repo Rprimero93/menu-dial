@@ -98,7 +98,7 @@ const PORTFOLIO = {
             ],
           },
           {
-            role: 'Automatizador de Procesos', org: 'Escuela Superior de Administración Pública (ESAP)', dates: 'Dic 2020 – Dic 2025',
+            role: 'Automatizador de Procesos (Contratista)', org: 'Escuela Superior de Administración Pública (ESAP)', dates: 'Dic 2020 – Dic 2025',
             points: [
               'Diseñé e implementé 6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura (arrendamientos, comodatos y mantenimiento de sedes a nivel nacional).',
               'Monté tableros de seguimiento diario con indicadores de avance (incluido el SPI, índice de desempeño del cronograma) que sirvieron para priorizar los contratos pendientes.',
@@ -137,6 +137,7 @@ const PORTFOLIO = {
         rows: [
           {
             name: 'Herramientas de control operativo — ESAP',
+            logo: ['assets/esap_simbolo_negativo.svg', 'Logo de la ESAP'], // símbolo en blanco, del manual de marca ESAP
             text: '6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura:',
             points: ['Plan de pagos (macros en Excel)', 'GLPI (sistema de solicitudes de requerimientos logísticos)',
               'Matriz de aseo', 'Matriz de ingreso vehicular', 'Matriz de servicios públicos', 'Matriz de viáticos'],

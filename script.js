@@ -398,9 +398,13 @@ const RENDERERS = {
     </ul>`).join(''),
 
   // `points` (opcional): viñetas con el mismo estilo de las funciones de Experiencia
-  projects: ({ rows }) => rows.map(({ name, text, points, tags, link }) => `
+  // `logo` (opcional): [ruta de la imagen, texto alternativo], a la izquierda del título
+  projects: ({ rows }) => rows.map(({ name, logo, text, points, tags, link }) => `
     <article class="project">
-      <strong>${name}</strong>
+      <div class="project-head">
+        ${logo ? `<span class="project-logo"><img src="${logo[0]}" alt="${logo[1]}"></span>` : ''}
+        <strong>${name}</strong>
+      </div>
       <p>${text}</p>
       ${points ? `<ul class="project-points">${points.map((pt) => `<li>${pt}</li>`).join('')}</ul>` : ''}
       <div class="chips">${tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
