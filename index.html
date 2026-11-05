@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dial de acceso rápido</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%232b2d33'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%23e4e5e8'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,7 +12,7 @@
 </head>
 <body>
   <main class="viewport">
-    <!-- El escalador ajusta el escenario fijo (900x620) al tamaño de la ventana -->
+    <!-- El escalador ajusta el escenario fijo (900x540) al tamaño de la ventana -->
     <div class="stage-scaler" id="scaler">
       <div class="stage" id="stage">
         <div class="scene" id="scene">
@@ -19,7 +20,7 @@
 
           <header class="head">
             <h1>Personaliza tu Dial</h1>
-            <p>Elige el acceso rápido predeterminado.</p>
+            <p>Gira el dial para elegir un acceso rápido.</p>
           </header>
 
           <!-- Anillo con segmentos + perilla central -->
@@ -50,7 +51,7 @@
           </div>
 
           <!-- Línea que une el segmento activo con la opción activa -->
-          <svg class="connector" viewBox="0 0 900 620" width="900" height="620" aria-hidden="true">
+          <svg class="connector" viewBox="0 0 900 540" width="900" height="540" aria-hidden="true">
             <path id="connectorPath"/>
             <circle id="connectorDot" r="2.5"/>
           </svg>
@@ -58,19 +59,13 @@
           <ul class="options" id="options" role="listbox" aria-label="Opciones del dial"></ul>
 
           <aside class="controls">
-            <button class="ctl-round" id="btnClose" aria-label="Volver al predeterminado" data-icon="x"></button>
+            <button class="ctl-round" id="btnClose" aria-label="Volver a la opción inicial" data-icon="x"></button>
             <div class="ctl-pill">
               <button id="btnUp" aria-label="Opción anterior" data-icon="up"></button>
               <button id="btnOpen" aria-label="Abrir opción" data-icon="square"></button>
               <button id="btnDown" aria-label="Opción siguiente" data-icon="down"></button>
             </div>
-            <button class="ctl-flat" id="btnTilt" aria-label="Alternar vista 3D" data-icon="menu"></button>
           </aside>
-
-          <footer class="actions">
-            <button class="btn-ghost" id="btnCancel">Cancelar</button>
-            <button class="btn-solid" id="btnSave">Guardar cambios</button>
-          </footer>
         </div>
       </div>
     </div>

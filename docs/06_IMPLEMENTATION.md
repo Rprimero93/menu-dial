@@ -6,12 +6,13 @@
 - [x] **Fase 0 — Setup de contexto (adopción).** Traer el código (hecho fuera de la metodología el 2026-11-05) a `Herramientas/Web/Menu_Dial/` y crear `docs/` mínimo (`00_README`, `01_INDEX`, `07_PROGRESO_RESUMEN`, `06_IMPLEMENTATION`). Git: se versiona en el repo de la bóveda (Regla 12), sin acción extra.
   - Criterio: los 4 docs existen y reflejan las decisiones de descubrimiento; el código vive en la bóveda. **Cumplido.**
 
-- [ ] **Fase 1 — Validación en navegador y ajuste visual.** Validación con Playwright + Edge del sistema (`channel="msedge"`) contra la página servida por HTTP; el script de validación se guarda en el proyecto (preferencia de `INVENTARIO_Web.md`).
+- [~] **Fase 1 — Validación en navegador y ajuste visual.** Validación con Playwright + Edge del sistema (`channel="msedge"`) contra la página servida por HTTP; el script de validación se guarda en el proyecto (`tests/validar_fase1.py`, preferencia de `INVENTARIO_Web.md`).
+  - Ajustes de alcance pedidos por el usuario al arrancar la fase (2026-11-05): quitar «Cancelar»/«Guardar cambios», quitar la vista 3D (y su botón ≡), resplandor de la perilla en azul, opciones de la lista con extremos redondeados (píldora).
   - Criterios:
     1. Carga sin errores en consola.
     2. Arrastrar el dial y la rueda cambian la opción activa y ajustan a la más cercana.
     3. Las flechas ↑/↓ y las del teclado cambian la opción.
     4. Clic en un segmento o en una opción la deja activa.
-    5. «Guardar cambios» mueve la etiqueta «Predeterminado»; «Cancelar»/Esc vuelven a la guardada.
+    5. ✕ y Esc vuelven a la opción inicial; no quedan «Guardar»/«Cancelar» ni vista 3D; resplandor azul; opciones en píldora. _(Ajustado el 2026-11-05 por el cambio de alcance pedido por el usuario. Texto original: «"Guardar cambios" mueve la etiqueta "Predeterminado"; "Cancelar"/Esc vuelven a la guardada.»)_
     6. Se ve bien a 1440 px y a 390 px de ancho (captura de cada una), sin scroll horizontal.
     7. Visto bueno visual del usuario contra la imagen de referencia.

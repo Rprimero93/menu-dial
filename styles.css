@@ -9,7 +9,7 @@
   --text: #f1f2f4;
   --text-2: #a9adb6;
   --text-3: #6d717b;
-  --glow: 255, 122, 64;
+  --glow: 64, 150, 255;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,16 +38,9 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 
 /* ===== Escenario escalable ===== */
 .stage-scaler { position: relative; }
-.stage { position: absolute; top: 0; left: 0; width: 900px; height: 620px; transform-origin: 0 0; }
+.stage { position: absolute; top: 0; left: 0; width: 900px; height: 540px; transform-origin: 0 0; }
 
-.scene {
-  position: absolute;
-  inset: 0;
-  transform: perspective(1700px) rotateX(16deg) rotateY(-18deg) rotateZ(-3deg);
-  transform-style: preserve-3d;
-  transition: transform 0.7s cubic-bezier(.2, .8, .2, 1);
-}
-.scene.flat { transform: none; }
+.scene { position: absolute; inset: 0; }
 
 .halo {
   position: absolute;
@@ -138,8 +131,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 0 20px 0 14px;
-  border-radius: 10px;
+  padding: 0 24px 0 18px;
+  border-radius: 999px; /* extremos totalmente redondeados (píldora) */
   white-space: nowrap;
   font-size: 15px;
   font-weight: 500;
@@ -155,16 +148,6 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 }
 .option .ico { display: grid; place-items: center; width: 22px; color: var(--text-3); }
 .option .ico svg { width: 20px; height: 20px; }
-.option .badge {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 3px 7px;
-  border-radius: 99px;
-  color: rgb(var(--glow));
-  background: rgba(var(--glow), 0.12);
-}
 .option.active {
   color: var(--text);
   background: var(--surface-hi);
@@ -183,8 +166,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   gap: 18px;
 }
 .controls svg { width: 20px; height: 20px; }
-.ctl-round, .ctl-flat { width: 40px; height: 40px; display: grid; place-items: center; color: var(--text-2); border-radius: 50%; }
-.ctl-round:hover, .ctl-flat:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
+.ctl-round { width: 40px; height: 40px; display: grid; place-items: center; color: var(--text-2); border-radius: 50%; }
+.ctl-round:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
 .ctl-pill {
   display: flex;
   flex-direction: column;
@@ -197,22 +180,6 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .ctl-pill button { width: 40px; height: 44px; display: grid; place-items: center; color: var(--text-2); border-radius: 99px; }
 .ctl-pill button:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
 .ctl-pill button:active { transform: scale(0.92); }
-
-/* ===== Acciones ===== */
-.actions { position: absolute; left: 40px; top: 548px; display: flex; gap: 18px; align-items: center; }
-.btn-ghost { padding: 12px 18px; font-size: 16px; font-weight: 500; color: var(--text-2); }
-.btn-ghost:hover { color: var(--text); }
-.btn-solid {
-  padding: 12px 22px;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 10px;
-  color: var(--text);
-  background: var(--surface-hi);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-.btn-solid:hover { background: #3b3e46; }
 
 /* ===== Toast ===== */
 .toast {
@@ -232,5 +199,5 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 @media (prefers-reduced-motion: reduce) {
-  .scene, .toast { transition: none; }
+  .toast { transition: none; }
 }

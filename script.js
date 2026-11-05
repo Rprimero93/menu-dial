@@ -30,7 +30,7 @@ const ICONS = {
 // ===== Geometría =====
 const N = ITEMS.length;
 const STEP = 360 / N;              // grados por segmento
-const W = 900, H = 620;            // tamaño del escenario
+const W = 900, H = 540;            // tamaño del escenario
 const RING_C = 200;                // centro del anillo en el SVG local
 const CX = 50 + RING_C, CY = 100 + RING_C; // centro del dial en coordenadas del escenario
 const R_IN = 122, R_OUT = 188, R_ICON = 155;
@@ -40,8 +40,8 @@ const LIST_ARC = 15;               // grados entre opciones de la lista
 // ===== Estado =====
 let target = 0;      // posición objetivo (entera salvo durante el arrastre)
 let current = 0;     // posición animada (flotante)
-let savedIndex = 0;  // opción predeterminada guardada
 let lastRendered = null;
+const INITIAL_INDEX = 0; // opción a la que vuelven ✕ y Esc
 
 const $ = (id) => document.getElementById(id);
 const mod = (n, m) => ((n % m) + m) % m;
@@ -90,7 +90,6 @@ function build() {
   $('highlight').setAttribute('d', arcPath(R_IN - 4, R_OUT + 8, -STEP / 2 + 0.5, STEP / 2 - 0.5));
 
   document.querySelectorAll('[data-icon]').forEach((el) => (el.innerHTML = svgIcon(el.dataset.icon)));
-  updateBadge();
 }
 
 // ===== Render (se llama en cada frame solo si cambió la posición) =====
@@ -172,12 +171,6 @@ function openItem() {
   toast(`Abriendo «${selectedItem().label}»`);
 }
 
-function updateBadge() {
-  document.querySelectorAll('.option .badge').forEach((b) => b.remove());
-  const li = $('options').children[savedIndex];
-  li.insertAdjacentHTML('beforeend', '<span class="badge">Predeterminado</span>');
-}
-
 let toastTimer;
 function toast(msg) {
   const el = $('toast');
@@ -252,22 +245,20 @@ function initControls() {
   $('btnUp').addEventListener('click', () => step(-1));
   $('btnDown').addEventListener('click', () => step(1));
   $('btnOpen').addEventListener('click', openItem);
-  $('btnClose').addEventListener('click', () => { goTo(savedIndex); toast('Vuelto al predeterminado'); });
-  $('btnTilt').addEventListener('click', () => $('scene').classList.toggle('flat'));
-
-  $('btnCancel').addEventListener('click', () => { goTo(savedIndex); toast('Cambios descartados'); });
-  $('btnSave').addEventListener('click', () => {
-    savedIndex = mod(Math.round(target), N);
-    updateBadge();
-    toast(`Guardado: «${ITEMS[savedIndex].label}» es el acceso predeterminado`);
-  });
+  $('btnClose').addEventListener('click', resetDial);
 
   document.addEventListener('keydown', (e) => {
     if (['ArrowUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); step(-1); }
     else if (['ArrowDown', 'ArrowRight'].includes(e.key)) { e.preventDefault(); step(1); }
     else if (e.key === 'Enter' && document.activeElement === $('knob')) openItem();
-    else if (e.key === 'Escape') $('btnCancel').click();
+    else if (e.key === 'Escape') resetDial();
   });
+}
+
+// Vuelve a la opción inicial
+function resetDial() {
+  goTo(INITIAL_INDEX);
+  toast('Vuelto a la opción inicial');
 }
 
 // ===== Ajuste al tamaño de la ventana =====
