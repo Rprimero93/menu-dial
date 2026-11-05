@@ -21,10 +21,10 @@ const PORTFOLIO = {
         name: 'Ricardo Villamil Martínez',
         role: 'Automatización de procesos · Bogotá, Colombia',
         text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo microaplicaciones de control, análisis y seguimiento para los sectores público y privado.',
-        // Habilidades más relevantes (se muestran encima de las tarjetas de `facts`): reemplaza cada '' por el texto.
+        // Habilidades más relevantes (se muestran debajo del texto y encima de las tarjetas de `facts`): reemplaza cada '' por el texto.
         // Mientras un espacio esté vacío se muestra como «Skill N» punteado.
         skillsTitle: 'Habilidades destacadas',
-        skills: ['Excel Avanzado - Pontificia Universidad Javeriana', 'Auditor ISO 27001 SGSI - CertiProf', 'Project Management Essentials - CertiProf'],
+        skills: ['Excel Avanzado · Pontificia Universidad Javeriana', 'Auditor ISO 27001 SGSI · CertiProf', 'Project Management Essentials · CertiProf'],
         facts: [
           ['+9 años', 'de experiencia en TI'],
           ['8.º semestre', 'de Ingeniería de Sistemas'],
@@ -78,15 +78,15 @@ const PORTFOLIO = {
             role: 'Coordinador Wallbox', org: 'Los Coches S.A.S.', dates: 'Mar 2026 – Ago 2026',
             points: [
               'Coordiné la logística de la línea de cargadores Wallbox para vehículos eléctricos y sus accesorios.',
-              'Gestioné la facturación de cargadores y accesorios.',
-              'Estandaricé y automaticé procesos operativos del área, documentados en manuales de operación para asegurar que se ejecuten de forma consistente y que el conocimiento quede en la empresa.',
+              'Gestioné la facturación de los cargadores y sus accesorios.',
+              'Estandaricé y automaticé procesos operativos del área y los documenté en manuales de operación para que se ejecuten de forma consistente y el conocimiento quede en la empresa.',
             ],
           },
           {
             role: 'Automatizador de Procesos', org: 'Escuela Superior de Administración Pública (ESAP)', dates: 'Dic 2020 – Dic 2025',
             points: [
               'Diseñé e implementé 6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura (arrendamientos, comodatos y mantenimiento de sedes a nivel nacional).',
-              'Monté tableros de seguimiento diario con indicadores de avance (incluido el SPI, índice de desempeño del cronograma) que sirvieron para priorizar estados de contratos pendientes.',
+              'Monté tableros de seguimiento diario con indicadores de avance (incluido el SPI, índice de desempeño del cronograma) que sirvieron para priorizar los contratos pendientes.',
               'Adapté la herramienta GLPI para las solicitudes de mantenimiento locativo a nivel nacional.',
               'Implementé controles de acceso y respaldos de información siguiendo las buenas prácticas de ITIL 4 y la norma ISO 27001.',
               'Administré la información inmobiliaria de las sedes de la entidad en todo el país como fuente única para la toma de decisiones.',
@@ -97,7 +97,7 @@ const PORTFOLIO = {
             points: [
               'Gestioné incidentes y requerimientos en la herramienta ITSM del proyecto según el ciclo de vida ITIL.',
               'Construí y reporté los indicadores de operación del servicio.',
-              'Di soporte a usuarios y gestioné las comunicaciones en racks.',
+              'Di soporte a usuarios y gestioné el cableado de comunicaciones en racks.',
             ],
           },
           {
@@ -123,8 +123,8 @@ const PORTFOLIO = {
           {
             name: 'Herramientas de control operativo — ESAP',
             text: '6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura:',
-            points: ['Plan de pagos', 'GLPI', 'Matriz de aseo', 'Matriz de ingreso vehicular',
-              'Matriz de servicios públicos', 'Matriz de viáticos'],
+            points: ['Plan de pagos (macros en Excel)', 'GLPI (sistema de solicitudes de requerimientos logísticos)',
+              'Matriz de aseo', 'Matriz de ingreso vehicular', 'Matriz de servicios públicos', 'Matriz de viáticos'],
             tags: ['Excel', 'SharePoint', 'Power Automate'],
           },
         ],
