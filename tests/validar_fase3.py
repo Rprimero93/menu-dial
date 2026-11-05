@@ -38,10 +38,11 @@ EXPECTED = {
         "SCRUMstudy", "Project Management Essentials (PME)", "Cyber Security Foundation",
         "Excel Avanzado", "Pontificia Universidad Javeriana",
         "Lean Six Sigma White Belt Professional"],  # agregada por el usuario (no está en la hoja de vida)
-    "projects": ["Menu Dial", "6 herramientas web", "arrendamientos, comodatos y mantenimiento de sedes"],
+    # Proyectos: el usuario quitó Menu Dial y listó las 6 herramientas (2026-11-05)
+    "projects": ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos"],
     "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
 }
-COUNTS = {"experience": (".tl-item", 5), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
+COUNTS = {"experience": (".tl-item", 5), "projects": (".project-points li", 6), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
 # Huella SHA-256 de los 10 dígitos del teléfono: se compara la huella, el número no se escribe aquí
 PHONE_SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
 

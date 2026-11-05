@@ -323,7 +323,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .tl-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
 .tl-head .muted { white-space: nowrap; }
 .tl-org { margin: 2px 0 6px; color: var(--text-2); font-size: 13px; }
-.tl-item ul { padding-left: 16px; display: grid; gap: 4px; font-size: 13px; line-height: 1.45; }
+.tl-item ul, .project-points { padding-left: 16px; display: grid; gap: 4px; font-size: 13px; line-height: 1.45; }
+.project-points { margin: -4px 0 12px; }
 
 /* Logros: indicadores + comparación con barras horizontales (barrido a la derecha, de mayor a menor) */
 .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }

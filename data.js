@@ -121,14 +121,10 @@ const PORTFOLIO = {
         type: 'projects',
         rows: [
           {
-            name: 'Menu Dial',
-            text: 'Menú radial tipo dial en HTML, CSS y JavaScript vainilla: anillo giratorio, lista en arco con magnificación y panel de contenido con medio dial. Es esta misma página.',
-            tags: ['HTML', 'CSS', 'JavaScript'],
-            link: ['Ver en GitHub', 'https://github.com/Rprimero93/menu-dial'],
-          },
-          {
             name: 'Herramientas de control operativo — ESAP',
-            text: '6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura (arrendamientos, comodatos y mantenimiento de sedes a nivel nacional).',
+            text: '6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura:',
+            points: ['Plan de pagos', 'GLPI', 'Matriz de aseo', 'Matriz de ingreso vehicular',
+              'Matriz de servicios públicos', 'Matriz de viáticos'],
             tags: ['Excel', 'SharePoint', 'Power Automate'],
           },
         ],
