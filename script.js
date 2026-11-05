@@ -52,11 +52,28 @@ function svgIcon(name, size = 24) {
     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[name]}"/></svg>`;
 }
 
-// Trazo de un sector de anillo entre dos ángulos (0° = las 3 en punto, sentido horario)
-function arcPath(r0, r1, a0, a1, c = RING_C) {
+// Trazo de un sector de anillo entre dos ángulos (0° = las 3 en punto, sentido horario),
+// con esquinas redondeadas: rcOut en el borde exterior y rcIn en el interior
+function arcPath(r0, r1, a0, a1, rcOut = 0, rcIn = 0, c = RING_C) {
   const p = (r, a) => `${c + r * Math.cos(rad(a))} ${c + r * Math.sin(rad(a))}`;
   const large = a1 - a0 > 180 ? 1 : 0;
-  return `M ${p(r1, a0)} A ${r1} ${r1} 0 ${large} 1 ${p(r1, a1)} L ${p(r0, a1)} A ${r0} ${r0} 0 ${large} 0 ${p(r0, a0)} Z`;
+  // Desfase angular del punto de tangencia sobre cada arco y distancia sobre el lado radial
+  const dOut = (Math.asin(rcOut / (r1 - rcOut)) * 180) / Math.PI;
+  const dIn = (Math.asin(rcIn / (r0 + rcIn)) * 180) / Math.PI;
+  const sideOut = (r1 - rcOut) * Math.cos(rad(dOut));
+  const sideIn = (r0 + rcIn) * Math.cos(rad(dIn));
+  return [
+    `M ${p(sideIn, a0)}`,
+    `L ${p(sideOut, a0)}`,
+    `A ${rcOut} ${rcOut} 0 0 1 ${p(r1, a0 + dOut)}`,
+    `A ${r1} ${r1} 0 ${large} 1 ${p(r1, a1 - dOut)}`,
+    `A ${rcOut} ${rcOut} 0 0 1 ${p(sideOut, a1)}`,
+    `L ${p(sideIn, a1)}`,
+    `A ${rcIn} ${rcIn} 0 0 1 ${p(r0, a1 - dIn)}`,
+    `A ${r0} ${r0} 0 ${large} 0 ${p(r0, a0 + dIn)}`,
+    `A ${rcIn} ${rcIn} 0 0 1 ${p(sideIn, a0)}`,
+    'Z',
+  ].join(' ');
 }
 
 // ===== Construcción =====
@@ -68,7 +85,7 @@ function build() {
   ITEMS.forEach((item, i) => {
     const seg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     seg.setAttribute('class', 'segment');
-    seg.setAttribute('d', arcPath(R_IN, R_OUT, i * STEP - STEP / 2 + 1.2, i * STEP + STEP / 2 - 1.2));
+    seg.setAttribute('d', arcPath(R_IN, R_OUT, i * STEP - STEP / 2 + 1.2, i * STEP + STEP / 2 - 1.2, 10, 5));
     seg.dataset.index = i;
     segments.appendChild(seg);
 
@@ -87,7 +104,7 @@ function build() {
   });
 
   // El realce sobresale del anillo y queda fijo a las 3 en punto
-  $('highlight').setAttribute('d', arcPath(R_IN - 4, R_OUT + 8, -STEP / 2 + 0.5, STEP / 2 - 0.5));
+  $('highlight').setAttribute('d', arcPath(R_IN - 4, R_OUT + 8, -STEP / 2 + 0.5, STEP / 2 - 0.5, 12, 6));
 
   document.querySelectorAll('[data-icon]').forEach((el) => (el.innerHTML = svgIcon(el.dataset.icon)));
 }

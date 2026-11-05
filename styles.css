@@ -131,8 +131,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 0 24px 0 18px;
-  border-radius: 999px; /* extremos totalmente redondeados (píldora) */
+  padding: 0 20px 0 14px;
+  border-radius: 10px;
   white-space: nowrap;
   font-size: 15px;
   font-weight: 500;

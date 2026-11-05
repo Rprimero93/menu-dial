@@ -61,6 +61,7 @@ def main():
         check("1. Carga sin errores en consola", not errors, "; ".join(errors))
         check("   Opción inicial activa", active_label(page) == "Gestión de proyectos", active_label(page))
         page.screenshot(path=str(SHOTS / "desktop_1440.png"))
+        page.locator("#dial").screenshot(path=str(SHOTS / "dial_detalle.png"))
 
         # 2a. Rueda del ratón sobre el dial
         box = page.locator("#dial").bounding_box()
@@ -119,15 +120,21 @@ def main():
         x_ok = active_label(page) == "Gestión de proyectos"
         check("5. ✕ y Esc vuelven a la opción inicial", esc_ok and x_ok)
 
-        # Cambios pedidos: sin botones inferiores ni vista 3D, resplandor azul, opciones en píldora
+        # Cambios pedidos: sin botones inferiores ni vista 3D, resplandor azul,
+        # segmentos del anillo con esquinas redondeadas y tarjetas de la lista como antes (10 px)
         no_buttons = page.locator("#btnSave, #btnCancel, #btnTilt").count() == 0
         flat = page.eval_on_selector(".scene", "el => getComputedStyle(el).transform") == "none"
         glow = page.eval_on_selector(".knob", "el => getComputedStyle(el).boxShadow")
         radius = page.eval_on_selector(".option", "el => parseFloat(getComputedStyle(el).borderTopLeftRadius)")
+        # Un sector redondeado tiene 6 arcos (2 bordes + 4 esquinas); uno recto tendría 2
+        seg_arcs = page.eval_on_selector(".segment", "el => (el.getAttribute('d').match(/A/g) || []).length")
+        hl_arcs = page.eval_on_selector("#highlight", "el => (el.getAttribute('d').match(/A/g) || []).length")
         check("   Sin Guardar/Cancelar ni botón 3D", no_buttons)
         check("   Escena plana (sin 3D)", flat)
         check("   Resplandor azul en la perilla", "rgba(64, 150, 255" in glow)
-        check("   Opciones con extremos redondeados", radius >= 24, f"radio {radius}px")
+        check("   Segmentos y realce con esquinas redondeadas", seg_arcs == 6 and hl_arcs == 6,
+              f"arcos segmento {seg_arcs}, realce {hl_arcs}")
+        check("   Tarjetas de la lista con radio original", radius == 10, f"radio {radius}px")
 
         # 6. Móvil 390 px sin scroll horizontal
         page.set_viewport_size({"width": 390, "height": 844})
