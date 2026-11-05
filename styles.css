@@ -54,14 +54,9 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   border: 1px solid rgba(255, 255, 255, 0.04);
   background: radial-gradient(circle, rgba(255,255,255,0.025), transparent 65%);
   pointer-events: none;
-  transition: transform 0.6s var(--ease-out);
 }
 
-/* ===== Modo panel abierto: el dial se desliza a la izquierda y se ve solo su mitad derecha ===== */
-.scene.open .dial,
-.scene.open .connector,
-.scene.open .halo { transform: translateX(-250px); }
-.scene.open .dial { clip-path: inset(-60px -60px -60px 200px); }
+/* ===== Modo panel abierto: el dial se desliza (desde JS) hasta el borde izquierdo de la ventana ===== */
 .scene.open .options { opacity: 0; visibility: hidden; }
 
 .head { position: absolute; left: 40px; top: 20px; }
@@ -75,8 +70,6 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   width: 400px; height: 400px;
   touch-action: none;
   cursor: grab;
-  clip-path: inset(-60px);
-  transition: transform 0.6s var(--ease-out), clip-path 0.6s var(--ease-out);
 }
 .dial.dragging { cursor: grabbing; }
 
@@ -147,7 +140,7 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .knob-face svg { width: 30px; height: 30px; }
 
 /* ===== Conector ===== */
-.connector { position: absolute; inset: 0; overflow: visible; pointer-events: none; transition: transform 0.6s var(--ease-out); }
+.connector { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
 #connectorPath { fill: none; stroke: rgba(255, 255, 255, 0.45); stroke-width: 1.2; }
 #connectorDot { fill: #fff; }
 
@@ -212,12 +205,13 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .ctl-pill button:active { transform: scale(0.92); }
 
 /* ===== Panel de contenido ===== */
-/* Vive fuera del escenario: se ubica y escala con --s para coincidir con sus coordenadas (900x540) */
+/* Vive fuera del escenario: se ubica y escala con --s para coincidir con sus coordenadas (900x540);
+   --panel-x y --panel-w los calcula fit() según dónde queda el medio dial */
 .panel {
   position: absolute;
-  left: calc(290px * var(--s, 1));
+  left: calc(var(--panel-x, 290px) * var(--s, 1));
   top: calc(80px * var(--s, 1));
-  width: 500px;
+  width: var(--panel-w, 500px);
   height: 380px;
   display: flex;
   flex-direction: column;
@@ -393,6 +387,6 @@ body.compact .kpi-grid { grid-template-columns: 1fr 1fr; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 @media (prefers-reduced-motion: reduce) {
-  .toast, .dial, .connector, .halo, .panel { transition: none; }
+  .toast, .panel { transition: none; }
   .panel-content, .p-bar, .bar { animation: none; }
 }

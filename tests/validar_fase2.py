@@ -72,8 +72,13 @@ def main():
             return el ? !!el.closest('.option') : false;
         })()""")
         overflow = page.evaluate("document.documentElement.scrollWidth > window.innerWidth")
-        check("2. Medio dial en el borde izquierdo del escenario",
-              abs(kx - stage["x"]) < 4, f"centro del dial x={kx:.0f}, borde del escenario x={stage['x']:.0f}")
+        pnl = page.locator("#panel").bounding_box()
+        ring_right = page.locator("#ring").bounding_box()
+        check("2. Medio dial en el borde izquierdo de la ventana (mitad oculta fuera)",
+              abs(kx) < 4, f"centro del dial x={kx:.0f}")
+        check("   Panel a la derecha del medio dial sin solaparse",
+              pnl["x"] > ring_right["x"] + ring_right["width"],
+              f"dial hasta x={ring_right['x'] + ring_right['width']:.0f}, panel desde x={pnl['x']:.0f}")
         check("   Lista oculta y sin recibir clics; sin scroll horizontal",
               list_hidden and not hit and not overflow)
         page.screenshot(path=str(SHOTS / "panel_1440.png"))

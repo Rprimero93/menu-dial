@@ -1,6 +1,6 @@
 ---
 fase_actual: 2
-estado_resumen: "Fase 2 construida — validación automática 11/11 OK, falta el visto bueno visual"
+estado_resumen: "Fase 2 construida — validación automática 12/12 OK, falta el visto bueno visual"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---

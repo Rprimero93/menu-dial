@@ -99,6 +99,10 @@ const MAG_MAX = 0.16;              // crecimiento máximo de la tarjeta (+16 %)
 const MAG_SPREAD = LIST_ARC * 1.6; // alcance angular del efecto a cada lado del puntero
 const MAG_LERP = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0.2;
 const COMPACT_MAX = 700;           // por debajo de este ancho el panel va debajo del medio dial
+const SHIFT_LERP = MAG_LERP === 1 ? 1 : 0.14; // suavidad del desplazamiento del dial al abrir/cerrar
+const PANEL_GAP = 90;              // espacio entre el borde del realce y el panel (unidades del escenario)
+const PANEL_MAX_W = 640;           // ancho máximo del panel
+const PANEL_RIGHT = 810;           // borde derecho disponible (antes de los controles)
 
 // ===== Estado =====
 let target = 0;      // posición objetivo (entera salvo durante el arrastre)
@@ -110,6 +114,10 @@ let mags = new Array(N).fill(1);  // escala animada de cada tarjeta de la lista
 let hoveredSeg = null;            // segmento del anillo bajo el puntero (su ícono se ilumina)
 let isOpen = false;               // panel de contenido abierto (dial a la izquierda)
 let panelIndex = null;            // opción que muestra el panel
+let shift = 0;                    // desplazamiento animado del dial (unidades del escenario)
+let shiftTarget = 0;              // 0 cerrado; con el panel abierto, centro del dial en el borde de la ventana
+let openShift = -CX;              // desplazamiento de "abierto", recalculado en fit()
+let panelX = 290;                 // borde izquierdo del panel, recalculado en fit()
 
 const $ = (id) => document.getElementById(id);
 const mod = (n, m) => ((n % m) + m) % m;
@@ -224,9 +232,14 @@ function render() {
     li.setAttribute('aria-selected', ad < 0.5);
   });
 
-  // Conector: del borde del realce a la opción activa, se desvanece al girar
-  const x0 = CX + R_OUT + 8;
-  const x1 = CX + LIST_R - 2;
+  // Dial y fondo se desplazan juntos; fuera de la ventana el dial queda oculto sin corte visible
+  $('dial').style.transform = shift ? `translateX(${shift}px)` : '';
+  document.querySelector('.halo').style.transform = shift ? `translateX(${shift}px)` : '';
+
+  // Conector: del borde del realce a la opción activa (o al panel), se desvanece al girar
+  const p = openShift ? shift / openShift : 0; // 0 cerrado → 1 abierto
+  const x0 = CX + R_OUT + 8 + shift;
+  const x1 = (CX + LIST_R - 2) * (1 - p) + (panelX - 2) * p;
   $('connectorPath').setAttribute('d', `M ${x0} ${CY - 10} H ${x0 + 34} L ${x0 + 46} ${CY} H ${x1}`);
   $('connectorDot').setAttribute('cx', x0);
   $('connectorDot').setAttribute('cy', CY - 10);
@@ -266,6 +279,9 @@ function tick() {
     if (next !== mags[i]) changed = true;
     mags[i] = next;
   }
+  const nextShift = Math.abs(shiftTarget - shift) < 0.3 ? shiftTarget : shift + (shiftTarget - shift) * SHIFT_LERP;
+  if (nextShift !== shift) changed = true;
+  shift = nextShift;
   if (changed) {
     render();
     lastRendered = current;
@@ -309,6 +325,7 @@ function openPanel() {
   $('headHint').textContent = 'Gira el medio dial para cambiar de opción.';
   renderPanel(activeIndex());
   fit();
+  shiftTarget = openShift;
 }
 
 function closePanel() {
@@ -321,6 +338,7 @@ function closePanel() {
   $('btnClose').setAttribute('aria-label', 'Volver a la opción inicial');
   $('headHint').textContent = 'Gira el dial para elegir un acceso rápido.';
   fit();
+  shiftTarget = 0;
 }
 
 function renderPanel(index) {
@@ -554,6 +572,17 @@ function fit() {
   $('scaler').style.setProperty('--s', s);
   // En modo compacto el panel ocupa el alto que queda debajo del escenario
   document.body.style.setProperty('--panel-max', `${innerHeight - H * s - 48}px`);
+
+  // Abierto: el centro del dial queda justo en el borde izquierdo de la ventana (mitad oculta fuera)
+  const left = $('scaler').getBoundingClientRect().left;
+  openShift = -(CX + left / s);
+  // El panel se acerca al medio dial y aprovecha el ancho hasta los controles
+  panelX = CX + openShift + R_OUT + 8 + PANEL_GAP;
+  const panelW = Math.min(PANEL_MAX_W, PANEL_RIGHT - panelX);
+  $('scaler').style.setProperty('--panel-x', `${panelX}px`);
+  $('scaler').style.setProperty('--panel-w', `${panelW}px`);
+  if (isOpen) shiftTarget = openShift;
+  lastRendered = null; // fuerza a redibujar el conector con la geometría nueva
 }
 
 build();
