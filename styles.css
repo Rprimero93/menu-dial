@@ -213,7 +213,7 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   left: calc(var(--panel-x, 290px) * var(--s, 1));
   top: calc(100px * var(--s, 1)); /* debajo del encabezado de tres líneas */
   width: var(--panel-w, 500px);
-  height: 420px;
+  height: 440px;
   display: flex;
   flex-direction: column;
   padding: 22px 24px;
@@ -260,16 +260,34 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .profile div { display: flex; flex-direction: column; gap: 2px; }
 .profile-avatar {
   display: grid; place-items: center; flex: none;
-  width: 54px; height: 54px; border-radius: 50%;
-  font-size: 18px; font-weight: 600; color: #fff;
+  width: 48px; height: 48px; border-radius: 50%;
+  font-size: 17px; font-weight: 600; color: #fff;
   background: linear-gradient(145deg, rgba(var(--glow), 0.55), rgba(var(--glow), 0.2));
   box-shadow: inset 0 0 0 1px rgba(var(--glow), 0.5);
 }
 .profile-name { font-size: 16px; }
-.profile-text { margin: 14px 0 16px; line-height: 1.55; }
-.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.profile-text { margin: 10px 0 10px; line-height: 1.5; }
+/* Las tarjetas se reparten el ancho según cuántas haya en data.js */
+.facts { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; }
+.skills-title { margin-top: 12px; }
+/* Fichas que se acomodan en una o dos líneas para que entren las 5 sin desplazar el panel */
+.skills { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.skill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px 5px 5px; border-radius: 99px; font-size: 13px;
+  color: var(--text); background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line);
+}
+.skill-n {
+  display: grid; place-items: center; flex: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  font-size: 11px; font-weight: 600; color: #fff; background: rgba(var(--glow), 0.25);
+}
+/* Espacio reservado sin texto todavía */
+.skill.is-empty { color: var(--text-3); border-style: dashed; border-color: var(--line-hi); background: transparent; }
 .fact, .kpi { display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); }
 .fact strong { font-size: 15px; }
+/* En Sobre mí la cifra y su texto van en una sola línea para dejar sitio a las skills */
+.facts .fact { flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 6px; padding: 9px 12px; }
 
 /* Experiencia: línea de tiempo */
 .timeline { list-style: none; position: relative; padding-left: 18px; }
@@ -362,7 +380,7 @@ body.compact .panel {
 }
 body.compact .panel.open { transform: none; }
 body.compact .panel:not(.open) { display: none; }
-body.compact .facts { grid-template-columns: 1fr; }
+body.compact .facts { grid-auto-flow: row; }
 
 /* ===== Toast ===== */
 .toast {

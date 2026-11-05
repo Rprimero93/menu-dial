@@ -319,7 +319,7 @@ const linkAttrs = (href) => (href.startsWith('http') ? `href="${href}" target="_
 
 // Un renderizador por tipo de contenido; cada uno devuelve el HTML del cuerpo del panel
 const RENDERERS = {
-  profile: ({ initials, name, role, text, facts }) => `
+  profile: ({ initials, name, role, text, facts, skillsTitle, skills = [] }) => `
     <div class="profile">
       <span class="profile-avatar">${initials}</span>
       <div><strong class="profile-name">${name}</strong><span class="muted">${role}</span></div>
@@ -327,7 +327,13 @@ const RENDERERS = {
     <p class="profile-text">${text}</p>
     <div class="facts">${facts.map(([value, label]) => `
       <div class="fact"><strong>${value}</strong><span class="muted">${label}</span></div>`).join('')}
-    </div>`,
+    </div>
+    ${skills.length ? `
+      <div class="group-title skills-title">${skillsTitle || 'Skills'}</div>
+      <ol class="skills">${skills.map((s, i) => s
+        ? `<li class="skill"><span class="skill-n">${i + 1}</span>${s}</li>`
+        : `<li class="skill is-empty"><span class="skill-n">${i + 1}</span>Skill ${i + 1}</li>`).join('')}
+      </ol>` : ''}`,
 
   timeline: ({ rows }) => `
     <ol class="timeline">${rows.map(({ role, org, dates, points }) => `

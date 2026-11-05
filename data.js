@@ -5,8 +5,8 @@
 // Cada opción: label, icon (nombre de ICONS en script.js), desc y content { type, ... } — un tipo por renderizador.
 const PORTFOLIO = {
   header: {
-    title: 'Ricardo Villamil Martínez',
-    role: 'Profesional de TI · Automatización de procesos',
+    title: 'PORTAFOLIO',
+    role: 'Ricardo Villamil Martínez· Automatización de procesos',
     hint: 'Gira el dial para explorar mi perfil.',
     hintOpen: 'Gira el medio dial para cambiar de sección.',
   },
@@ -19,13 +19,16 @@ const PORTFOLIO = {
         type: 'profile',
         initials: 'RV',
         name: 'Ricardo Villamil Martínez',
-        role: 'Profesional de TI · Bogotá, Colombia',
-        text: 'Profesional de TI con más de 9 años de experiencia. Desde 2020 automatizo procesos y construyo herramientas de control y análisis de datos en los sectores público y privado, con bases sólidas en gestión de servicios (ITIL 4), seguridad de la información (auditor ISO 27001) y gestión de proyectos (Scrum, PME).',
+        role: 'Experto en TI · Bogotá, Colombia',
+        text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo herramientas mediante micro aplicaciones de control, análisis y seguimiento para sectores públicos y privados.',
         facts: [
           ['+9 años', 'de experiencia en TI'],
-          ['Público y privado', 'sectores en los que he trabajado'],
           ['8.º semestre', 'de Ingeniería de Sistemas'],
         ],
+        // Skills más relevantes (debajo de las tarjetas): reemplaza cada '' por el texto de la skill.
+        // Mientras un espacio esté vacío se muestra como «Skill N» punteado.
+        skillsTitle: 'Skills destacadas',
+        skills: ['', '', '', '', ''],
       },
     },
     {
@@ -46,9 +49,8 @@ const PORTFOLIO = {
             role: 'Automatizador de Procesos', org: 'Escuela Superior de Administración Pública (ESAP)', dates: 'Dic 2020 – Dic 2025',
             points: [
               'Diseñé e implementé 6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura (arrendamientos, comodatos y mantenimiento de sedes a nivel nacional).',
-              'Reduje el tiempo de gestión un 87,5 %, de 4 horas a 30 minutos por proceso, al automatizar la captura, validación y consolidación de la información.',
-              'Monté tableros de seguimiento diario con indicadores de avance (incluido el SPI, índice de desempeño del cronograma) que sirvieron para priorizar proyectos y decidir dónde asignar recursos.',
-              'Llevé la adopción de las soluciones con 21 usuarios internos: capacitación, soporte y continuidad operativa.',
+              'Monté tableros de seguimiento diario con indicadores de avance (incluido el SPI, índice de desempeño del cronograma) que sirvieron para priorizar estados de contratos pendientes.',
+              'Adapte el sistema de GLPI para solicitudes a nivel nacional sobre temas de mantenimiento locativo ',
               'Implementé controles de acceso y respaldos de información siguiendo las buenas prácticas de ITIL 4 y la norma ISO 27001.',
               'Administré la información inmobiliaria de las sedes de la entidad en todo el país como fuente única para la toma de decisiones.',
             ],

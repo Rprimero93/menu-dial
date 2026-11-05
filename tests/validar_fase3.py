@@ -5,6 +5,7 @@ contenido separado en data.js, fidelidad con la hoja de vida, apertura con doble
 privacidad de lo publicado y capturas. Con --live revisa además el sitio en GitHub Pages.
 Uso:  python tests/validar_fase3.py [--live]
 """
+import hashlib
 import re
 import subprocess
 import sys
@@ -20,11 +21,12 @@ results = []
 
 # Textos que deben aparecer en cada panel, tomados de HojaDeVida_Ricardo_Villamil_2026.pdf
 EXPECTED = {
-    0: ["más de 9 años", "ITIL 4", "auditor ISO 27001", "Scrum, PME", "8.º semestre"],
+    # Sobre mí: redacción propia del usuario (2026-11-05); se comprueban las cifras y las skills
+    0: ["más de 9 años", "+9 años", "8.º semestre", "Skills destacadas"],
     1: ["Coordinador Wallbox", "Los Coches S.A.S.", "Mar 2026 – Ago 2026",
         "Automatizador de Procesos", "Dic 2020 – Dic 2025", "Frontdesk", "Ene 2020 – May 2020",
         "Selcomp (Proyecto Capital Salud)", "Jun 2018 – Nov 2019",
-        "Secretaría de Gobierno de Bogotá", "Dic 2016 – Abr 2018", "21 usuarios internos"],
+        "Secretaría de Gobierno de Bogotá", "Dic 2016 – Abr 2018"],
     2: ["87,5 %", "4 horas", "30 minutos", "21", "+9 años"],
     3: ["Power Automate", "SharePoint", "VBA", "Power BI", "Python", "ITIL 4", "ISO 27001 (SGSI)",
         "ISO 19011", "Scrum", "Seguimiento de cronograma (SPI)", "Interventoría"],
@@ -37,8 +39,15 @@ EXPECTED = {
     6: ["Menu Dial", "6 herramientas web", "arrendamientos, comodatos y mantenimiento de sedes"],
     7: ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
 }
-COUNTS = {1: (".tl-item", 5), 5: (".entry", 6), 4: (".entry", 6), 3: (".tag-group", 6)}
-PHONE = re.compile(r"(?!)")  # patrón retirado del historial publicado
+COUNTS = {0: (".skill", 5), 1: (".tl-item", 5), 5: (".entry", 6), 4: (".entry", 6), 3: (".tag-group", 6)}
+# Huella SHA-256 de los 10 dígitos del teléfono: se compara la huella, el número no se escribe aquí
+PHONE_SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
+
+
+def has_phone(text):
+    digits = re.sub(r"\D", "", text)
+    return any(hashlib.sha256(digits[i:i + 10].encode()).hexdigest() == PHONE_SHA
+               for i in range(len(digits) - 9))
 
 
 def check(name, ok, detail=""):
@@ -66,7 +75,7 @@ def main():
     # 5a. Privacidad de lo que se publica (archivos versionados del proyecto)
     files = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split()
     files += ["data.js"]  # por si todavía no está versionado
-    leaks = [f for f in set(files) if (ROOT / f).is_file() and PHONE.search((ROOT / f).read_text(encoding="utf-8", errors="ignore"))]
+    leaks = [f for f in set(files) if (ROOT / f).is_file() and has_phone((ROOT / f).read_text(encoding="utf-8", errors="ignore"))]
     pdfs = [f for f in set(files) if f.lower().endswith(".pdf")]
     check("5a. Ningún archivo publicado contiene el teléfono ni es un PDF", not leaks and not pdfs,
           f"teléfono en: {leaks or '—'}; PDF: {pdfs or '—'}")
@@ -89,7 +98,7 @@ def main():
 
         same = page.evaluate("ITEMS === PORTFOLIO.items")
         head = page.text_content("#headTitle")
-        check("1b. ITEMS sale de PORTFOLIO y el encabezado de data.js", same and head == "Ricardo Villamil Martínez", head)
+        check("1b. ITEMS sale de PORTFOLIO y el encabezado de data.js", same and head == page.evaluate("PORTFOLIO.header.title"), head)
         page.screenshot(path=str(SHOTS / "portafolio_1440.png"))
 
         # 2. Fidelidad con la hoja de vida, opción por opción
@@ -121,7 +130,7 @@ def main():
         check("   Contacto: correo y GitHub como enlaces",
               "mailto:villamil76@gmail.com" in hrefs and "https://github.com/Rprimero93" in hrefs, str(hrefs))
         body = page.content()
-        check("5b. Teléfono y PDF ausentes en la página", not PHONE.search(body) and ".pdf" not in body.lower())
+        check("5b. Teléfono y PDF ausentes en la página", not has_phone(body) and ".pdf" not in body.lower())
         page.screenshot(path=str(SHOTS / "panel_contacto_1440.png"))
 
         page.set_viewport_size({"width": 390, "height": 844})
@@ -175,9 +184,9 @@ def main():
             wait_settle(pg)
             pg.click(".option[data-index='1']")
             wait_settle(pg)
-            live_ok = pg.text_content("#headTitle") == "Ricardo Villamil Martínez" and \
+            live_ok = pg.text_content("#headTitle") == pg.evaluate("PORTFOLIO.header.title") and \
                 pg.text_content("#panelTitle") == "Experiencia" and "Coordinador Wallbox" in pg.text_content("#panel")
-            live_priv = not PHONE.search(pg.content())
+            live_priv = not has_phone(pg.content())
             pg.close()
             check("3b/7. GitHub Pages publicado con el contenido nuevo", live_ok and live_priv and not errs,
                   "; ".join(errs))
