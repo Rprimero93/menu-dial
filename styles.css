@@ -302,13 +302,18 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .profile-loc { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 13px; color: rgb(120, 180, 255); }
 .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; margin-top: 16px; }
 .stat { display: flex; flex-direction: column; gap: 2px; padding: 0 6px; }
-.stat + .stat { border-left: 1px solid var(--line); }
+.stat { position: relative; }
+/* Divisor como línea aparte: con borde se curvaría en la cifra-enlace, que es redondeada */
+.stat + .stat::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 1px; background: var(--line); }
 .stat strong { font-size: 20px; color: #fff; }
 .stat span { font-size: 11px; color: var(--text-3); }
-.profile-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 16px; }
+.stat.is-link { border-radius: 10px; transition: background 0.2s; }
+.stat.is-link span { color: rgb(120, 180, 255); text-decoration: underline; text-decoration-color: rgba(var(--glow), 0.4); text-underline-offset: 3px; }
+.stat.is-link:hover { background: rgba(var(--glow), 0.08); }
+.profile-actions { display: flex; justify-content: center; gap: 10px; width: 100%; margin-top: 16px; }
 .btn-pill {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  height: 38px; border-radius: 99px; font-size: 14px; font-weight: 500;
+  flex: 0 1 220px; height: 38px; border-radius: 99px; font-size: 14px; font-weight: 500;
   text-decoration: none; color: var(--text);
   border: 1px solid var(--line-hi);
   transition: background 0.2s, border-color 0.2s;
@@ -317,7 +322,7 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .btn-pill.is-primary { color: #fff; border-color: transparent; background: linear-gradient(180deg, rgba(var(--glow), 0.9), rgba(var(--glow), 0.65)); box-shadow: 0 8px 20px rgba(var(--glow), 0.3); }
 .btn-pill.is-primary:hover { background: rgb(var(--glow)); }
 .btn-pill:focus-visible { outline: 2px solid rgba(var(--glow), 0.8); outline-offset: 2px; }
-.profile-text { margin: 16px 0 4px; line-height: 1.55; }
+.profile-text { align-self: stretch; margin: 16px 0 4px; line-height: 1.55; text-align: left; }
 .profile-card .skills-title { align-self: stretch; margin-top: 14px; }
 .profile-card .skills { align-self: stretch; }
 .profile-card .skill { text-align: left; }

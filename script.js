@@ -337,8 +337,10 @@ const RENDERERS = {
       <strong class="profile-name">${name}</strong>
       <span class="profile-role">${role}</span>
       ${location ? `<span class="profile-loc">${svgIcon('mapPin', 15)}${location}</span>` : ''}
-      <div class="profile-stats">${stats.map(([value, label]) => `
-        <div class="stat"><strong>${statValue(value)}</strong><span>${label}</span></div>`).join('')}
+      <div class="profile-stats">${stats.map(([value, label]) => String(value).startsWith('#')
+        // Cifra calculada: es un enlace a su sección
+        ? `<button class="stat is-link" data-goto="${value.slice(1)}" aria-label="Ver ${label}"><strong>${statValue(value)}</strong><span>${label}</span></button>`
+        : `<div class="stat"><strong>${value}</strong><span>${label}</span></div>`).join('')}
       </div>
       <div class="profile-actions">${actions.map(([label, href, icon], i) => `
         <a class="btn-pill${i === 0 ? ' is-primary' : ''}" ${linkAttrs(href)}>${svgIcon(icon, 16)}${label}</a>`).join('')}
@@ -414,6 +416,15 @@ const RENDERERS = {
 
 function initPanel() {
   $('panel').inert = true;
+  // Enlaces internos (ej. la cifra de certificaciones): llevan a esa sección en el panel o en la hoja
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-goto]');
+    if (!link) return;
+    const index = ITEMS.findIndex((it) => it.id === link.dataset.goto);
+    if (index < 0) return;
+    if (document.body.classList.contains('compact')) openSheet(index);
+    else goTo(index);
+  });
 }
 
 // ===== Versión móvil (Fase 4): tarjeta-menú + hoja a pantalla completa =====

@@ -31,16 +31,15 @@ const PORTFOLIO = {
         role: 'Automatización de procesos',
         location: 'Bogotá, Colombia',
         text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo microaplicaciones de control, análisis y seguimiento para los sectores público y privado.',
-        // Cifras de la tarjeta: [valor, texto]; un valor '#<id>' se calcula contando esa sección
+        // Cifras de la tarjeta: [valor, texto]; un valor '#<id>' se calcula contando esa sección y al tocarlo lleva a ella
         stats: [
           ['+9', 'años de experiencia'],
           ['#certifications', 'certificaciones'],
           ['6', 'herramientas web'],
         ],
-        // Botones: [texto, enlace, ícono]; el primero va relleno en azul y el segundo con borde
+        // Botones: [texto, enlace, ícono]; el primero va relleno en azul y los demás con borde
         actions: [
           ['Escríbeme', 'mailto:villamil76@gmail.com', 'mail'],
-          ['GitHub', 'https://github.com/Rprimero93', 'github'],
         ],
         // Habilidades más relevantes (debajo del texto). Mientras un espacio esté vacío ('') se muestra como «Skill N» punteado.
         skillsTitle: 'Habilidades destacadas',

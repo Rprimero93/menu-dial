@@ -24,7 +24,7 @@ results = []
 EXPECTED = {
     # Sobre mí: redacción propia del usuario (2026-11-05). Desde el ajuste de la Fase 4 es una tarjeta de
     # perfil con cifras y botones (antes: "+9 años" y "8.º semestre" en tarjetas de datos)
-    "about": ["más de 9 años", "años de experiencia", "Bogotá, Colombia", "Escríbeme", "GitHub"],
+    "about": ["más de 9 años", "años de experiencia", "Bogotá, Colombia", "Escríbeme"],
     "experience": ["Coordinador Wallbox", "Los Coches S.A.S.", "Mar 2026 – Ago 2026",
         "Automatizador de Procesos", "Dic 2020 – Dic 2025", "Frontdesk", "Ene 2020 – May 2020",
         "Selcomp (Proyecto Capital Salud)", "Jun 2018 – Nov 2019",

@@ -129,6 +129,28 @@ def main():
         check("3b. Esc y Atrás del navegador cierran la hoja (sin salir del sitio)", esc_ok and back_ok,
               f"Esc={esc_ok}, Atrás={back_ok}")
 
+        # 3c. En Sobre mí, la cifra de certificaciones lleva a esa sección (móvil y escritorio)
+        about = page.evaluate("ITEMS.findIndex(i => i.id === 'about')")
+        page.tap(f"button.m-row[data-index='{about}']")
+        settle(page, 450)
+        page.tap("#mSheetBody .stat.is-link[data-goto='certifications']")
+        settle(page, 450)
+        cert_label = page.evaluate("ITEMS.find(i => i.id === 'certifications').label")
+        m_ok = sheet_open(page) and page.text_content("#mSheetTitle") == cert_label
+        page.tap("#mBack")
+        settle(page, 450)
+        m_ok = m_ok and not sheet_open(page)
+        desk = browser.new_page(viewport={"width": 1440, "height": 900})
+        desk.goto(url, wait_until="networkidle")
+        desk.evaluate(f"goTo({about}); openPanel()")
+        settle(desk, 900)
+        desk.click("#panelBody .stat.is-link[data-goto='certifications']")
+        settle(desk, 1200)
+        d_ok = desk.text_content("#panelTitle") == cert_label and desk.evaluate("isOpen")
+        desk.close()
+        check("3c. «Sobre mí»: la cifra de certificaciones lleva a Certificaciones", m_ok and d_ok,
+              f"móvil={m_ok}, escritorio={d_ok}")
+
         # 4. Enlaces directos de Contacto
         hrefs = page.eval_on_selector_all("a.m-row", "els => els.map(a => a.getAttribute('href'))")
         check("4. Correo y GitHub como enlaces directos en la tarjeta",
