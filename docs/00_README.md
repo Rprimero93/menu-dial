@@ -3,7 +3,7 @@ tecnologia: Web
 tipo: herramienta
 proyecto: Menu_Dial
 estado: pendiente
-estado_resumen: "Fase 3 construida — validación automática 11/11 OK; faltan republicar y el visto bueno"
+estado_resumen: "Fase 3 construida y publicada — falta el visto bueno visual"
 stack: "HTML + CSS + JS vainilla, sin frameworks (fuente Inter de Google Fonts)"
 descripcion: "Portafolio personal en forma de menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco) con panel de contenido por opción y medio dial; contenido en data.js"
 aliases: [Menu_Dial]
