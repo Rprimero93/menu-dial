@@ -36,9 +36,9 @@ const CX = 50 + RING_C, CY = 100 + RING_C; // centro del dial en coordenadas del
 const R_IN = 122, R_OUT = 188, R_ICON = 155;
 const LIST_R = 300;                // radio del arco por el que corre la lista
 const LIST_ARC = 15;               // grados entre opciones de la lista
-// Magnificación (estilo Dock): el ícono bajo el puntero crece y los vecinos menos
-const MAG_MAX = 0.5;               // crecimiento máximo del ícono (+50 %)
-const MAG_SPREAD = STEP * 1.6;     // alcance angular del efecto a cada lado del puntero
+// Magnificación (estilo Dock) en la lista: la tarjeta bajo el puntero crece y las vecinas menos
+const MAG_MAX = 0.16;              // crecimiento máximo de la tarjeta (+16 %)
+const MAG_SPREAD = LIST_ARC * 1.6; // alcance angular del efecto a cada lado del puntero
 const MAG_LERP = matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0.2;
 
 // ===== Estado =====
@@ -46,8 +46,9 @@ let target = 0;      // posición objetivo (entera salvo durante el arrastre)
 let current = 0;     // posición animada (flotante)
 let lastRendered = null;
 const INITIAL_INDEX = 0; // opción a la que vuelven ✕ y Esc
-let pointerAngle = null;          // ángulo del puntero sobre el anillo, o null si está fuera
-let mags = new Array(N).fill(1);  // escala animada del ícono de cada segmento
+let pointerAngle = null;          // ángulo del puntero alrededor del dial en la zona de la lista, o null
+let mags = new Array(N).fill(1);  // escala animada de cada tarjeta de la lista
+let hoveredSeg = null;            // segmento del anillo bajo el puntero (su ícono se ilumina)
 
 const $ = (id) => document.getElementById(id);
 const mod = (n, m) => ((n % m) + m) % m;
@@ -127,20 +128,20 @@ function render() {
   $('segments').setAttribute('transform', `rotate(${rot} ${RING_C} ${RING_C})`);
   $('ridges').style.transform = `rotate(${rot}deg)`;
 
-  // Íconos del anillo: se posicionan sin rotar para que queden derechos; la escala es la magnificación
+  // Íconos del anillo: se posicionan sin rotar para que queden derechos; al hover se iluminan como el activo
   [...$('icons').children].forEach((g, i) => {
     const a = rad(i * STEP + rot);
     const x = RING_C + R_ICON * Math.cos(a);
     const y = RING_C + R_ICON * Math.sin(a);
-    g.setAttribute('transform', `translate(${x} ${y}) scale(${mags[i]})`);
+    g.setAttribute('transform', `translate(${x} ${y})`);
     g.classList.toggle('active', i === mod(Math.round(current), N));
+    g.classList.toggle('hover', i === hoveredSeg);
   });
 
   // Lista: cada opción se ubica sobre un arco según su distancia a la activa
   let nearest = Infinity;
   [...$('options').children].forEach((li, i) => {
-    let d = i - current;
-    d -= N * Math.round(d / N);
+    const d = listOffset(i);
     const ad = Math.abs(d);
     nearest = Math.min(nearest, ad);
 
@@ -149,11 +150,13 @@ function render() {
     const y = CY + LIST_R * Math.sin(theta);
     const opacity = Math.max(0, 1 - ad * 0.3);
 
-    li.style.transform = `translate(${x}px, ${y - 24}px) rotate(${d * LIST_ARC}deg)`;
+    // La escala de la magnificación crece desde el borde izquierdo (transform-origin)
+    li.style.transform = `translate(${x}px, ${y - 24}px) rotate(${d * LIST_ARC}deg) scale(${mags[i]})`;
     li.style.opacity = opacity;
     li.style.filter = ad > 1.2 ? `blur(${(ad - 1.2) * 1.4}px)` : 'none';
     li.style.pointerEvents = opacity < 0.15 ? 'none' : 'auto';
-    li.style.zIndex = String(10 - Math.round(ad));
+    // La tarjeta más magnificada queda encima de sus vecinas
+    li.style.zIndex = String(20 + Math.round((mags[i] - 1) * 100) - Math.round(ad));
     li.classList.toggle('active', ad < 0.5);
     li.setAttribute('aria-selected', ad < 0.5);
   });
@@ -168,6 +171,12 @@ function render() {
 
   $('knob').setAttribute('aria-valuenow', mod(Math.round(current), N));
   $('knob').setAttribute('aria-valuetext', ITEMS[mod(Math.round(current), N)].label);
+}
+
+// Distancia (en posiciones) de la opción i a la activa, por el camino más corto
+function listOffset(i) {
+  const d = i - current;
+  return d - N * Math.round(d / N);
 }
 
 // Peso de la magnificación según la distancia angular al puntero (curva coseno suave)
@@ -189,9 +198,8 @@ function tick() {
   current = Math.abs(diff) < 0.0005 ? target : current + diff * 0.16;
   let changed = current !== lastRendered;
 
-  const rot = -current * STEP;
   for (let i = 0; i < N; i++) {
-    const next = ease(mags[i], 1 + MAG_MAX * magWeight(i * STEP + rot), MAG_LERP);
+    const next = ease(mags[i], 1 + MAG_MAX * magWeight(listOffset(i) * LIST_ARC), MAG_LERP);
     if (next !== mags[i]) changed = true;
     mags[i] = next;
   }
@@ -252,23 +260,26 @@ function initDrag() {
     dial.classList.add('dragging');
   });
 
-  // Magnificación: ubica el puntero sobre el anillo (se apaga durante el arrastre)
-  const trackPointer = (e) => {
-    const r = dial.getBoundingClientRect();
-    const k = 400 / r.width; // de píxeles de pantalla a coordenadas del SVG
-    const x = (e.clientX - r.left) * k - RING_C;
-    const y = (e.clientY - r.top) * k - RING_C;
+  // Magnificación de la lista: ubica el puntero en la franja del arco de tarjetas (se apaga al arrastrar)
+  document.addEventListener('pointermove', (e) => {
+    if (dragging || e.pointerType === 'touch') { pointerAngle = null; return; }
+    const r = $('stage').getBoundingClientRect();
+    const k = W / r.width; // de píxeles de pantalla a coordenadas del escenario
+    const x = (e.clientX - r.left) * k - CX;
+    const y = (e.clientY - r.top) * k - CY;
     const dist = Math.hypot(x, y);
-    pointerAngle = dist > R_IN - 12 && dist < R_OUT + 24 ? (Math.atan2(y, x) * 180) / Math.PI : null;
-  };
-  dial.addEventListener('pointerleave', () => (pointerAngle = null));
+    pointerAngle = x > 0 && dist > LIST_R - 20 && dist < LIST_R + 300 ? (Math.atan2(y, x) * 180) / Math.PI : null;
+  });
+  document.addEventListener('pointerleave', () => (pointerAngle = null));
+
+  // Ícono del segmento bajo el puntero: se ilumina como el activo
+  [...$('segments').children].forEach((seg) => {
+    seg.addEventListener('pointerenter', () => { hoveredSeg = Number(seg.dataset.index); render(); });
+    seg.addEventListener('pointerleave', () => { hoveredSeg = null; render(); });
+  });
 
   dial.addEventListener('pointermove', (e) => {
-    if (!dragging) {
-      if (e.pointerType === 'mouse' || e.pointerType === 'pen') trackPointer(e);
-      return;
-    }
-    pointerAngle = null;
+    if (!dragging) return;
     const a = angleOf(e);
     let delta = a - lastAngle;
     delta -= 360 * Math.round(delta / 360); // evita saltos al cruzar ±180°

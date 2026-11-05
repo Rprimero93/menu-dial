@@ -145,27 +145,40 @@ def main():
               f"arcos segmento {seg_arcs}, realce {hl_arcs}")
         check("   Tarjetas de la lista con radio original", radius == 10, f"radio {radius}px")
 
-        # 8. Magnificación al hover: el ícono bajo el puntero crece más que los vecinos; los segmentos no
+        # 8a. Hover en el anillo: el ícono del segmento se ilumina como el activo, sin zoom
         page.mouse.move(cx - 150, cy)  # sobre el segmento a las 9 en punto
         wait_settle(page)
-        m = page.evaluate("({ mags, idx: mod(Math.round(target), N) })")
-        hovered = (m["idx"] + 4) % 8
-        prev_, next_ = (hovered - 1) % 8, (hovered + 1) % 8
-        far = (hovered + 4) % 8
-        mags = m["mags"]
-        icon_scale = page.evaluate(f"document.querySelectorAll('.ring-icon')[{hovered}].getAttribute('transform')")
+        idx = page.evaluate("mod(Math.round(target), N)")
+        seg_hover = (idx + 4) % 8
+        icon = page.evaluate(f"""(() => {{
+            const g = document.querySelectorAll('.ring-icon')[{seg_hover}];
+            return {{ hover: g.classList.contains('hover'), color: getComputedStyle(g).color,
+                     transform: g.getAttribute('transform') }};
+        }})()""")
         seg_static = page.evaluate(
             "[...document.querySelectorAll('.segment, #highlight')].every(s => !s.getAttribute('transform'))")
-        check("   Ícono escalado y segmentos sin zoom", "scale(1.5)" in icon_scale and seg_static, icon_scale)
-        check("8. Magnificación de íconos: hover > vecinos > lejanos",
-              mags[hovered] > mags[prev_] > 1.0 and abs(mags[prev_] - mags[next_]) < 1e-3
-              and abs(mags[far] - 1.0) < 1e-3,
-              f"hover {mags[hovered]:.3f}, vecinos {mags[prev_]:.3f}/{mags[next_]:.3f}, opuesto {mags[far]:.3f}")
-        page.locator("#dial").screenshot(path=str(SHOTS / "dial_magnificacion.png"))
-        page.mouse.move(5, 5)  # fuera del dial
+        check("8a. Hover en segmento: ícono iluminado, sin zoom",
+              icon["hover"] and "scale" not in icon["transform"] and seg_static
+              and page.evaluate("mags.every(v => v === 1)"), icon["color"])
+        page.locator("#dial").screenshot(path=str(SHOTS / "dial_hover_icono.png"))
+
+        # 8b. Magnificación en la lista: la tarjeta bajo el puntero crece más que sus vecinas
+        card = (idx + 1) % 8
+        b = page.locator(f".option[data-index='{card}']").bounding_box()
+        page.mouse.move(b["x"] + b["width"] / 2, b["y"] + b["height"] / 2)
         wait_settle(page)
-        rest = page.evaluate("mags.every(v => v === 1)")
-        check("   Al salir del anillo vuelve a escala 1", rest)
+        mags = page.evaluate("mags")
+        prev_, next_, far = (card - 1) % 8, (card + 1) % 8, (card + 4) % 8
+        card_tf = page.eval_on_selector(f".option[data-index='{card}']", "el => el.style.transform")
+        check("8b. Magnificación de tarjetas: hover > vecinas > lejanas",
+              mags[card] > max(mags[prev_], mags[next_]) and min(mags[prev_], mags[next_]) > 1.0
+              and abs(mags[far] - 1.0) < 1e-3 and "scale(" in card_tf,
+              f"hover {mags[card]:.3f}, vecinas {mags[prev_]:.3f}/{mags[next_]:.3f}, opuesta {mags[far]:.3f}")
+        page.screenshot(path=str(SHOTS / "lista_magnificacion.png"))
+        page.mouse.move(5, 5)  # fuera del dial y de la lista
+        wait_settle(page)
+        rest = page.evaluate("mags.every(v => v === 1) && !document.querySelector('.ring-icon.hover')")
+        check("   Al salir todo vuelve a escala 1 y sin ícono iluminado", rest)
 
         # 6. Móvil 390 px sin scroll horizontal
         page.set_viewport_size({"width": 390, "height": 844})

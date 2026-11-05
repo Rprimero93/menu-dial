@@ -91,7 +91,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 }
 
 .ring-icon { pointer-events: none; color: var(--text-3); transition: color 0.25s; }
-.ring-icon.active { color: #fff; }
+.ring-icon.active,
+.ring-icon.hover { color: #fff; }
 
 /* Perilla */
 .knob {
