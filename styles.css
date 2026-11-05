@@ -406,12 +406,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .project { padding: 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); }
 .project + .project { margin-top: 10px; }
 .project-head { display: flex; align-items: center; gap: 12px; }
-/* Logo de la entidad sobre la misma baldosa azul de los íconos del panel */
-.project-logo {
-  display: grid; place-items: center; flex: none;
-  width: 42px; height: 42px; border-radius: 12px;
-  background: rgba(var(--glow), 0.14); box-shadow: inset 0 0 0 1px rgba(var(--glow), 0.35);
-}
+/* Logo de la entidad, sin contenedor (a pedido del usuario) */
+.project-logo { display: grid; place-items: center; flex: none; width: 42px; height: 42px; }
 .project-logo img { width: 44px; height: auto; display: block; } /* el SVG trae margen propio */
 .project p { margin: 6px 0 10px; line-height: 1.5; }
 .btn-link, .contact-row.is-link { text-decoration: none; color: inherit; }
