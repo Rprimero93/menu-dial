@@ -37,7 +37,8 @@ git filter-branch -f \
 
 # Control de privacidad: si algún commit del historial a publicar contiene el teléfono, no se empuja.
 # Compara la huella SHA-256 de cada secuencia de 10 dígitos (la misma de tests/validar_fase3.py).
-git log -p --all | python -c '
+rm -rf .git/refs/original  # respaldo de filter-branch: no se publica
+git log -p main | python -c '
 import hashlib, re, sys
 SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
 d = re.sub(r"\D", "", sys.stdin.buffer.read().decode("utf-8", "ignore"))
