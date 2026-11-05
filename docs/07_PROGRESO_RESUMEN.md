@@ -18,8 +18,8 @@ fases_reabiertas: 0
 
 ## Bloqueos
 
-- Hay un `.git` anidado dentro de la carpeta del proyecto (creado fuera de esta sesión el 2026-11-05, 12:40-12:43, commit «inicio del proyecto», remoto `origin` → `Rprimero93/menu-dial`). Rompe el espejo acordado (Regla 12: se versiona en la bóveda y se publica con `scripts/publicar_github.sh`) — pendiente de la decisión del usuario.
+- Ninguno. (El `.git` anidado encontrado el 2026-11-05 se borró con aprobación del usuario: su único commit tenía los mismos archivos que la bóveda.)
 
 ## Siguiente paso
 
-Resolver el `.git` anidado y planificar la Fase 3 (alcance, contenido real por opción y criterios de cierre) para aprobación del usuario.
+Planificar la Fase 3 (alcance, contenido real por opción y criterios de cierre) para aprobación del usuario.

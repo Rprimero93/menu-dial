@@ -40,10 +40,17 @@ Menu_Dial/
 ├── index.html   # estructura: anillo SVG, perilla, conector, lista, controles, panel de contenido
 ├── styles.css   # tokens en :root, dial, lista, controles, panel y sus contenidos, modo compacto
 ├── script.js    # opciones (ITEMS), íconos, geometría, render animado, arrastre/rueda/teclado, panel
-└── tests/       # validar_fase1.py, validar_fase2.py (Playwright + Edge); capturas/ fuera de Git
+├── tests/       # validar_fase1.py, validar_fase2.py (Playwright + Edge); capturas/ fuera de Git
+└── scripts/     # publicar_github.sh (espejo en GitHub)
 ```
 
 Las opciones se editan en el arreglo `ITEMS` al inicio de `script.js` (etiqueta, ícono, descripción y contenido del panel); el anillo se recalcula solo según su cantidad.
+
+## Publicación (espejo en GitHub)
+
+- Repo público: `https://github.com/Rprimero93/menu-dial` · página: `https://rprimero93.github.io/menu-dial/` (GitHub Pages desde `main`, raíz).
+- **Git (Regla 12):** el proyecto se versiona en el repo de la bóveda; GitHub es solo un espejo. No se crea un `.git` dentro de esta carpeta (rompería el versionado en la bóveda).
+- Para republicar: `bash scripts/publicar_github.sh` (`--dry-run` para ensayar). Hace `git subtree split` de esta carpeta, cambia el correo de autor/committer por `Rprimero93@users.noreply.github.com` (el correo corporativo no se publica), quita `tests/__pycache__` y empuja a `main`. La cuenta de Git por defecto en este equipo es otra (`coorwallbox`): el remoto lleva el usuario `Rprimero93@` para que el administrador de credenciales use esa cuenta.
 
 ## Lecciones aprendidas
 
