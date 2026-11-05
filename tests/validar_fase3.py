@@ -43,7 +43,8 @@ EXPECTED = {
     "projects": ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos", "mantenimiento vehicular"],
     "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
 }
-COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 10),  # 6 herramientas web + 4 de seguimiento (antes: 6) "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
+# Proyectos: 6 herramientas web + 4 de seguimiento = 10 viñetas (antes: 6)
+COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 10), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
 # Huella SHA-256 de los 10 dígitos del teléfono: se compara la huella, el número no se escribe aquí
 PHONE_SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
 
