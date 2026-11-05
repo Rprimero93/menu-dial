@@ -142,7 +142,9 @@ const PORTFOLIO = {
             points: ['Plan de pagos (macros en Excel)', 'GLPI (sistema de solicitudes de requerimientos logísticos)',
               'Matriz de aseo', 'Matriz de ingreso vehicular', 'Matriz de servicios públicos', 'Matriz de viáticos'],
             // Texto debajo de la lista (un segundo `text` reemplazaría al primero: por eso va en `note`)
-            note: 'Se implementaron otras herramientas de seguimiento, como el cuadro de control del Plan de Infraestructura, el formato de mantenimiento vehicular, el mapa de seguimiento de contratos y las piezas y presentaciones del GIM.',
+            note: 'Se implementaron otras herramientas de seguimiento:',
+            notePoints: ['Cuadro de control del Plan de Infraestructura', 'Formato de mantenimiento vehicular',
+              'Mapa de seguimiento de contratos', 'Piezas y presentaciones del GIM'],
             tags: ['Excel', 'SharePoint', 'Power Automate'],
           },
         ],
