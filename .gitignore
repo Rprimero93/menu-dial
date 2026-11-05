@@ -1,2 +1,5 @@
 # Capturas regeneradas en cada corrida de tests/validar_fase1.py
 tests/capturas/
+
+# Caché de Python generada al correr los tests
+__pycache__/
