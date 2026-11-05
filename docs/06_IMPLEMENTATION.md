@@ -34,3 +34,14 @@
   - Avance (2026-11-05): construida. `tests/validar_fase2.py` **12/12 OK** (criterios 1-7, incluida la regresión de la Fase 1 en 18/18); capturas `panel_1440.png`, `panel_390.png`, `contenido_calendario.png`.
   - **Cumplido: sí** (2026-11-05). Criterios 1-7 con `tests/validar_fase2.py` (12/12, regresión de la Fase 1 en 18/18); criterio 8: visto bueno visual del usuario el 2026-11-05 sobre la versión con el dial desplazado al borde de la ventana. Publicado además como espejo en GitHub Pages (`https://rprimero93.github.io/menu-dial/`), verificado en Edge sin errores. El contenido de los paneles es de prueba; su contenido real queda para la fase siguiente.
   - Notas de implementación: contenido por opción en `ITEMS[].desc/content` con un renderizador por tipo (`progress`, `notes`, `kpis`, `calendar`, `people`, `toggles`, `checklist`, `chat`); barras animadas una por una de mayor a menor (horizontales con barrido a la derecha, verticales hacia arriba); casillas e interruptores guardan su estado en `ITEMS`. El panel vive fuera del escenario (en `.stage-scaler`) y se escala con `--s` para poder pasar debajo en móvil (< 700 px). `validar_fase1.py` se adaptó: tras el paso 4a cierra el panel con Esc, porque el clic en tarjeta ahora también lo abre.
+
+- [ ] **Fase 3 — Contenido real: portafolio desde la hoja de vida.** Plan y criterios aprobados el 2026-11-05. Fuente: `HojaDeVida_Ricardo_Villamil_2026.pdf` (Descargas del usuario). Contenido en `data.js` (no `data.json`: el navegador no deja leer un `.json` abriendo el archivo con doble clic). Encabezado «Ricardo Villamil Martínez · Profesional de TI · Automatización de procesos». 8 opciones: Sobre mí, Experiencia, Logros, Competencias, Formación (estudios + diplomados), Certificaciones, Proyectos (Menu Dial + herramientas ESAP con la descripción de la hoja de vida), Contacto. Se eliminan los contenidos de prueba. Privacidad (decisión del usuario): sin teléfono, con correo, sin PDF descargable.
+  - Criterios:
+    1. El contenido vive solo en `data.js`; agregar o quitar una opción ahí recalcula anillo y lista sin tocar el JS.
+    2. Los textos de las 8 opciones coinciden con la hoja de vida (la prueba revisa cargos, fechas, cifras y certificaciones).
+    3. Funciona abriendo `index.html` con doble clic (`file://`) y en GitHub Pages.
+    4. `validar_fase1.py` y `validar_fase2.py` siguen pasando, ajustados a las etiquetas nuevas.
+    5. Privacidad: ningún archivo publicado contiene el teléfono ni un PDF; el correo aparece en Contacto.
+    6. Sin errores en consola; capturas a 1440 px y 390 px.
+    7. Republicado con `scripts/publicar_github.sh` y verificado en `https://rprimero93.github.io/menu-dial/`.
+    8. Visto bueno visual del usuario.
