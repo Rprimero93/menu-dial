@@ -387,9 +387,10 @@ const RENDERERS = {
       <div class="chips">${tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
     </div>`).join(''),
 
-  list: ({ sections }) => sections.map(([title, rows]) => `
+  // Cada sección: [título, filas, tono opcional del punto ('green')]
+  list: ({ sections }) => sections.map(([title, rows, tone]) => `
     ${title ? `<div class="group-title">${title}</div>` : ''}
-    <ul class="entries">${rows.map(([name, issuer, extra]) => `
+    <ul class="entries${tone ? ` tone-${tone}` : ''}">${rows.map(([name, issuer, extra]) => `
       <li class="entry"><span class="entry-dot"></span>
         <div><strong>${name}</strong><span class="muted">${issuer}</span></div>
         ${extra ? `<span class="badge">${extra}</span>` : ''}

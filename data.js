@@ -61,7 +61,7 @@ const PORTFOLIO = {
             ['Gerencia de Proyectos', 'Politécnico de Colombia'],
             ['Interventoría y Auditoría de Proyectos', 'Politécnico de Colombia'],
             ['Auditoría de Sistemas de Gestión ISO 19011:2018', 'Politécnico de Colombia'],
-          ]],
+          ], 'green'], // puntos en verde para distinguir los diplomados
         ],
       },
     },

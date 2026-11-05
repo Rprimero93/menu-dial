@@ -398,6 +398,8 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .entry + .entry { border-top: 1px solid var(--line); }
 .entry div { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .entry-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--glow)); box-shadow: 0 0 8px rgba(var(--glow), 0.7); }
+/* Tono verde (Diplomados): el verde de la paleta (--ok) con su mismo brillo */
+.entries.tone-green .entry-dot { background: var(--ok); box-shadow: 0 0 8px rgba(76, 195, 138, 0.7); }
 .badge { flex: none; padding: 3px 8px; border-radius: 99px; font-size: 11px; color: #fff; background: rgba(var(--glow), 0.25); }
 
 /* Proyectos */
