@@ -1,6 +1,6 @@
 ---
 fase_actual: 4
-estado_resumen: "Fase 4 (móvil) construida y publicada — falta el visto bueno"
+estado_resumen: "Fase 4 (móvil) cerrada — pendiente el cierre del proyecto"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---
@@ -15,7 +15,7 @@ fases_reabiertas: 0
 - Fase 1 (Validación en navegador y ajuste visual): **cerrada** el 2026-11-05 — resultado y validación en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 - Fase 2 (Panel de contenido con medio dial): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 - Fase 3 (Contenido real: portafolio desde la hoja de vida): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
-- Fase 4 (Versión móvil en tarjeta-menú): **construida, validación pendiente** `[~]` — publicada en GitHub Pages el 2026-11-05 (criterio 7); falta el visto bueno en el celular (criterio 8).
+- Fase 4 (Versión móvil en tarjeta-menú): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 
 ## Bloqueos
 
@@ -23,4 +23,4 @@ fases_reabiertas: 0
 
 ## Siguiente paso
 
-Visto bueno visual de la Fase 4 en el celular; luego el cierre del proyecto (skill `cierre-proyecto`, Regla 4), que incluye actualizar la fila de `INVENTARIO_Web.md`.
+Cierre del proyecto (skill `cierre-proyecto`, Regla 4), que incluye actualizar la fila de `INVENTARIO_Web.md`.
