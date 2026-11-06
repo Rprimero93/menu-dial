@@ -1,6 +1,6 @@
 ---
 fase_actual: 4
-estado_resumen: "Fase 4 (móvil) cerrada — pendiente el cierre del proyecto"
+estado_resumen: "Cerrado — portafolio publicado en GitHub Pages (escritorio con dial + móvil con tarjeta-menú)"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---
@@ -23,4 +23,4 @@ fases_reabiertas: 0
 
 ## Siguiente paso
 
-Cierre del proyecto (skill `cierre-proyecto`, Regla 4), que incluye actualizar la fila de `INVENTARIO_Web.md`.
+Ninguno: proyecto cerrado el 2026-11-05 con el ciclo de aprendizaje (lecciones en [[Herramientas/Web/Menu_Dial/docs/00_README|00_README.md]]). Retomarlo para una función nueva es el Mecanismo B (`03_TRD.md` § Referencias y reapertura).

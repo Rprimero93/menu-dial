@@ -2,8 +2,8 @@
 tecnologia: Web
 tipo: herramienta
 proyecto: Menu_Dial
-estado: pendiente
-estado_resumen: "Fase 4 (móvil) cerrada — pendiente el cierre del proyecto"
+estado: completo
+estado_resumen: "Cerrado — portafolio publicado en GitHub Pages (escritorio con dial + móvil con tarjeta-menú)"
 stack: "HTML + CSS + JS vainilla, sin frameworks (fuente Inter de Google Fonts)"
 descripcion: "Portafolio personal en forma de menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco) con panel de contenido por opción y medio dial; contenido en data.js"
 aliases: [Menu_Dial]
@@ -16,7 +16,7 @@ aliases: [Menu_Dial]
 
 ## Propósito
 
-Menú de acceso rápido tipo dial, replicado a partir de una imagen de referencia: un anillo de segmentos con íconos y una perilla central que gira; la opción activa se resalta con un segmento rayado fijo y una línea que la conecta con su tarjeta en una lista dispuesta en arco. Se gira arrastrando, con la rueda o con el teclado, y la opción predeterminada se guarda o se descarta con «Guardar cambios» / «Cancelar». Viene con 8 opciones de ejemplo.
+Portafolio personal de Ricardo Villamil Martínez en forma de menú tipo dial. En escritorio: anillo de segmentos con íconos, perilla giratoria y lista en arco; al elegir una opción se abre un panel de contenido con un medio dial para cambiar de sección. Se gira arrastrando, con la rueda o con el teclado. Por debajo de 700 px se muestra una tarjeta-menú con hoja a pantalla completa por sección. Todo el contenido sale de `data.js` (perfil, formación, certificaciones, experiencia, proyectos, logros, competencias y contacto); publicado en `https://rprimero93.github.io/menu-dial/`.
 
 ## Contexto
 
@@ -41,7 +41,8 @@ Menu_Dial/
 ├── index.html   # estructura: anillo SVG, perilla, conector, lista, controles, panel de contenido
 ├── styles.css   # tokens en :root, dial, lista, controles, panel y sus contenidos, modo compacto
 ├── script.js    # opciones (ITEMS), íconos, geometría, render animado, arrastre/rueda/teclado, panel
-├── tests/       # validar_fase1.py, validar_fase2.py (Playwright + Edge); capturas/ fuera de Git
+├── assets/      # esap_simbolo_negativo.svg (copiado del manual de marca ESAP)
+├── tests/       # validar_fase1-4.py (Playwright + Edge); capturas/ fuera de Git
 └── scripts/     # publicar_github.sh (espejo en GitHub)
 ```
 
@@ -53,9 +54,17 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 - **Git (Regla 12):** el proyecto se versiona en el repo de la bóveda; GitHub es solo un espejo. No se crea un `.git` dentro de esta carpeta (rompería el versionado en la bóveda).
 - Para republicar: `bash scripts/publicar_github.sh` (`--dry-run` para ensayar). Hace `git subtree split` de esta carpeta, cambia el correo de autor/committer por `Rprimero93@users.noreply.github.com` (el correo corporativo no se publica), quita `tests/__pycache__` y empuja a `main`. La cuenta de Git por defecto en este equipo es otra (`coorwallbox`): el remoto lleva el usuario `Rprimero93@` para que el administrador de credenciales use esa cuenta.
 
+## Pruebas
+
+`tests/validar_fase4.py` corre la suite completa (incluye las Fases 1-3): interacción del dial y del panel en escritorio, tarjeta-menú y hoja en móvil emulado (390 y 360 px), conteos calculados desde `data.js`, enlaces de contacto, `file://`, `prefers-reduced-motion`, privacidad (teléfono ausente), `data.js` sin claves repetidas y, con `--live`, el sitio publicado. **No cubre:** el aspecto visual, que se valida con el visto bueno del usuario, ni navegadores distintos de Edge.
+
 ## Lecciones aprendidas
 
-_(pendiente — se completa al cerrar el ciclo de aprendizaje del proyecto, Regla 4)_
+- **Contenido aislado en un solo archivo de datos** (`data.js`, sin `fetch`): el usuario edita el contenido a mano y la página sigue funcionando con doble clic (`file://`). Riesgo descubierto: en un objeto literal de JS una clave repetida pisa a la anterior sin aviso; por eso las pruebas comprueban que `data.js` no tenga claves repetidas.
+- **El modo móvil se decide con `matchMedia`, no con `innerWidth`:** en un celular real, un escenario de ancho fijo aleja el zoom e infla `innerWidth`. Solo se detectó al emular un celular de verdad (`is_mobile`, `has_touch`, `device_scale_factor`); con solo achicar el ancho de la ventana no aparecía.
+- **Espejo público desde la bóveda sin `.git` anidado:** `git subtree split`, el correo cambiado por el noreply de GitHub y un control de privacidad por hash (sin guardar el teléfono en el script) antes de empujar.
+- **Proceso:** nunca hacer commit con una prueba en rojo; correr la suite completa justo antes del commit. Al editar una prueba, el comentario va en su propia línea (un `#` en medio de la línea anuló el resto de un diccionario de Python).
+- Mini-retro de cierre (2026-11-05): el usuario no registró observaciones de proceso.
 
 ## Consumidores
 
