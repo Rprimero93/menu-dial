@@ -68,7 +68,9 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 
 ## Consumidores
 
-_Proyectos que usaron esta herramienta (proyecto, fecha, qué le faltó) — `03_TRD.md` § Herramientas y entregables. Sin consumidores registrados todavía._
+_Proyectos que usaron esta herramienta (proyecto, fecha, qué le faltó) — `03_TRD.md` § Herramientas y entregables._
+
+- **[[Entregables/Illustrator/Portafolio_Menu_Dial/docs/00_README|Portafolio_Menu_Dial]]** (2026-11-10): leyó `data.js` (vía Node, solo lectura) como fuente de todos los textos del portafolio en PDF. Le faltó: la lista y las descripciones actualizadas de los proyectos de la ESAP y de Los Coches (el usuario las dio aparte) y el teléfono (excluido a propósito del sitio público).
 
 ## Documentación relacionada
 
