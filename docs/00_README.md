@@ -62,7 +62,7 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 
 - **Contenido aislado en un solo archivo de datos** (`data.js`, sin `fetch`): el usuario edita el contenido a mano y la página sigue funcionando con doble clic (`file://`). Riesgo descubierto: en un objeto literal de JS una clave repetida pisa a la anterior sin aviso; por eso las pruebas comprueban que `data.js` no tenga claves repetidas.
 - **El modo móvil se decide con `matchMedia`, no con `innerWidth`:** en un celular real, un escenario de ancho fijo aleja el zoom e infla `innerWidth`. Solo se detectó al emular un celular de verdad (`is_mobile`, `has_touch`, `device_scale_factor`); con solo achicar el ancho de la ventana no aparecía.
-- **Espejo público desde la bóveda sin `.git` anidado:** `git subtree split`, el correo cambiado por el noreply de GitHub y un control de privacidad por hash (sin guardar el teléfono en el script) antes de empujar.
+- **Espejo público desde la bóveda sin `.git` anidado:** `git subtree split`, el correo cambiado por el noreply de GitHub y un control de privacidad por hash (sin guardar el teléfono en el script) antes de empujar. _(Desde el 2026-11-10 el teléfono se publica en Contacto por decisión del usuario: el control ya no aborta por el teléfono, solo por un PDF; las pruebas siguen reconociéndolo por su hash para comprobar que solo vive en `data.js`.)_
 - **Proceso:** nunca hacer commit con una prueba en rojo; correr la suite completa justo antes del commit. Al editar una prueba, el comentario va en su propia línea (un `#` en medio de la línea anuló el resto de un diccionario de Python).
 - Mini-retro de cierre (2026-11-05): el usuario no registró observaciones de proceso.
 

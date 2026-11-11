@@ -43,7 +43,7 @@ EXPECTED = {
     # Texto original: ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos", "mantenimiento vehicular"]
     "projects": ["Los Coches S.A.S.", "Contador de facturación", "Navegador documental", "Ejecución presupuestal",
         "Registro de comisiones", "Consecutivos", "GLPI", "mantenimiento vehicular"],
-    "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
+    "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "Teléfono"],  # GitHub → teléfono (2026-11-10); el número se reconoce por su huella (5b)
 }
 # Proyectos (Fase 5): 4 de Los Coches + 6 de la ESAP + 4 de seguimiento = 14 viñetas (antes: 10)
 COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 14), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
@@ -82,9 +82,11 @@ def main():
     # 5a. Privacidad de lo que se publica (archivos versionados del proyecto)
     files = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split()
     files += ["data.js"]  # por si todavía no está versionado
-    leaks = [f for f in set(files) if (ROOT / f).is_file() and has_phone((ROOT / f).read_text(encoding="utf-8", errors="ignore"))]
+    # Desde el 2026-11-10 el teléfono se publica en Contacto (decisión del usuario): solo puede vivir en data.js
+    # (texto original: «5a. Ningún archivo publicado contiene el teléfono ni es un PDF»)
+    leaks = [f for f in set(files) if f != "data.js" and (ROOT / f).is_file() and has_phone((ROOT / f).read_text(encoding="utf-8", errors="ignore"))]
     pdfs = [f for f in set(files) if f.lower().endswith(".pdf")]
-    check("5a. Ningún archivo publicado contiene el teléfono ni es un PDF", not leaks and not pdfs,
+    check("5a. El teléfono solo está en data.js y no se publica ningún PDF", not leaks and not pdfs,
           f"teléfono en: {leaks or '—'}; PDF: {pdfs or '—'}")
 
     # 1a. Contenido solo en data.js: script.js no contiene datos de la hoja de vida
@@ -144,10 +146,11 @@ def main():
         page.evaluate(f"goTo({index['contact']})")
         wait_settle(page)
         hrefs = page.eval_on_selector_all("#panelBody a", "els => els.map(a => a.getAttribute('href'))")
-        check("   Contacto: correo y GitHub como enlaces",
-              "mailto:villamil76@gmail.com" in hrefs and "https://github.com/Rprimero93" in hrefs, str(hrefs))
+        check("   Contacto: correo y teléfono como enlaces",
+              "mailto:villamil76@gmail.com" in hrefs and any(h and h.startswith("tel:") and has_phone(h) for h in hrefs), str(hrefs))
         body = page.content()
-        check("5b. Teléfono y PDF ausentes en la página", not has_phone(body) and ".pdf" not in body.lower())
+        # Texto original: «5b. Teléfono y PDF ausentes en la página» (el teléfono se publica desde el 2026-11-10)
+        check("5b. Teléfono visible en Contacto y sin PDF en la página", has_phone(body) and ".pdf" not in body.lower())
         page.screenshot(path=str(SHOTS / "panel_contacto_1440.png"))
 
         page.set_viewport_size({"width": 390, "height": 844})
@@ -203,7 +206,7 @@ def main():
             wait_settle(pg)
             live_ok = pg.text_content("#headTitle") == pg.evaluate("PORTFOLIO.header.title") and \
                 pg.text_content("#panelTitle") == pg.evaluate("ITEMS[1].label")
-            live_priv = not has_phone(pg.content())
+            live_priv = ".pdf" not in pg.content().lower()  # antes también exigía teléfono ausente
             pg.close()
             check("3b/7. GitHub Pages publicado con el contenido nuevo", live_ok and live_priv and not errs,
                   "; ".join(errs))

@@ -1,7 +1,8 @@
 // ===== Contenido del dial (Fase 3) =====
 // Fuente: hoja de vida de Ricardo Villamil Martínez (2026). Este es el único archivo que hay que
 // editar para cambiar el contenido: agregar o quitar una opción de `items` recalcula anillo y lista.
-// Privacidad: el sitio es público, por eso no se incluye el teléfono ni el PDF de la hoja de vida.
+// Privacidad: el sitio es público; no se incluye el PDF de la hoja de vida. El teléfono va en Contacto desde el
+// 2026-11-10 por decisión del usuario (antes se excluía), en lugar de GitHub.
 // Cada opción: label, icon (nombre de ICONS en script.js), desc y content { type, ... } — un tipo por renderizador.
 const PORTFOLIO = {
   header: {
@@ -206,7 +207,7 @@ const PORTFOLIO = {
         rows: [
           ['mapPin', 'Ubicación', 'Bogotá, Colombia', null],
           ['mail', 'Correo', 'villamil76@gmail.com', 'mailto:villamil76@gmail.com'],
-          ['github', 'GitHub', 'github.com/Rprimero93', 'https://github.com/Rprimero93'],
+          ['phone', 'Teléfono', '+57 323 324 6022', 'tel:+573233246022'],
         ],
       },
     },

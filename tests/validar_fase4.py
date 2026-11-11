@@ -78,8 +78,9 @@ def main():
     # 6c. Privacidad de lo que se publica
     files = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split()
     files += ["tests/validar_fase4.py"]
-    leaks = [f for f in set(files) if (ROOT / f).is_file() and has_phone((ROOT / f).read_text(encoding="utf-8", errors="ignore"))]
-    check("6c. Ningún archivo publicado contiene el teléfono", not leaks, f"{leaks or '—'}")
+    # Desde el 2026-11-10 el teléfono se publica en Contacto (decisión del usuario): solo puede vivir en data.js
+    leaks = [f for f in set(files) if f != "data.js" and (ROOT / f).is_file() and has_phone((ROOT / f).read_text(encoding="utf-8", errors="ignore"))]
+    check("6c. El teléfono solo está en data.js", not leaks, f"{leaks or '—'}")
 
     SHOTS.mkdir(exist_ok=True)
     httpd = serve()
@@ -176,9 +177,9 @@ def main():
 
         # 4. Enlaces directos de Contacto
         hrefs = page.eval_on_selector_all("a.m-row", "els => els.map(a => a.getAttribute('href'))")
-        check("4. Correo y GitHub como enlaces directos en la tarjeta",
-              "mailto:villamil76@gmail.com" in hrefs and "https://github.com/Rprimero93" in hrefs, str(hrefs))
-        check("6c. Teléfono ausente en la página móvil", not has_phone(page.content()))
+        check("4. Correo y teléfono como enlaces directos en la tarjeta",
+              "mailto:villamil76@gmail.com" in hrefs and any(h and h.startswith("tel:") and has_phone(h) for h in hrefs), str(hrefs))
+        check("6c. Teléfono visible en la página móvil", has_phone(page.content()))
         check("   Sin errores en consola (recorrido completo)", not errors, "; ".join(errors))
         ctx.close()
 
@@ -225,7 +226,7 @@ def main():
             settle(page)
             page.tap("button.m-row[data-index='1']")
             settle(page, 450)
-            live_ok = page.locator(".m-card").count() == 1 and sheet_open(page) and not has_phone(page.content())
+            live_ok = page.locator(".m-card").count() == 1 and sheet_open(page) and has_phone(page.content())
             page.screenshot(path=str(SHOTS / "movil_live.png"))
             check("7. GitHub Pages con la tarjeta-menú móvil", live_ok and not errors, "; ".join(errors))
             ctx.close()
