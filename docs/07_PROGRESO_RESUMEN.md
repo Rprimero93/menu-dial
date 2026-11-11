@@ -1,6 +1,6 @@
 ---
 fase_actual: 5
-estado_resumen: "Reabierto (Mecanismo B) — Fase 5 cerrada y publicada; falta el cierre del proyecto"
+estado_resumen: "Cerrado — portafolio publicado en GitHub Pages (escritorio con dial + móvil con tarjeta-menú); Proyectos con Los Coches y la ESAP, teléfono en Contacto"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---
@@ -25,4 +25,4 @@ fases_reabiertas: 0
 
 ## Siguiente paso
 
-Cierre del proyecto (Mecanismo B, skill `cierre-proyecto`): al terminarlo, `estado` vuelve a `completo` en `00_README.md`.
+Ninguno: reapertura (Fase 5) cerrada el 2026-11-10 con el ciclo de aprendizaje (lecciones en [[Herramientas/Web/Menu_Dial/docs/00_README|00_README.md]]). Retomarlo para una función nueva es el Mecanismo B (`03_TRD.md` § Referencias y reapertura).

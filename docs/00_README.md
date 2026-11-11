@@ -2,8 +2,8 @@
 tecnologia: Web
 tipo: herramienta
 proyecto: Menu_Dial
-estado: pendiente
-estado_resumen: "Reabierto (Mecanismo B) — Fase 5: Proyectos con los datos del portafolio PDF"
+estado: completo
+estado_resumen: "Cerrado — portafolio publicado en GitHub Pages (escritorio con dial + móvil con tarjeta-menú); Proyectos con Los Coches y la ESAP, teléfono en Contacto"
 stack: "HTML + CSS + JS vainilla, sin frameworks (fuente Inter de Google Fonts)"
 descripcion: "Portafolio personal en forma de menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco) con panel de contenido por opción y medio dial; contenido en data.js"
 aliases: [Menu_Dial]
@@ -65,12 +65,15 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 - **Espejo público desde la bóveda sin `.git` anidado:** `git subtree split`, el correo cambiado por el noreply de GitHub y un control de privacidad por hash (sin guardar el teléfono en el script) antes de empujar. _(Desde el 2026-11-10 el teléfono se publica en Contacto por decisión del usuario: el control ya no aborta por el teléfono, solo por un PDF; las pruebas siguen reconociéndolo por su hash para comprobar que solo vive en `data.js`.)_
 - **Proceso:** nunca hacer commit con una prueba en rojo; correr la suite completa justo antes del commit. Al editar una prueba, el comentario va en su propia línea (un `#` en medio de la línea anuló el resto de un diccionario de Python).
 - Mini-retro de cierre (2026-11-05): el usuario no registró observaciones de proceso.
+- **La sección Consumidores sirvió de lista de funciones nuevas (reapertura, 2026-11-10):** la Fase 5 cubrió justo lo que le había faltado a Portafolio_Menu_Dial (la lista de proyectos de Los Coches y la ESAP, y el teléfono). Al reabrir una herramienta, revisar primero esa sección.
+- **Dato sensible en pruebas, por huella y nunca en claro:** al pasar a publicar el teléfono, las pruebas cambiaron de «ausente» a «solo en `data.js`» y lo reconocen por su SHA-256. Escribir el número literal en una prueba la hizo fallar en la primera corrida (el propio control lo detectó).
+- Mini-retro de cierre de la reapertura (2026-11-10): el usuario no registró observaciones de proceso.
 
 ## Consumidores
 
 _Proyectos que usaron esta herramienta (proyecto, fecha, qué le faltó) — `03_TRD.md` § Herramientas y entregables._
 
-- **[[Entregables/Illustrator/Portafolio_Menu_Dial/docs/00_README|Portafolio_Menu_Dial]]** (2026-11-10): leyó `data.js` (vía Node, solo lectura) como fuente de todos los textos del portafolio en PDF. Le faltó: la lista y las descripciones actualizadas de los proyectos de la ESAP y de Los Coches (el usuario las dio aparte) y el teléfono (excluido a propósito del sitio público).
+- **[[Entregables/Illustrator/Portafolio_Menu_Dial/docs/00_README|Portafolio_Menu_Dial]]** (2026-11-10): leyó `data.js` (vía Node, solo lectura) como fuente de todos los textos del portafolio en PDF. Le faltó: la lista y las descripciones actualizadas de los proyectos de la ESAP y de Los Coches (el usuario las dio aparte) y el teléfono (excluido a propósito del sitio público). _(Cubierto por la Fase 5, 2026-11-10: proyectos y teléfono ya están en `data.js`.)_
 
 ## Documentación relacionada
 
