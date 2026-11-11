@@ -410,6 +410,10 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 /* Logo de la entidad, sin contenedor (a pedido del usuario) */
 .project-logo { display: grid; place-items: center; flex: none; width: 42px; height: 42px; }
 .project-logo img { width: 44px; height: auto; display: block; } /* el SVG trae margen propio */
+/* Logo horizontal (logo[2] = 'wide' en data.js): se ajusta por alto y conserva su proporción */
+.project-logo.is-wide { width: auto; height: 42px; }
+.project-logo.is-wide img { width: auto; height: 26px; }
+.project-points strong { font-weight: 600; }
 .project p { margin: 6px 0 10px; line-height: 1.5; }
 .btn-link, .contact-row.is-link { text-decoration: none; color: inherit; }
 .btn-link {

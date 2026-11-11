@@ -398,12 +398,12 @@ const RENDERERS = {
     </ul>`).join(''),
 
   // `points` (opcional): viñetas con el mismo estilo de las funciones de Experiencia
-  // `logo` (opcional): [ruta de la imagen, texto alternativo], a la izquierda del título
+  // `logo` (opcional): [ruta de la imagen, texto alternativo, 'wide' si es horizontal], a la izquierda del título
   // `note` (opcional): párrafo debajo de las viñetas, con su propia lista en `notePoints`
   projects: ({ rows }) => rows.map(({ name, logo, text, points, note, notePoints, tags, link }) => `
     <article class="project">
       <div class="project-head">
-        ${logo ? `<span class="project-logo"><img src="${logo[0]}" alt="${logo[1]}"></span>` : ''}
+        ${logo ? `<span class="project-logo${logo[2] === 'wide' ? ' is-wide' : ''}"><img src="${logo[0]}" alt="${logo[1]}"></span>` : ''}
         <strong>${name}</strong>
       </div>
       <p>${text}</p>

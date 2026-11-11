@@ -39,12 +39,14 @@ EXPECTED = {
         "SCRUMstudy", "Project Management Essentials (PME)", "Cyber Security Foundation",
         "Excel Avanzado", "Pontificia Universidad Javeriana",
         "Lean Six Sigma White Belt Professional"],  # agregada por el usuario (no está en la hoja de vida)
-    # Proyectos: el usuario quitó Menu Dial y listó las 6 herramientas (2026-11-05)
-    "projects": ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos", "mantenimiento vehicular"],
+    # Proyectos: desde la Fase 5 (2026-11-10) son las herramientas del portafolio PDF: Los Coches (4) + ESAP (6).
+    # Texto original: ["6 herramientas web", "Plan de pagos", "GLPI", "Matriz de viáticos", "mantenimiento vehicular"]
+    "projects": ["Los Coches S.A.S.", "Contador de facturación", "Navegador documental", "Ejecución presupuestal",
+        "Registro de comisiones", "Consecutivos", "GLPI", "mantenimiento vehicular"],
     "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "github.com/Rprimero93"],
 }
-# Proyectos: 6 herramientas web + 4 de seguimiento = 10 viñetas (antes: 6)
-COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 10), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
+# Proyectos (Fase 5): 4 de Los Coches + 6 de la ESAP + 4 de seguimiento = 14 viñetas (antes: 10)
+COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 14), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
 # Huella SHA-256 de los 10 dígitos del teléfono: se compara la huella, el número no se escribe aquí
 PHONE_SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
 

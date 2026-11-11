@@ -132,15 +132,31 @@ const PORTFOLIO = {
     {
       id: 'projects', label: 'Proyectos', icon: 'folder',
       desc: 'Trabajo destacado.',
+      // Fase 5: mismas herramientas y textos que la sección Proyectos del portafolio PDF
+      // (Entregables/Illustrator/Portafolio_Menu_Dial, pasos 13 y 9), sin capturas: el sitio es público.
       content: {
         type: 'projects',
         rows: [
           {
+            name: 'Herramientas web — Los Coches S.A.S.',
+            logo: ['assets/loscoches_logo_horizontal_blanco.svg', 'Logo de Los Coches', 'wide'], // logo del manual de marca, en blanco
+            text: '4 herramientas web para Los Coches S.A.S.:',
+            points: ['<strong>Contador de facturación</strong> — visualizador de facturación por asesor comercial.',
+              '<strong>Agendamiento multimarca</strong> — formulario de registro multimarca.',
+              '<strong>Mapa de procesos</strong> — mapa de procesos de Los Coches.',
+              '<strong>Navegador documental</strong> — sistema de consulta documental.'],
+            tags: ['HTML', 'CSS', 'JavaScript'],
+          },
+          {
             name: 'Herramientas de control operativo — ESAP',
             logo: ['assets/esap_simbolo_negativo.svg', 'Logo de la ESAP'], // símbolo en blanco, del manual de marca ESAP
-            text: '6 herramientas web integradas con Excel, SharePoint y Power Automate para el control operativo del área de infraestructura:',
-            points: ['Plan de pagos (macros en Excel)', 'GLPI (sistema de solicitudes de requerimientos logísticos)',
-              'Matriz de aseo', 'Matriz de ingreso vehicular', 'Matriz de servicios públicos', 'Matriz de viáticos'],
+            text: 'Herramientas web del Grupo de Infraestructura y Mantenimiento (GIM) de la ESAP, con Excel, SharePoint y Power Automate:',
+            points: ['<strong>Ejecución presupuestal</strong> — tablero de ejecución presupuestal del GIM: resultados extraídos del Excel del plan de pagos de la ESAP.',
+              '<strong>Registro de comisiones</strong> — formulario de registro de comisiones del GIM.',
+              '<strong>Servicios públicos</strong> — tablero de pagos de servicios públicos.',
+              '<strong>Matriz de aseo</strong> — matriz de órdenes de compra de aseo.',
+              '<strong>Consecutivos</strong> — sistema de asignación de consecutivos del GIM.',
+              '<strong>GLPI</strong> — sistema de solicitudes de requerimientos logísticos.'],
             // Texto debajo de la lista (un segundo `text` reemplazaría al primero: por eso va en `note`)
             note: 'Se implementaron otras herramientas de seguimiento:',
             notePoints: ['Cuadro de control del Plan de Infraestructura', 'Formato de mantenimiento vehicular',

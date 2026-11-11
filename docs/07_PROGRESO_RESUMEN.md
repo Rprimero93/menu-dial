@@ -1,13 +1,13 @@
 ---
-fase_actual: 4
-estado_resumen: "Cerrado — portafolio publicado en GitHub Pages (escritorio con dial + móvil con tarjeta-menú)"
+fase_actual: 5
+estado_resumen: "Reabierto (Mecanismo B) — Fase 5 construida: Proyectos con los datos del portafolio PDF; falta visto bueno y republicar"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---
 # Progreso — Resumen — Menu_Dial
 
 > Cargar junto con `01_INDEX.md` al iniciar cualquier tarea sobre este proyecto.
-> Última actualización: 2026-11-05.
+> Última actualización: 2026-11-10.
 
 ## Estado actual
 
@@ -17,10 +17,12 @@ fases_reabiertas: 0
 - Fase 3 (Contenido real: portafolio desde la hoja de vida): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 - Fase 4 (Versión móvil en tarjeta-menú): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 
+- Fase 5 (Proyectos con los datos del portafolio PDF): **construida** el 2026-11-10 (reapertura, Mecanismo B) — validación 15/15; faltan el visto bueno del usuario y republicar. Detalle en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
+
 ## Bloqueos
 
 - Ninguno. (El `.git` anidado encontrado el 2026-11-05 se borró con aprobación del usuario: su único commit tenía los mismos archivos que la bóveda.)
 
 ## Siguiente paso
 
-Ninguno: proyecto cerrado el 2026-11-05 con el ciclo de aprendizaje (lecciones en [[Herramientas/Web/Menu_Dial/docs/00_README|00_README.md]]). Retomarlo para una función nueva es el Mecanismo B (`03_TRD.md` § Referencias y reapertura).
+Visto bueno visual del usuario sobre Proyectos (Fase 5); después, republicar con `scripts/publicar_github.sh`, verificar con `--live`, cerrar la fase y volver a hacer el cierre del proyecto (Mecanismo B).
