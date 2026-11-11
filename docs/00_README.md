@@ -56,7 +56,7 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 
 ## Pruebas
 
-`tests/validar_fase4.py` corre la suite completa (incluye las Fases 1-3): interacción del dial y del panel en escritorio, tarjeta-menú y hoja en móvil emulado (390 y 360 px), conteos calculados desde `data.js`, enlaces de contacto, `file://`, `prefers-reduced-motion`, privacidad (teléfono ausente), `data.js` sin claves repetidas y, con `--live`, el sitio publicado. **No cubre:** el aspecto visual, que se valida con el visto bueno del usuario, ni navegadores distintos de Edge.
+`tests/validar_fase4.py` corre la suite completa (incluye las Fases 1-3): interacción del dial y del panel en escritorio, tarjeta-menú y hoja en móvil emulado (390 y 360 px), conteos calculados desde `data.js`, enlaces de contacto, `file://`, `prefers-reduced-motion`, privacidad (teléfono solo en `data.js`, sin PDF; antes de 2026-11-10: teléfono ausente), `data.js` sin claves repetidas y, con `--live`, el sitio publicado. **No cubre:** el aspecto visual, que se valida con el visto bueno del usuario, ni navegadores distintos de Edge.
 
 ## Lecciones aprendidas
 
