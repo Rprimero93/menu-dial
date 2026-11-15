@@ -83,6 +83,13 @@ const PORTFOLIO = {
       desc: 'Certificaciones profesionales.',
       content: {
         type: 'list',
+        // Logo de cada entidad en lugar del punto (Fase 6); una entidad sin logo conserva el punto
+        logos: {
+          'Pontificia Universidad Javeriana': 'assets/entidades/javeriana.svg',
+          'CertiProf': 'assets/entidades/certiprof.svg',
+          'PeopleCert': 'assets/entidades/itil.svg',
+          'SCRUMstudy': 'assets/entidades/scrumstudy.png',
+        },
         sections: [
           [null, [
             ['Excel Avanzado', 'Pontificia Universidad Javeriana'],

@@ -410,10 +410,13 @@ const RENDERERS = {
     </div>`).join(''),
 
   // Cada sección: [título, filas, tono opcional del punto ('green')]
-  list: ({ sections }) => sections.map(([title, rows, tone]) => `
+  // `logos` (opcional, Fase 6): { entidad: imagen }; la fila de esa entidad lleva su logo en lugar del punto
+  list: ({ sections, logos = {} }) => sections.map(([title, rows, tone]) => `
     ${title ? `<div class="group-title">${title}</div>` : ''}
     <ul class="entries${tone ? ` tone-${tone}` : ''}">${rows.map(([name, issuer, extra]) => `
-      <li class="entry"><span class="entry-dot"></span>
+      <li class="entry">${logos[issuer]
+        ? `<span class="entry-logo"><img src="${logos[issuer]}" alt="${issuer}"></span>`
+        : '<span class="entry-dot"></span>'}
         <div><strong>${name}</strong><span class="muted">${issuer}</span></div>
         ${extra ? `<span class="badge">${extra}</span>` : ''}
       </li>`).join('')}

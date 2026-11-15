@@ -4,11 +4,16 @@
   - assets/tech/<nombre>.png: íconos de tecnologías (los mismos del PDF, 96 px).
   - assets/motion/<clave>.mp4 + .jpg: las 9 piezas de Entregables/Motion reducidas a 360 × 640 (sin audio, en bucle
     desde la web) y su póster (el cuadro clave elegido con el usuario para el PDF).
+  - assets/entidades/<clave>.svg|png: logos de las entidades certificadoras (los mismos del paso 7 del PDF), recortados
+    a su símbolo para usarlos como ícono en «Certificaciones».
 
-Uso:  python scripts/preparar_assets.py
+Uso:  python scripts/preparar_assets.py            (todo)
+      python scripts/preparar_assets.py entidades  (solo uno o varios pasos: foto, tech, motion, entidades)
 """
+import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 from PIL import Image
@@ -35,6 +40,17 @@ PIEZAS = [
     ["pixeles", "Radio_ESAP_Pixeles/salida/final/radio_esap_pixeles.mp4"],
     ["formas", "Logo_ESAP_Formas/salida/final/logo_esap_formas.mp4"],
     ["fuegos", "Logo_ESAP_Fuegos/salida/final/logo_esap_fuegos.mp4"],
+]
+
+# Logos de entidades: [archivo en el PDF, clave en assets/entidades, recorte al símbolo]
+# SVG: nuevo viewBox (x y ancho alto, en unidades del original); PNG: caja de píxeles (izq, arriba, der, abajo).
+# Javeriana: solo el escudo, sin el nombre; ITIL: solo el símbolo, sin la palabra; SCRUMstudy: solo el círculo con el check.
+ENTIDADES = [
+    ["Javeriana.svg", "javeriana", "83 15 434 421"],
+    ["certiprof.svg", "certiprof", None],
+    ["itil-logo-svg.svg", "itil", "0 0 110 101"],
+    # La punta del check sobresale por encima de la «S»: se recorta hasta x = 43 y se borra la zona del texto (x ≥ 33, y ≥ 8)
+    ["Scrum.png", "scrumstudy", (0, 0, 43, 33), (33, 8, 43, 33)],
 ]
 
 
@@ -66,7 +82,30 @@ def motion():
     print(f"motion: {len(PIEZAS)} piezas, {total / 1e6:.1f} MB en total")
 
 
+def entidades():
+    (ASSETS / "entidades").mkdir(exist_ok=True)
+    for src, clave, recorte, *resto in ENTIDADES:
+        borrar = resto[0] if resto else None  # zona a dejar transparente (solo PNG)
+        if src.endswith(".svg"):
+            svg = (PDF / "imagenes" / src).read_text(encoding="utf-8")
+            # Sin tamaño fijo ni deformación: el tamaño lo pone la hoja de estilos
+            # Solo dentro de la etiqueta <svg> raíz (los elementos internos conservan sus medidas)
+            i = svg.index("<svg")
+            j = svg.index(">", i)
+            raiz = re.sub(r'\s(width|height|preserveAspectRatio)="[^"]*"', "", svg[i:j])
+            if recorte:
+                raiz = re.sub(r'viewBox="[^"]*"', f'viewBox="{recorte}"', raiz)
+            svg = svg[:i] + raiz + svg[j:]
+            (ASSETS / "entidades" / f"{clave}.svg").write_text(svg, encoding="utf-8")
+        else:
+            im = Image.open(PDF / "imagenes" / src).convert("RGBA").crop(recorte)
+            if borrar:
+                im.paste((0, 0, 0, 0), borrar)
+            im.save(ASSETS / "entidades" / f"{clave}.png")
+    print(f"entidades: {len(ENTIDADES)} logos")
+
+
 if __name__ == "__main__":
-    foto()
-    tech()
-    motion()
+    pasos = {"foto": foto, "tech": tech, "motion": motion, "entidades": entidades}
+    for nombre in (sys.argv[1:] or pasos):
+        pasos[nombre]()
