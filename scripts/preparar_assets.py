@@ -6,9 +6,11 @@
     desde la web) y su póster (el cuadro clave elegido con el usuario para el PDF).
   - assets/entidades/<clave>.svg|png: logos de las entidades certificadoras (los mismos del paso 7 del PDF), recortados
     a su símbolo para usarlos como ícono en «Certificaciones».
+  - assets/motion/infografias_<serie>.mp4 + .jpg: el carrusel 3D de las infografías (página 11 de la variante Behance
+    del PDF, salida/behance_trabajo/carrusel/animacion.mp4) recortado en sus dos series.
 
 Uso:  python scripts/preparar_assets.py            (todo)
-      python scripts/preparar_assets.py entidades  (solo uno o varios pasos: foto, tech, motion, entidades)
+      python scripts/preparar_assets.py entidades  (solo uno o varios pasos: foto, tech, motion, entidades, infografias)
 """
 import re
 import shutil
@@ -27,7 +29,8 @@ ASSETS = RAIZ / "assets"
 # Íconos: [archivo en el PDF, nombre en assets/tech]
 TECH = [["Excel.png", "excel"], ["Sharepoint.png", "sharepoint"], ["Power automate.png", "power-automate"],
         ["html.png", "html"], ["css.png", "css"], ["javascript.png", "javascript"], ["python.png", "python"],
-        ["programming.png", "vba"]]
+        ["programming.png", "vba"], ["illustrator.png", "illustrator"], ["photoshop.png", "photoshop"],
+        ["aftereffects.png", "after-effects"], ["git.png", "git"], ["github.png", "github"]]
 
 # Piezas: [clave (igual que salida/motion/piezas.json del PDF), MP4 final en Entregables/Motion]
 PIEZAS = [
@@ -52,6 +55,12 @@ ENTIDADES = [
     # La punta del check sobresale por encima de la «S»: se recorta hasta x = 43 y se borra la zona del texto (x ≥ 33, y ≥ 8)
     ["Scrum.png", "scrumstudy", (0, 0, 43, 33), (33, 8, 43, 33)],
 ]
+
+# Carrusel de infografías: video de 1400 × 990 a 30 cuadros/s (bucle perfecto de 104 cuadros). Cada serie ocupa una
+# columna de la retícula del PDF (margen 70,7 px, columna 617,5 px, medianil 23,6 px); la escena del carrusel va de
+# y = 290 a 880. Se recorta solo la escena (el título lo pone la web) y se reduce a 480 px de ancho.
+CARRUSEL = PDF / "salida" / "behance_trabajo" / "carrusel" / "animacion.mp4"
+INFOGRAFIAS = [["servicios", 71], ["auditoria", 712]]  # [clave, x de la columna]
 
 
 def foto():
@@ -105,7 +114,21 @@ def entidades():
     print(f"entidades: {len(ENTIDADES)} logos")
 
 
+def infografias():
+    (ASSETS / "motion").mkdir(exist_ok=True)
+    for clave, x in INFOGRAFIAS:
+        mp4 = ASSETS / "motion" / f"infografias_{clave}.mp4"
+        recorte = f"crop=616:580:{x}:300,scale=480:-2:flags=lanczos"
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(CARRUSEL), "-an", "-vf", recorte,
+                        "-c:v", "libx264", "-preset", "slow", "-crf", "26", "-pix_fmt", "yuv420p",
+                        "-movflags", "+faststart", str(mp4)], check=True)
+        # Póster: el primer cuadro (la infografía 1 al frente, en pausa)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(CARRUSEL), "-frames:v", "1",
+                        "-vf", recorte, "-q:v", "4", str(ASSETS / "motion" / f"infografias_{clave}.jpg")], check=True)
+    print(f"infografias: {len(INFOGRAFIAS)} series")
+
+
 if __name__ == "__main__":
-    pasos = {"foto": foto, "tech": tech, "motion": motion, "entidades": entidades}
+    pasos = {"foto": foto, "tech": tech, "motion": motion, "entidades": entidades, "infografias": infografias}
     for nombre in (sys.argv[1:] or pasos):
         pasos[nombre]()

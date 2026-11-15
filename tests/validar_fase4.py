@@ -192,8 +192,9 @@ def main():
         page.goto(url, wait_until="networkidle")
         settle(page)
         row = page.locator("button.m-row[data-id='extra']")
+        # Fase 7: el usuario quitó las píldoras superiores («Portafolio» y «N secciones»); el total se comprueba con N.
+        # Texto original: ... and page.text_content("#mCount") == f"{page.evaluate('N')} secciones" and ...
         extra_ok = row.count() == 1 and row.locator(".m-count").text_content() == "2" \
-            and page.text_content("#mCount") == f"{page.evaluate('N')} secciones" \
             and page.evaluate("N") == len(re.findall(r"\bid: '", original)) + 1  # Fase 6: antes "9 secciones"
         check("2b. Agregar una opción en data.js la muestra en la tarjeta", extra_ok and not errors,
               f"fila={row.count()}, errores={errors or '—'}")

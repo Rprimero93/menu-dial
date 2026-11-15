@@ -346,7 +346,8 @@ const RENDERERS = {
   // Tarjeta de perfil (Fase 6, variante A de la referencia del usuario): la foto ocupa toda la tarjeta y se funde
   // con desenfoque hacia el nombre, la insignia, el rol, las cifras con ícono y el botón principal. Debajo, el
   // texto y las habilidades destacadas. Sin `photo` en data.js se muestran las iniciales.
-  profile: ({ initials, photo, name, role, location, text, stats = [], actions = [], skillsTitle, skills = [] }) => {
+  // `tools` (Fase 7): herramientas en casillas con su ícono (PORTFOLIO.techIcons), debajo de las habilidades
+  profile: ({ initials, photo, name, role, location, text, stats = [], actions = [], skillsTitle, skills = [], toolsTitle, tools = [] }) => {
     const [label, href] = actions[0] || [];
     return `
     <div class="profile-card">
@@ -373,15 +374,28 @@ const RENDERERS = {
           ? `<li class="skill"><span class="skill-n">${i + 1}</span>${sk}</li>`
           : `<li class="skill is-empty"><span class="skill-n">${i + 1}</span>Skill ${i + 1}</li>`).join('')}
         </ol>` : ''}
+      ${tools.length ? `
+        <div class="group-title skills-title">${toolsTitle || 'Herramientas'}</div>
+        <ul class="tools">${tools.map((t) => {
+          const src = PORTFOLIO.techIcons?.[t];
+          return `<li class="tool"><span class="tool-ico">${src ? `<img src="${src}" alt="" width="26" height="26">` : ''}</span>${t}</li>`;
+        }).join('')}
+        </ul>` : ''}
     </div>`;
   },
 
+  // Fase 7: cada experiencia se contrae y expande (details/summary nativo: teclado y lector de pantalla incluidos);
+  // todas inician contraídas
   timeline: ({ rows }) => `
     <ol class="timeline">${rows.map(({ role, org, dates, points }) => `
       <li class="tl-item">
-        <div class="tl-head"><strong>${role}</strong><span class="muted">${dates}</span></div>
-        <div class="tl-org">${org}</div>
-        <ul>${points.map((pt) => `<li>${pt}</li>`).join('')}</ul>
+        <details class="tl-fold">
+          <summary class="tl-sum">
+            <div class="tl-head"><strong>${role}</strong><span class="tl-chev" aria-hidden="true">${svgIcon('chevron', 16)}</span><span class="muted">${dates}</span></div>
+            <div class="tl-org">${org}</div>
+          </summary>
+          <ul>${points.map((pt) => `<li>${pt}</li>`).join('')}</ul>
+        </details>
       </li>`).join('')}
     </ol>`,
 
@@ -452,12 +466,13 @@ const RENDERERS = {
 
   // Motion graphics (Fase 6): series con etiqueta, título y texto, y sus piezas 9:16 en video (MP4 en bucle, sin
   // sonido; preload="none" + póster: no se descargan hasta verse). initMotion() las reproduce al quedar a la vista.
-  motion: ({ series }) => series.map(({ tag, title, text, pieces }) => `
+  // `wide` (Fase 7): piezas horizontales (carrusel de infografías), dos por fila
+  motion: ({ series }) => series.map(({ tag, title, text, pieces, wide }) => `
     <section class="mo-series">
       <span class="mo-tag">${tag}</span>
       <strong class="mo-title">${title}</strong>
       <p class="mo-text">${text}</p>
-      <div class="mo-grid">${pieces.map(([name, secs, file]) => `
+      <div class="mo-grid${wide ? ' is-wide' : ''}">${pieces.map(([name, secs, file]) => `
         <figure class="mo-piece">
           <div class="mo-frame">
             <video src="assets/motion/${file}.mp4" poster="assets/motion/${file}.jpg" muted loop playsinline
@@ -514,8 +529,6 @@ function itemCount({ type, rows, sections, series }) {
 function buildMobile() {
   const conf = PORTFOLIO.mobile;
   const about = ITEMS.find((it) => it.content.type === 'profile')?.content || {};
-  $('mPill').innerHTML = `${svgIcon('folder', 14)}${conf.pill}`;
-  $('mCount').textContent = `${N} secciones`;
   $('mHead').innerHTML = `
     ${about.photo ? `<span class="profile-avatar has-photo"><img src="${about.photo}" alt=""></span>`
                   : `<span class="profile-avatar">${about.initials || ''}</span>`}

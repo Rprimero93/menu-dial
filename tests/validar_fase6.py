@@ -131,8 +131,10 @@ def main():
                      caps: [...document.querySelectorAll('#panelBody figcaption')].every(f => / s$/.test(f.textContent.trim())) };
         }""")
         page.screenshot(path=str(SHOTS / "f6_motion_1440.png"))
-        check("1c. Escritorio: «Motion graphics» con 9 piezas (póster, nombre, duración) que se reproducen al verse",
-              mo["n"] == 9 and mo["posters"] and mo["caps"] and mo["playing"] >= 1, str(mo))
+        # Fase 7: el total sale de data.js (se sumaron las 2 piezas infográficas). Texto original: «con 9 piezas», mo["n"] == 9
+        n_pz = page.evaluate("ITEMS.find(i => i.id === 'motion').content.series.reduce((n, se) => n + se.pieces.length, 0)")
+        check(f"1c. Escritorio: «Motion graphics» con {n_pz} piezas (póster, nombre, duración) que se reproducen al verse",
+              mo["n"] == n_pz and mo["posters"] and mo["caps"] and mo["playing"] >= 1, str(mo))
 
         # 1d. Behance en Contacto
         open_section(page, "contact")
@@ -159,7 +161,8 @@ def main():
         mpage.tap("button.m-row[data-id='motion']")
         settle(mpage, 500)
         n_vid = mpage.locator("#mSheetBody video").count()
-        check("2b. Agregar una pieza en data.js la muestra en la tarjeta y la hoja", cnt == "10" and n_vid == 10 and not merrors,
+        # Fase 7: n_pz + 1 en lugar de 10 fijo. Texto original: cnt == "10" and n_vid == 10
+        check("2b. Agregar una pieza en data.js la muestra en la tarjeta y la hoja", cnt == str(n_pz + 1) and n_vid == n_pz + 1 and not merrors,
               f"conteo={cnt}, videos={n_vid}")
         ctx.close()
 
@@ -226,7 +229,8 @@ def main():
             n = page.locator("#panelBody video").count()
             ready = page.evaluate("[...document.querySelectorAll('#panelBody video')].some(v => v.readyState >= 2)")
             page.screenshot(path=str(SHOTS / "f6_live.png"))
-            check("5. GitHub Pages con la foto y Motion graphics", photo and n == 9 and ready and not errors,
+            # Fase 7: el total sale del data.js publicado. Texto original: n == 9
+            check("5. GitHub Pages con la foto y Motion graphics", photo and n == page.evaluate("ITEMS.find(i => i.id === 'motion').content.series.reduce((n, se) => n + se.pieces.length, 0)") and ready and not errors,
                   f"foto={photo}, videos={n}, carga={ready}, errores={errors or '—'}")
             page.close()
 

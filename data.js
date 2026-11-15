@@ -18,7 +18,6 @@ const PORTFOLIO = {
 
   // Versión móvil (Fase 4, por debajo de 700 px): tarjeta-menú. Nombre e iniciales salen de «Sobre mí».
   mobile: {
-    pill: 'Portafolio',
     subtitle: 'Automatización de procesos',
     badge: '+9 años',
     lower: ['skills', 'contact'], // ids que van en el grupo inferior (Contacto muestra sus enlaces directos)
@@ -30,6 +29,8 @@ const PORTFOLIO = {
     'Excel': 'assets/tech/excel.png', 'SharePoint': 'assets/tech/sharepoint.png',
     'Power Automate': 'assets/tech/power-automate.png', 'HTML': 'assets/tech/html.png', 'CSS': 'assets/tech/css.png',
     'JavaScript': 'assets/tech/javascript.png', 'Python': 'assets/tech/python.png', 'VBA': 'assets/tech/vba.png',
+    'Illustrator': 'assets/tech/illustrator.png', 'Photoshop': 'assets/tech/photoshop.png',
+    'After Effects': 'assets/tech/after-effects.png', 'Git': 'assets/tech/git.png', 'GitHub': 'assets/tech/github.png',
   },
 
   items: [
@@ -57,6 +58,10 @@ const PORTFOLIO = {
         // Habilidades más relevantes (debajo del texto). Mientras un espacio esté vacío ('') se muestra como «Skill N» punteado.
         skillsTitle: 'Habilidades destacadas',
         skills: ['Excel Avanzado · Pontificia Universidad Javeriana', 'Auditor ISO 27001 SGSI · CertiProf', 'Project Management Essentials · CertiProf'],
+        // Herramientas que uso (debajo de las habilidades), en este orden; cada una con su ícono de techIcons
+        toolsTitle: 'Herramientas',
+        tools: ['Excel', 'VBA', 'HTML', 'CSS', 'JavaScript', 'Python', 'SharePoint', 'Power Automate',
+          'Illustrator', 'Photoshop', 'After Effects', 'Git', 'GitHub'],
       },
     },
     {
@@ -233,6 +238,12 @@ const PORTFOLIO = {
             tag: '3 piezas · 9:16', title: 'Radio ESAP',
             text: 'Partículas que forman una onda de voz y píxeles que arman el botón de play y el logo de Radio ESAP.',
             pieces: [['Píxeles', 6.5, 'pixeles'], ['Partículas', 10.8, 'radio'], ['Partículas oscuro', 10.8, 'radio_oscuro']],
+          },
+          // `wide`: piezas horizontales, dos por fila (el carrusel 3D de la variante Behance del PDF, recortado por serie)
+          {
+            tag: '2 series · carrusel 3D', title: 'Piezas infográficas', wide: true,
+            text: 'Infografías diseñadas para el Grupo de Infraestructura y Mantenimiento (GIM) de la ESAP, en rotación con CSS 3D.',
+            pieces: [['Servicios del GIM', 3.5, 'infografias_servicios'], ['Auditoría de procesos', 3.5, 'infografias_auditoria']],
           },
         ],
       },
