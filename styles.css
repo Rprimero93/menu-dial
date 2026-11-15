@@ -334,13 +334,22 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 /* Rol y ubicación: la ubicación baja a la línea siguiente sin sangría cuando no cabe */
 .hero-role { display: flex; flex-wrap: wrap; column-gap: 10px; margin-top: 6px; font-size: 13px; line-height: 1.45; color: rgba(255, 255, 255, 0.72); }
 .hero-loc { display: inline-flex; align-items: center; gap: 4px; color: rgb(140, 195, 255); white-space: nowrap; }
-.hero-card .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 12px; }
+/* Columnas al ancho de su texto, repartidas a lo ancho */
+.hero-card .profile-stats { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 2px; margin-top: 12px; }
 /* Ícono al costado izquierdo de la cifra, en la misma línea; el texto va debajo a todo el ancho */
-.stat { position: relative; display: grid; grid-template-columns: auto 1fr; column-gap: 6px; row-gap: 1px; align-items: center; padding: 5px 6px; text-align: left; }
+.stat { position: relative; display: flex; flex-wrap: wrap; column-gap: 6px; row-gap: 1px; align-items: center; padding: 5px 6px; text-align: left; }
 .stat i { display: grid; color: rgba(255, 255, 255, 0.6); }
-.stat span { grid-column: 1 / -1; justify-self: start; }
+/* Texto en una sola línea para que las tres cifras queden alineadas (antes «años de experiencia» partía en dos) */
+.stat span { flex-basis: 100%; white-space: nowrap; }
 .stat strong { font-size: 17px; color: #fff; }
 .stat span { font-size: 10.5px; line-height: 1.3; color: rgba(255, 255, 255, 0.6); }
+/* Móvil: menos relleno lateral para que las tres cifras quepan en una línea hasta 320 px */
+.m-sheet-body .stat { padding: 5px 3px; }
+@media (max-width: 340px) {
+  .m-sheet-body .hero-info { padding-left: 12px; padding-right: 12px; }
+  .m-sheet-body .stat { padding: 5px 0; }
+  .m-sheet-body .stat span { font-size: 10px; }
+}
 .stat.is-link { border-radius: 10px; transition: background 0.2s; }
 .stat.is-link span { color: rgb(140, 195, 255); text-decoration: underline; text-decoration-color: rgba(var(--glow), 0.4); text-underline-offset: 3px; }
 .stat.is-link:hover { background: rgba(var(--glow), 0.14); }
