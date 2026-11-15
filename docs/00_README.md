@@ -74,6 +74,7 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 _Proyectos que usaron esta herramienta (proyecto, fecha, qué le faltó) — `03_TRD.md` § Herramientas y entregables._
 
 - **[[Entregables/Illustrator/Portafolio_Menu_Dial/docs/00_README|Portafolio_Menu_Dial]]** (2026-11-10): leyó `data.js` (vía Node, solo lectura) como fuente de todos los textos del portafolio en PDF. Le faltó: la lista y las descripciones actualizadas de los proyectos de la ESAP y de Los Coches (el usuario las dio aparte) y el teléfono (excluido a propósito del sitio público). _(Cubierto por la Fase 5, 2026-11-10: proyectos y teléfono ya están en `data.js`.)_
+- **[[Entregables/Illustrator/Portafolio_Menu_Dial/docs/00_README|Portafolio_Menu_Dial]]** (reapertura, Fases 7-9, 2026-11-15): volvió a leer `data.js` por nombre (sin cambios en el sitio) para regenerar el PDF de 16 páginas. Qué le faltó: nada.
 
 ## Documentación relacionada
 
