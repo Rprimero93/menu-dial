@@ -29,7 +29,19 @@ const ICONS = {
   external: 'M14 4h6v6 M20 4l-9 9 M18 14v5H5V6h5',
   chevron: 'M9 6l6 6-6 6',
   back: 'M15 6l-6 6 6 6',
+  // Fase 6
+  film: 'M4 4h16v16H4z M8 4v16 M16 4v16 M4 8h4 M4 12h4 M4 16h4 M16 8h4 M16 12h4 M16 16h4',
+  image: 'M4 5h16v14H4z M4 16l4.5-4.5 3.5 3.5 2.5-2.5L20 18 M15.5 10a1.5 1.5 0 1 0 0-3a1.5 1.5 0 1 0 0 3z',
+  plus: 'M12 5v14 M5 12h14',
 };
+// Ícono de contacto por clave de data.js (Behance no tiene trazo propio: va con el de imagen, sin marca)
+const ICON_ALIAS = { behance: 'image' };
+
+// Insignia de verificado de la tarjeta de perfil (Fase 6): roseta azul del dial con el visto en blanco
+const VERIFIED = `<svg class="hero-verified" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+  <path fill="rgb(64,150,255)" d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76z"/>
+  <path d="M8.5 12.2l2.4 2.4 4.6-4.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ===== Geometría =====
 const N = ITEMS.length;
@@ -71,6 +83,7 @@ const rad = (deg) => (deg * Math.PI) / 180;
 const activeIndex = () => mod(Math.round(target), N);
 
 function svgIcon(name, size = 24) {
+  name = ICON_ALIAS[name] || name;
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor"
     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[name]}"/></svg>`;
 }
@@ -307,6 +320,7 @@ function renderPanel(index) {
   wrap.dataset.index = index;
   wrap.innerHTML = RENDERERS[item.content.type](item.content);
   $('panelBody').replaceChildren(wrap);
+  initMotion(wrap, $('panelBody'));
 }
 
 // Orden de aparición de barras: una por una, de mayor a menor
@@ -329,31 +343,38 @@ function statValue(value) {
 
 // Un renderizador por tipo de contenido; cada uno devuelve el HTML del cuerpo del panel
 const RENDERERS = {
-  // Tarjeta de perfil: portada curva con borde azul, avatar grande centrado, ubicación, cifras,
-  // dos botones (correo / GitHub), texto y habilidades destacadas
-  profile: ({ initials, name, role, location, text, stats = [], actions = [], skillsTitle, skills = [] }) => `
+  // Tarjeta de perfil (Fase 6, variante A de la referencia del usuario): la foto ocupa toda la tarjeta y se funde
+  // con desenfoque hacia el nombre, la insignia, el rol, las cifras con ícono y el botón principal. Debajo, el
+  // texto y las habilidades destacadas. Sin `photo` en data.js se muestran las iniciales.
+  profile: ({ initials, photo, name, role, location, text, stats = [], actions = [], skillsTitle, skills = [] }) => {
+    const [label, href] = actions[0] || [];
+    return `
     <div class="profile-card">
-      <div class="profile-cover"></div>
-      <span class="profile-avatar">${initials}</span>
-      <strong class="profile-name">${name}</strong>
-      <span class="profile-role">${role}</span>
-      ${location ? `<span class="profile-loc">${svgIcon('mapPin', 15)}${location}</span>` : ''}
-      <div class="profile-stats">${stats.map(([value, label]) => String(value).startsWith('#')
-        // Cifra calculada: es un enlace a su sección
-        ? `<button class="stat is-link" data-goto="${value.slice(1)}" aria-label="Ver ${label}"><strong>${statValue(value)}</strong><span>${label}</span></button>`
-        : `<div class="stat"><strong>${value}</strong><span>${label}</span></div>`).join('')}
-      </div>
-      <div class="profile-actions">${actions.map(([label, href, icon], i) => `
-        <a class="btn-pill${i === 0 ? ' is-primary' : ''}" ${linkAttrs(href)}>${svgIcon(icon, 16)}${label}</a>`).join('')}
+      <div class="hero-card">
+        ${photo ? `<img class="hero-photo" src="${photo}" alt="Foto de ${name}">` : `<span class="hero-initials">${initials}</span>`}
+        <div class="hero-info">
+          <strong class="hero-name">${name} ${VERIFIED}</strong>
+          <span class="hero-role">${role}${location ? `<span class="hero-loc">${svgIcon('mapPin', 13)}${location}</span>` : ''}</span>
+          <div class="profile-stats">${stats.map(([value, txt, icon]) => {
+            const inner = `${icon ? `<i>${svgIcon(icon, 15)}</i>` : ''}<strong>${statValue(value)}</strong><span>${txt}</span>`;
+            // Cifra calculada: es un enlace a su sección
+            return String(value).startsWith('#')
+              ? `<button class="stat is-link" data-goto="${value.slice(1)}" aria-label="Ver ${txt}">${inner}</button>`
+              : `<div class="stat">${inner}</div>`;
+          }).join('')}
+          </div>
+          ${label ? `<a class="hero-btn" ${linkAttrs(href)}>${label} ${svgIcon('plus', 16)}</a>` : ''}
+        </div>
       </div>
       <p class="profile-text">${text}</p>
       ${skills.length ? `
         <div class="group-title skills-title">${skillsTitle || 'Skills'}</div>
-        <ol class="skills">${skills.map((s, i) => s
-          ? `<li class="skill"><span class="skill-n">${i + 1}</span>${s}</li>`
+        <ol class="skills">${skills.map((sk, i) => sk
+          ? `<li class="skill"><span class="skill-n">${i + 1}</span>${sk}</li>`
           : `<li class="skill is-empty"><span class="skill-n">${i + 1}</span>Skill ${i + 1}</li>`).join('')}
         </ol>` : ''}
-    </div>`,
+    </div>`;
+  },
 
   timeline: ({ rows }) => `
     <ol class="timeline">${rows.map(({ role, org, dates, points }) => `
@@ -401,27 +422,67 @@ const RENDERERS = {
   // `points` (opcional): viñetas con el mismo estilo de las funciones de Experiencia
   // `logo` (opcional): [ruta de la imagen, texto alternativo, 'wide' si es horizontal], a la izquierda del título
   // `note` (opcional): párrafo debajo de las viñetas, con su propia lista en `notePoints`
-  projects: ({ rows }) => rows.map(({ name, logo, text, points, note, notePoints, tags, link }) => `
+  // `numbered` (opcional, Fase 6): viñetas numeradas 01, 02… como en el PDF; las etiquetas llevan su ícono de PORTFOLIO.techIcons
+  projects: ({ rows }) => rows.map(({ name, logo, text, points, numbered, note, notePoints, tags, link }) => `
     <article class="project">
       <div class="project-head">
         ${logo ? `<span class="project-logo${logo[2] === 'wide' ? ' is-wide' : ''}"><img src="${logo[0]}" alt="${logo[1]}"></span>` : ''}
         <strong>${name}</strong>
       </div>
       <p>${text}</p>
-      ${points ? `<ul class="project-points">${points.map((pt) => `<li>${pt}</li>`).join('')}</ul>` : ''}
+      ${points ? (numbered
+        ? `<ol class="project-points is-numbered">${points.map((pt, i) => `<li><span class="pt-n">${String(i + 1).padStart(2, '0')}</span><span>${pt}</span></li>`).join('')}</ol>`
+        : `<ul class="project-points">${points.map((pt) => `<li>${pt}</li>`).join('')}</ul>`) : ''}
       ${note ? `<p class="project-note">${note}</p>` : ''}
       ${notePoints ? `<ul class="project-points">${notePoints.map((pt) => `<li>${pt}</li>`).join('')}</ul>` : ''}
-      <div class="chips">${tags.map((t) => `<span class="chip">${t}</span>`).join('')}</div>
+      <div class="chips">${tags.map(techChip).join('')}</div>
       ${link ? `<a class="btn-link" ${linkAttrs(link[1])}>${link[0]} ${svgIcon('external', 14)}</a>` : ''}
     </article>`).join(''),
 
-  contact: ({ rows }) => rows.map(([icon, label, value, href]) => {
+  // `links` (Fase 6): enlaces después de las filas (Behance), con el mismo formato
+  contact: ({ rows, links = [] }) => [...rows, ...links].map(([icon, label, value, href]) => {
     const body = `<span class="contact-ico">${svgIcon(icon, 18)}</span>
       <div><span class="muted">${label}</span><strong>${value}</strong></div>`;
     return href ? `<a class="contact-row is-link" ${linkAttrs(href)}>${body}${svgIcon('external', 14)}</a>`
                 : `<div class="contact-row">${body}</div>`;
   }).join(''),
+
+  // Motion graphics (Fase 6): series con etiqueta, título y texto, y sus piezas 9:16 en video (MP4 en bucle, sin
+  // sonido; preload="none" + póster: no se descargan hasta verse). initMotion() las reproduce al quedar a la vista.
+  motion: ({ series }) => series.map(({ tag, title, text, pieces }) => `
+    <section class="mo-series">
+      <span class="mo-tag">${tag}</span>
+      <strong class="mo-title">${title}</strong>
+      <p class="mo-text">${text}</p>
+      <div class="mo-grid">${pieces.map(([name, secs, file]) => `
+        <figure class="mo-piece">
+          <div class="mo-frame">
+            <video src="assets/motion/${file}.mp4" poster="assets/motion/${file}.jpg" muted loop playsinline
+              preload="none" aria-label="${title}: ${name}"${REDUCED ? ' controls' : ''}></video>
+          </div>
+          <figcaption>${name} <span>${String(secs).replace('.', ',')} s</span></figcaption>
+        </figure>`).join('')}
+      </div>
+    </section>`).join(''),
 };
+
+// Etiqueta de tecnología con su ícono (si lo hay en PORTFOLIO.techIcons)
+function techChip(t) {
+  const src = PORTFOLIO.techIcons?.[t];
+  return `<span class="chip${src ? ' has-icon' : ''}">${src ? `<img src="${src}" alt="" width="16" height="16">` : ''}${t}</span>`;
+}
+
+// Reproduce los videos de un contenido recién pintado solo mientras se ven dentro de su contenedor con scroll
+// (con movimiento reducido no se reproducen solos: quedan con controles)
+function initMotion(wrap, root) {
+  const vids = wrap.querySelectorAll('video');
+  if (!vids.length || REDUCED) return;
+  const io = new IntersectionObserver((entries) => entries.forEach(({ target: v, isIntersecting }) => {
+    if (isIntersecting) v.play().catch(() => {});
+    else v.pause();
+  }), { root, threshold: 0.25 });
+  vids.forEach((v) => io.observe(v));
+}
 
 function initPanel() {
   $('panel').inert = true;
@@ -440,9 +501,10 @@ function initPanel() {
 let sheetIndex = null; // sección que muestra la hoja, o null si está cerrada
 
 // Dato de la derecha de cada fila: cuántos elementos tiene la sección (solo listas y líneas de tiempo)
-function itemCount({ type, rows, sections }) {
+function itemCount({ type, rows, sections, series }) {
   if (type === 'timeline') return rows.length;
   if (type === 'list') return sections.reduce((n, [, list]) => n + list.length, 0);
+  if (type === 'motion') return series.reduce((n, se) => n + se.pieces.length, 0); // Fase 6: piezas animadas
   return null;
 }
 
@@ -452,14 +514,15 @@ function buildMobile() {
   $('mPill').innerHTML = `${svgIcon('folder', 14)}${conf.pill}`;
   $('mCount').textContent = `${N} secciones`;
   $('mHead').innerHTML = `
-    <span class="profile-avatar">${about.initials || ''}</span>
+    ${about.photo ? `<span class="profile-avatar has-photo"><img src="${about.photo}" alt=""></span>`
+                  : `<span class="profile-avatar">${about.initials || ''}</span>`}
     <div class="m-who"><strong>${about.name || ''}</strong><span>${conf.subtitle}</span></div>
     ${conf.badge ? `<span class="m-badge">${conf.badge}</span>` : ''}`;
 
   const row = (it, i) => {
     // Contacto: sus enlaces van directos en la tarjeta, sin abrir la hoja
     if (it.content.type === 'contact') {
-      return it.content.rows.filter((r) => r[3]).map(([icon, label, value, href]) => `
+      return [...it.content.rows, ...(it.content.links || [])].filter((r) => r[3]).map(([icon, label, value, href]) => `
         <li><a class="m-row" data-id="${it.id}" ${linkAttrs(href)}>
           <span class="m-ico">${svgIcon(icon, 20)}</span>
           <span class="m-label">${label}<small>${value}</small></span>
@@ -506,6 +569,7 @@ function openSheet(index) {
   wrap.innerHTML = RENDERERS[item.content.type](item.content);
   $('mSheetBody').replaceChildren(wrap);
   $('mSheetBody').scrollTop = 0;
+  initMotion(wrap, $('mSheetBody'));
   document.querySelectorAll('.m-row').forEach((r) => r.classList.toggle('is-current', r.dataset.index === String(index)));
   $('mSheet').inert = false;
   $('mSheet').classList.add('open');

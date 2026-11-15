@@ -107,10 +107,15 @@ def main():
             page.keyboard.press("Escape")
             wait_settle(page)
 
-        # 4b. Clic en un segmento del anillo (el que está a las 9 en punto: opuesto al activo)
-        page.mouse.click(cx - 150, cy)
+        # 4b. Clic en un segmento del anillo (el opuesto al activo, en el centro del segmento)
+        # Fase 6: con 9 opciones las 9 en punto es el borde entre dos segmentos. Texto original:
+        # page.mouse.click(cx - 150, cy) y active_label(page) == L[1] (con 8 opciones fijas)
+        n = page.evaluate("N")
+        k = (5 + n // 2) % n
+        ang = math.radians((k - 5) * 360 / n)
+        page.mouse.click(cx + 150 * math.cos(ang), cy + 150 * math.sin(ang))
         wait_settle(page)
-        check("4b. Clic en segmento del anillo", active_label(page) == L[1], active_label(page))
+        check("4b. Clic en segmento del anillo", active_label(page) == L[k], active_label(page))
 
         # 5. ✕ y Esc vuelven a la opción inicial
         page.keyboard.press("ArrowDown")
@@ -151,10 +156,14 @@ def main():
         check("   Tarjetas de la lista con radio original", radius == 10, f"radio {radius}px")
 
         # 8a. Hover en el anillo: el ícono del segmento se ilumina como el activo, sin zoom
-        page.mouse.move(cx - 150, cy)  # sobre el segmento a las 9 en punto
-        wait_settle(page)
+        # Fase 6: con 9 opciones las 9 en punto cae en el borde entre dos segmentos; se apunta al centro del segmento
+        # opuesto. Texto original: page.mouse.move(cx - 150, cy) y seg_hover = (idx + 4) % 8 (con 8 opciones fijas)
         idx = page.evaluate("mod(Math.round(target), N)")
-        seg_hover = (idx + 4) % 8
+        n = page.evaluate("N")
+        seg_hover = (idx + n // 2) % n
+        ang = math.radians((seg_hover - idx) * 360 / n)
+        page.mouse.move(cx + 150 * math.cos(ang), cy + 150 * math.sin(ang))
+        wait_settle(page)
         icon = page.evaluate(f"""(() => {{
             const g = document.querySelectorAll('.ring-icon')[{seg_hover}];
             return {{ hover: g.classList.contains('hover'), color: getComputedStyle(g).color,
@@ -168,12 +177,12 @@ def main():
         page.locator("#dial").screenshot(path=str(SHOTS / "dial_hover_icono.png"))
 
         # 8b. Magnificación en la lista: la tarjeta bajo el puntero crece más que sus vecinas
-        card = (idx + 1) % 8
+        card = (idx + 1) % n  # Fase 6: antes % 8
         b = page.locator(f".option[data-index='{card}']").bounding_box()
         page.mouse.move(b["x"] + b["width"] / 2, b["y"] + b["height"] / 2)
         wait_settle(page)
         mags = page.evaluate("mags")
-        prev_, next_, far = (card - 1) % 8, (card + 1) % 8, (card + 4) % 8
+        prev_, next_, far = (card - 1) % n, (card + 1) % n, (card + 4) % n  # Fase 6: antes % 8
         card_tf = page.eval_on_selector(f".option[data-index='{card}']", "el => el.style.transform")
         check("8b. Magnificación de tarjetas: hover > vecinas > lejanas",
               mags[card] > max(mags[prev_], mags[next_]) and min(mags[prev_], mags[next_]) > 1.0

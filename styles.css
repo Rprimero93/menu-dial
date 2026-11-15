@@ -237,7 +237,7 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 
 .panel-head { display: flex; align-items: center; gap: 14px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
 .panel-ico {
-  display: grid; place-items: center;
+  display: grid; place-items: center; flex: none; /* no se aplasta con una descripción larga (Fase 6) */
   width: 42px; height: 42px;
   border-radius: 12px;
   color: #fff;
@@ -274,17 +274,7 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .muted { color: var(--text-3); font-size: 12px; }
 .panel-body strong { color: var(--text); font-weight: 600; }
 
-/* Sobre mí: tarjeta de perfil (portada curva, avatar centrado, cifras y botones) */
-.profile-card { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
-/* Portada: banda del color del dial con el borde inferior curvo y brillo azul, como el arco del anillo */
-.profile-cover {
-  align-self: stretch;
-  height: 64px;
-  border-radius: 14px 14px 50% 50% / 14px 14px 100% 100%;
-  background: linear-gradient(160deg, var(--surface-hi), var(--surface));
-  border-bottom: 2px solid rgba(var(--glow), 0.85);
-  box-shadow: 0 8px 22px -8px rgba(var(--glow), 0.7);
-}
+/* Avatar redondo (encabezado de la tarjeta-menú móvil) */
 .profile-avatar {
   display: grid; place-items: center; flex: none;
   width: 48px; height: 48px; border-radius: 50%;
@@ -292,44 +282,80 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   background: linear-gradient(145deg, rgba(var(--glow), 0.55), rgba(var(--glow), 0.2));
   box-shadow: inset 0 0 0 1px rgba(var(--glow), 0.5);
 }
-.profile-card .profile-avatar {
-  width: 80px; height: 80px; margin-top: -42px; font-size: 26px;
-  background: linear-gradient(145deg, #3d6fb3, #23324a);
-  box-shadow: 0 0 0 4px #282a30, 0 0 0 5px rgba(var(--glow), 0.6), 0 10px 26px rgba(var(--glow), 0.35);
+/* Con foto (Fase 6): la foto sin fondo sobre el degradado azul, ampliada para que el rostro llene el círculo */
+.profile-avatar.has-photo { overflow: hidden; place-items: start center; background: radial-gradient(circle at 50% 35%, #3d6fb3, #23324a 75%); }
+.profile-avatar.has-photo img { width: 170%; height: auto; flex: none; }
+
+/* Sobre mí (Fase 6): tarjeta con la foto fundida con desenfoque hacia el texto (variante A de la referencia del
+   usuario). En el panel de escritorio (440 de alto) va horizontal: foto a la derecha, texto a la izquierda; en la
+   hoja del celular, vertical como la referencia. Debajo, el texto y las habilidades. */
+.profile-card { display: flex; flex-direction: column; }
+.hero-card {
+  position: relative;
+  display: flex; align-items: center;
+  height: 300px;
+  overflow: hidden;
+  clip-path: inset(0 round 26px); /* el desenfoque no se escapa por las esquinas */
+  border-radius: 26px;
+  background: radial-gradient(circle at 78% 34%, rgba(var(--glow), 0.5), #23324a 45%, #1b1d22 90%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
-.profile-name { margin-top: 10px; font-size: 18px; }
-.profile-role { margin-top: 2px; font-size: 13px; color: var(--text-2); }
-.profile-loc { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 13px; color: rgb(120, 180, 255); }
-.profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; margin-top: 16px; }
-.stat { display: flex; flex-direction: column; gap: 2px; padding: 0 6px; }
-.stat { position: relative; }
-/* Divisor como línea aparte: con borde se curvaría en la cifra-enlace, que es redondeada */
-.stat + .stat::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 1px; background: var(--line); }
-.stat strong { font-size: 20px; color: #fff; }
-.stat span { font-size: 11px; color: var(--text-3); }
+.hero-photo { position: absolute; top: 0; right: 0; height: 100%; width: auto; aspect-ratio: 420 / 478; object-fit: cover; object-position: 50% 0; }
+.hero-initials { position: absolute; top: 0; right: 0; bottom: 0; width: 45%; display: grid; place-items: center; font-size: 56px; font-weight: 600; color: #fff; }
+/* Zona del texto: la foto se funde con desenfoque y oscurece hacia el texto, como vidrio */
+.hero-info { position: relative; width: 60%; padding: 20px 8px 20px 22px; color: #fff; }
+.hero-info::before {
+  content: "";
+  position: absolute; top: -50%; bottom: -50%; left: -40px; right: -70px;
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  background: linear-gradient(to left, rgba(24, 26, 31, 0), rgba(24, 26, 31, 0.6) 45%, rgba(24, 26, 31, 0.9));
+  -webkit-mask-image: linear-gradient(to left, transparent, #000 40%);
+  mask-image: linear-gradient(to left, transparent, #000 40%);
+}
+.hero-info > * { position: relative; }
+/* Celular: vertical, la foto a todo el ancho y el texto abajo */
+.m-sheet-body .hero-card {
+  flex-direction: column; align-items: stretch; justify-content: flex-end;
+  height: auto; min-height: 460px; width: 100%; max-width: 380px; align-self: center;
+  background: radial-gradient(circle at 50% 28%, rgba(var(--glow), 0.5), #23324a 55%, #1b1d22 100%);
+}
+.m-sheet-body .hero-photo { inset: 0; width: 100%; aspect-ratio: auto; }
+.m-sheet-body .hero-initials { inset: 0 0 45%; width: auto; }
+.m-sheet-body .hero-info { width: auto; padding: 76px 16px 16px; }
+.m-sheet-body .hero-info::before {
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(24, 26, 31, 0), rgba(24, 26, 31, 0.55) 42%, rgba(24, 26, 31, 0.88));
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%);
+  mask-image: linear-gradient(to bottom, transparent, #000 40%);
+}
+.hero-name { display: block; font-size: 19px; font-weight: 600; line-height: 1.25; color: #fff; }
+.hero-verified { display: inline-block; vertical-align: -4px; margin-left: 2px; filter: drop-shadow(0 0 6px rgba(var(--glow), 0.6)); }
+/* Rol y ubicación: la ubicación baja a la línea siguiente sin sangría cuando no cabe */
+.hero-role { display: flex; flex-wrap: wrap; column-gap: 10px; margin-top: 6px; font-size: 13px; line-height: 1.45; color: rgba(255, 255, 255, 0.72); }
+.hero-loc { display: inline-flex; align-items: center; gap: 4px; color: rgb(140, 195, 255); white-space: nowrap; }
+.hero-card .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 12px; }
+.stat { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 5px 6px; text-align: left; }
+.stat i { display: grid; color: rgba(255, 255, 255, 0.6); margin-bottom: 2px; }
+.stat strong { font-size: 17px; color: #fff; }
+.stat span { font-size: 10.5px; line-height: 1.3; color: rgba(255, 255, 255, 0.6); }
 .stat.is-link { border-radius: 10px; transition: background 0.2s; }
-.stat.is-link span { color: rgb(120, 180, 255); text-decoration: underline; text-decoration-color: rgba(var(--glow), 0.4); text-underline-offset: 3px; }
-.stat.is-link:hover { background: rgba(var(--glow), 0.08); }
-.profile-actions { display: flex; justify-content: center; gap: 10px; width: 100%; margin-top: 16px; }
-.btn-pill {
-  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-  flex: 0 1 220px; height: 38px; border-radius: 99px; font-size: 14px; font-weight: 500;
-  text-decoration: none; color: var(--text);
-  border: 1px solid var(--line-hi);
-  transition: background 0.2s, border-color 0.2s;
+.stat.is-link span { color: rgb(140, 195, 255); text-decoration: underline; text-decoration-color: rgba(var(--glow), 0.4); text-underline-offset: 3px; }
+.stat.is-link:hover { background: rgba(var(--glow), 0.14); }
+/* Botón principal claro, como «Follow» de la referencia */
+.hero-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  height: 40px; margin-top: 12px; border-radius: 99px;
+  font-size: 14px; font-weight: 600; text-decoration: none;
+  color: #18191d; background: #eceef1;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 #fff;
+  transition: background 0.2s, transform 0.2s;
 }
-.btn-pill:hover { background: rgba(255, 255, 255, 0.05); }
-.btn-pill.is-primary { color: #fff; border-color: transparent; background: linear-gradient(180deg, rgba(var(--glow), 0.9), rgba(var(--glow), 0.65)); box-shadow: 0 8px 20px rgba(var(--glow), 0.3); }
-.btn-pill.is-primary:hover { background: rgb(var(--glow)); }
-.btn-pill:focus-visible { outline: 2px solid rgba(var(--glow), 0.8); outline-offset: 2px; }
-.profile-text { align-self: stretch; margin: 16px 0 4px; line-height: 1.55; text-align: left; }
-.profile-card .skills-title { align-self: stretch; margin-top: 14px; }
-.profile-card .skills { align-self: stretch; }
-.profile-card .skill { text-align: left; }
-/* En la hoja del celular hay más espacio: portada y avatar más grandes */
-.m-sheet-body .profile-cover { height: 92px; }
-.m-sheet-body .profile-card .profile-avatar { width: 104px; height: 104px; margin-top: -54px; font-size: 32px; }
-.m-sheet-body .profile-name { font-size: 20px; }
+.hero-btn:hover { background: #fff; }
+.hero-btn:active { transform: scale(0.97); }
+.hero-btn:focus-visible { outline: 2px solid rgba(var(--glow), 0.8); outline-offset: 2px; }
+.profile-text { margin: 16px 0 4px; line-height: 1.55; text-align: left; }
+.profile-card .skills-title { margin-top: 14px; }
 /* Lista vertical: una habilidad por fila */
 .skills { list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .skill {
@@ -362,6 +388,10 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .tl-org { margin: 2px 0 6px; color: var(--text-2); font-size: 13px; }
 .tl-item ul, .project-points { padding-left: 16px; display: grid; gap: 4px; font-size: 13px; line-height: 1.45; }
 .project-points { margin: -4px 0 12px; }
+/* Viñetas numeradas 01, 02… (Fase 6, como en el PDF) */
+.project-points.is-numbered { list-style: none; padding-left: 0; }
+.project-points.is-numbered li { display: flex; gap: 8px; }
+.pt-n { flex: none; min-width: 20px; padding-top: 1px; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; color: rgb(120, 180, 255); }
 .project p.project-note { margin: 0 0 10px; }
 
 /* Logros: indicadores + comparación con barras horizontales (barrido a la derecha, de mayor a menor) */
@@ -392,6 +422,24 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
   padding: 4px 10px; border-radius: 99px; font-size: 12px; color: var(--text);
   background: rgba(var(--glow), 0.1); box-shadow: inset 0 0 0 1px rgba(var(--glow), 0.28);
 }
+
+/* Etiqueta con ícono de la tecnología (Fase 6) */
+.chip.has-icon { display: inline-flex; align-items: center; gap: 6px; padding-left: 6px; }
+.chip.has-icon img { display: block; width: 16px; height: 16px; }
+
+/* Motion graphics (Fase 6): series con sus piezas 9:16 en video */
+.mo-series + .mo-series { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.mo-tag { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgb(120, 180, 255); }
+.mo-title { display: block; margin-top: 2px; font-size: 16px; }
+.mo-text { margin: 4px 0 12px; line-height: 1.5; }
+/* 6 por fila en el panel (la serie de 6 en una sola fila) y 3 en el celular */
+.mo-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px 8px; }
+.m-sheet-body .mo-grid { grid-template-columns: repeat(3, 1fr); gap: 14px 10px; }
+.mo-piece { margin: 0; }
+.mo-frame { aspect-ratio: 9 / 16; overflow: hidden; border-radius: 10px; background: #111216; border: 1px solid var(--line); box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35); }
+.mo-frame video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mo-piece figcaption { margin-top: 6px; font-size: 12px; color: var(--text); }
+.mo-piece figcaption span { color: var(--text-3); }
 
 /* Formación y certificaciones */
 .entries { list-style: none; display: grid; gap: 4px; }
@@ -510,6 +558,7 @@ body.compact .m-view {
 }
 .m-head { display: flex; align-items: center; gap: 12px; padding: 0 12px 14px; }
 .m-head .profile-avatar { width: 44px; height: 44px; font-size: 15px; }
+.m-head .profile-avatar.has-photo { box-shadow: 0 0 0 2px rgba(var(--glow), 0.55); }
 .m-who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .m-who strong { font-size: 16px; font-weight: 600; line-height: 1.25; }
 .m-who span { font-size: 13px; color: var(--text-3); }
@@ -595,6 +644,6 @@ body.compact .m-sheet.open { transform: none; visibility: visible; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 @media (prefers-reduced-motion: reduce) {
-  .toast, .panel, body.compact .m-sheet, .m-row { transition: none; }
+  .toast, .panel, body.compact .m-sheet, .m-row, .hero-btn { transition: none; }
   .panel-content, .cmp-bar, .m-card { animation: none; }
 }

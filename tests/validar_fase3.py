@@ -46,7 +46,8 @@ EXPECTED = {
     "contact": ["Bogotá, Colombia", "villamil76@gmail.com", "Teléfono"],  # GitHub → teléfono (2026-11-10); el número se reconoce por su huella (5b)
 }
 # Proyectos (Fase 5): 4 de Los Coches + 6 de la ESAP + 4 de seguimiento = 14 viñetas (antes: 10)
-COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 14), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
+# Fase 6: + 2 del Plan de pagos 2026 = 16 (texto original: 14)
+COUNTS = {"about": (".stat", 3), "experience": (".tl-item", 5), "projects": (".project-points li", 16), "certifications": (".entry", 7), "education": (".entry", 6), "skills": (".tag-group", 6)}
 # Huella SHA-256 de los 10 dígitos del teléfono: se compara la huella, el número no se escribe aquí
 PHONE_SHA = "562e626c4919d5c554fd8ce9ad82888c05812d0e95403aa22bb51ba9e5083dad"
 
@@ -139,7 +140,8 @@ def main():
         check("   Habilidades destacadas en lista vertical", len(xs) == n_sk and len(set(xs)) == 1 and ys == sorted(set(ys)),
               f"{len(xs)} filas")
         labels = page.evaluate("ITEMS.map(i => i.label)")
-        check("2. Las 8 opciones coinciden con la hoja de vida", not missing and len(labels) == 8,
+        # Fase 6: 9 opciones (se suma Motion graphics, que revisa validar_fase6.py). Texto original: len(labels) == 8
+        check(f"2. Las {len(labels)} opciones coinciden con la hoja de vida", not missing and len(labels) == 9,
               f"faltantes: {missing}" if missing else ", ".join(labels))
 
         # Enlaces de Contacto y Proyectos
@@ -173,17 +175,19 @@ def main():
 
         pg, errs = with_extra_js("PORTFOLIO.items.push({ id: 'extra', label: 'Opción extra', icon: 'folder', "
                                  "desc: 'Prueba.', content: { type: 'tags', groups: [['Grupo', ['Uno']]] } });")
-        nine = pg.locator(".segment").count() == 9 and pg.locator(".option").count() == 9
-        pg.evaluate("goTo(8); openPanel()")
+        # Fase 6: las cuentas salen de las opciones que tenga data.js (texto original: 9 y 7, con 8 opciones fijas)
+        base = len(re.findall(r"\bid: '", (ROOT / "data.js").read_text(encoding="utf-8")))
+        nine = pg.locator(".segment").count() == base + 1 and pg.locator(".option").count() == base + 1
+        pg.evaluate(f"goTo({base}); openPanel()")
         wait_settle(pg)
         extra_ok = pg.text_content("#panelTitle") == "Opción extra"
         pg.close()
         pg, errs2 = with_extra_js("PORTFOLIO.items.pop();")
-        seven = pg.locator(".segment").count() == 7 and pg.locator(".option").count() == 7
+        seven = pg.locator(".segment").count() == base - 1 and pg.locator(".option").count() == base - 1
         pg.close()
         check("1c. Agregar/quitar una opción en data.js recalcula anillo y lista",
               nine and extra_ok and seven and not errs and not errs2,
-              f"9 opciones={nine}, panel extra={extra_ok}, 7 opciones={seven}")
+              f"{base + 1} opciones={nine}, panel extra={extra_ok}, {base - 1} opciones={seven}")
 
         # 3. Doble clic: abrir index.html como archivo (file://)
         pg = browser.new_page(viewport={"width": 1440, "height": 900})

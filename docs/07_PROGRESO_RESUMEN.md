@@ -1,13 +1,13 @@
 ---
-fase_actual: 5
-estado_resumen: "Cerrado — portafolio publicado en GitHub Pages (escritorio con dial + móvil con tarjeta-menú); Proyectos con Los Coches y la ESAP, teléfono en Contacto"
+fase_actual: 6
+estado_resumen: "Reabierto (Mecanismo B, 2026-11-15) — Fase 6 en curso: al día con el portafolio PDF y foto de perfil"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---
 # Progreso — Resumen — Menu_Dial
 
 > Cargar junto con `01_INDEX.md` al iniciar cualquier tarea sobre este proyecto.
-> Última actualización: 2026-11-10.
+> Última actualización: 2026-11-15.
 
 ## Estado actual
 
@@ -18,6 +18,7 @@ fases_reabiertas: 0
 - Fase 4 (Versión móvil en tarjeta-menú): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 
 - Fase 5 (Proyectos con los datos del portafolio PDF): **cerrada** el 2026-11-10 (reapertura, Mecanismo B) — 15/15 local, republicada y verificada con `--live` (16/16), visto bueno del usuario. Detalle en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
+- Fase 6 (Al día con el portafolio PDF y foto de perfil): **en curso** (plan aprobado el 2026-11-15, reapertura por Mecanismo B). Detalle en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 
 ## Bloqueos
 

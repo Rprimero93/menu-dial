@@ -4,6 +4,10 @@
 // Privacidad: el sitio es público; no se incluye el PDF de la hoja de vida. El teléfono va en Contacto desde el
 // 2026-11-10 por decisión del usuario (antes se excluía), en lugar de GitHub.
 // Cada opción: label, icon (nombre de ICONS en script.js), desc y content { type, ... } — un tipo por renderizador.
+// Ojo (Fase 6): el portafolio PDF (Entregables/Illustrator/Portafolio_Menu_Dial, jsx/ejecutar.ps1) también lee este
+// archivo. Mantener «Sobre mí» en items[0] y «Logros» en items[5] (el paso 4 lo toma por posición), no poner «ESAP» ni
+// «Los Coches» en el nombre de otra tarjeta de Proyectos (los pasos 9 y 13 las buscan así) y dejar en contact.rows solo
+// ubicación, correo y teléfono (el paso 15 hace una tarjeta por fila; Behance va en contact.links).
 const PORTFOLIO = {
   header: {
     title: 'PORTAFOLIO',
@@ -21,6 +25,13 @@ const PORTFOLIO = {
     footer: { handle: '@Rprimero93', role: 'Automatización de procesos', href: 'https://github.com/Rprimero93' },
   },
 
+  // Íconos de las tecnologías (Fase 6): una etiqueta de Proyectos con ícono aquí lo muestra a su izquierda
+  techIcons: {
+    'Excel': 'assets/tech/excel.png', 'SharePoint': 'assets/tech/sharepoint.png',
+    'Power Automate': 'assets/tech/power-automate.png', 'HTML': 'assets/tech/html.png', 'CSS': 'assets/tech/css.png',
+    'JavaScript': 'assets/tech/javascript.png', 'Python': 'assets/tech/python.png', 'VBA': 'assets/tech/vba.png',
+  },
+
   items: [
     {
       id: 'about', label: 'Sobre mí', icon: 'user',
@@ -28,15 +39,16 @@ const PORTFOLIO = {
       content: {
         type: 'profile',
         initials: 'RV',
+        photo: 'assets/perfil.webp', // Fase 6: foto sin fondo (scripts/preparar_assets.py); sin ella se usan las iniciales
         name: 'Ricardo Villamil Martínez',
         role: 'Automatización de procesos',
         location: 'Bogotá, Colombia',
         text: 'Experto en TI con más de 9 años de experiencia. Automatizo procesos y construyo microaplicaciones de control, análisis y seguimiento para los sectores público y privado.',
-        // Cifras de la tarjeta: [valor, texto]; un valor '#<id>' se calcula contando esa sección y al tocarlo lleva a ella
+        // Cifras de la tarjeta: [valor, texto, ícono]; un valor '#<id>' se calcula contando esa sección y al tocarlo lleva a ella
         stats: [
-          ['+9', 'años de experiencia'],
-          ['#certifications', 'certificaciones'],
-          ['6', 'herramientas web'],
+          ['+9', 'años de experiencia', 'briefcase'],
+          ['#certifications', 'certificaciones', 'award'],
+          ['6', 'herramientas web', 'code'],
         ],
         // Botones: [texto, enlace, ícono]; el primero va relleno en azul y los demás con borde
         actions: [
@@ -142,6 +154,7 @@ const PORTFOLIO = {
             name: 'Herramientas web — Los Coches S.A.S.',
             logo: ['assets/loscoches_logo_horizontal_blanco.svg', 'Logo de Los Coches', 'wide'], // logo del manual de marca, en blanco
             text: '4 herramientas web para Los Coches S.A.S.:',
+            numbered: true, // viñetas numeradas 01, 02… (como en el PDF)
             points: ['<strong>Contador de facturación</strong> — visualizador de facturación por asesor comercial.',
               '<strong>Agendamiento multimarca</strong> — formulario de registro multimarca.',
               '<strong>Mapa de procesos</strong> — mapa de procesos de Los Coches.',
@@ -149,9 +162,20 @@ const PORTFOLIO = {
             tags: ['HTML', 'CSS', 'JavaScript'],
           },
           {
+            // Fase 6: página «Plan de pagos 2026» del PDF (paso 19), solo texto: sin la tabla dinámica (el sitio es público).
+            // El nombre no lleva «ESAP»: el paso 9 del PDF busca la tarjeta de la ESAP con ese patrón.
+            name: 'Plan de pagos 2026',
+            logo: ['assets/esap_simbolo_negativo.svg', 'Logo de la ESAP'],
+            text: 'Proyecto de la ESAP: automatización del seguimiento a la ejecución presupuestal del Grupo de Infraestructura y Mantenimiento (GIM).',
+            points: ['<strong>Macros</strong> — siete macros VBA toman los reportes del SIIF (RPS, CDPS, reservas y desagregado), limpian y cruzan los datos y arman las tablas dinámicas y la hoja EJECUCION de la vigencia 2026.',
+              '<strong>Tablero</strong> — generado por código, muestra vigente, compromiso, obligación y disponible por gasto y por unidad.'],
+            tags: ['Excel', 'VBA', 'Python'],
+          },
+          {
             name: 'Herramientas de control operativo — ESAP',
             logo: ['assets/esap_simbolo_negativo.svg', 'Logo de la ESAP'], // símbolo en blanco, del manual de marca ESAP
             text: 'Herramientas web del Grupo de Infraestructura y Mantenimiento (GIM) de la ESAP, con Excel, SharePoint y Power Automate:',
+            numbered: true,
             points: ['<strong>Ejecución presupuestal</strong> — tablero de ejecución presupuestal del GIM: resultados extraídos del Excel del plan de pagos de la ESAP.',
               '<strong>Registro de comisiones</strong> — formulario de registro de comisiones del GIM.',
               '<strong>Servicios públicos</strong> — tablero de pagos de servicios públicos.',
@@ -185,6 +209,28 @@ const PORTFOLIO = {
       },
     },
     {
+      // Fase 6: página «Motion graphics» del PDF (paso 18). Piezas: [nombre, segundos, archivo sin extensión en assets/motion]
+      // (MP4 360 × 640 y póster .jpg de scripts/preparar_assets.py); dentro de cada serie, de menor a mayor duración.
+      id: 'motion', label: 'Motion graphics', icon: 'film',
+      desc: 'Animaciones de la marca ESAP hechas con código (HTML/SVG), exportadas a MP4 y GIF 1080 × 1920.',
+      content: {
+        type: 'motion',
+        series: [
+          {
+            tag: '6 piezas · 9:16', title: 'Logo ESAP',
+            text: 'El símbolo se arma con partículas, un rebote, gotas, puntos, formas o fuegos artificiales y cierra en el logo oficial.',
+            pieces: [['Partículas', 6.7, 'particulas'], ['Rebote', 8.3, 'rebote'], ['Gotas', 8.5, 'gotas'],
+              ['Puntos', 8.7, 'puntos'], ['Formas', 9.9, 'formas'], ['Fuegos', 11.6, 'fuegos']],
+          },
+          {
+            tag: '3 piezas · 9:16', title: 'Radio ESAP',
+            text: 'Partículas que forman una onda de voz y píxeles que arman el botón de play y el logo de Radio ESAP.',
+            pieces: [['Píxeles', 6.5, 'pixeles'], ['Partículas', 10.8, 'radio'], ['Partículas oscuro', 10.8, 'radio_oscuro']],
+          },
+        ],
+      },
+    },
+    {
       id: 'skills', label: 'Competencias', icon: 'code',
       desc: 'Competencias técnicas.',
       content: {
@@ -208,6 +254,10 @@ const PORTFOLIO = {
           ['mapPin', 'Ubicación', 'Bogotá, Colombia', null],
           ['mail', 'Correo', 'villamil76@gmail.com', 'mailto:villamil76@gmail.com'],
           ['phone', 'Teléfono', '+57 323 324 6022', 'tel:+573233246022'],
+        ],
+        // Fase 6: enlaces que van después de las filas (mismo formato). Aparte de `rows` para que el PDF no los convierta en tarjetas.
+        links: [
+          ['behance', 'Behance', 'Portafolio 2026', 'https://www.behance.net/gallery/258535135/Portafolio-2026'],
         ],
       },
     },

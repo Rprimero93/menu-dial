@@ -65,6 +65,10 @@ def main():
               f"abierto={is_open(page)}, título={panel_title(page)}")
 
         # 2. Medio dial a la izquierda, lista oculta y sin clics
+        # Fase 6: se espera a que el desplazamiento termine (tope 3 s). Con 9 opciones el navegador sin pantalla de la
+        # prueba (~40 cuadros/s) tarda ~1 s en llegar y la medición a los 900 ms fijos de wait_settle quedaba a mitad
+        # de camino. Texto original: solo wait_settle(page) antes de medir.
+        page.wait_for_function("shift === shiftTarget", timeout=3000)
         kx, ky, kw = dial_center(page)
         list_hidden = page.eval_on_selector(".options", "el => getComputedStyle(el).visibility") == "hidden"
         hit = page.evaluate("""(() => {
@@ -109,9 +113,10 @@ def main():
               wheel_ok and key_ok and btn_ok and drag_ok,
               f"rueda={wheel_ok}, teclado={key_ok}, flecha={btn_ok}, arrastre={drag_ok} ({panel_title(page)})")
 
-        # 4. Las 8 opciones tienen contenido propio
+        # 4. Las N opciones tienen contenido propio (Fase 6: antes range(8), «Las 8 opciones»)
+        n = page.evaluate("N")
         seen = {}
-        for i in range(8):
+        for i in range(n):
             page.evaluate(f"goTo({i})")
             wait_settle(page)
             info = page.evaluate("""(() => {
@@ -120,11 +125,11 @@ def main():
                          type: c?.dataset.type, index: Number(c?.dataset.index), kids: c?.children.length || 0 };
             })()""")
             seen[i] = info
-        labels = [page.evaluate(f"ITEMS[{i}].label") for i in range(8)]
+        labels = [page.evaluate(f"ITEMS[{i}].label") for i in range(n)]
         types = {v["type"] for v in seen.values()}
-        all_ok = all(seen[i]["title"] == labels[i] and seen[i]["index"] == i and seen[i]["kids"] > 0 for i in range(8))
+        all_ok = all(seen[i]["title"] == labels[i] and seen[i]["index"] == i and seen[i]["kids"] > 0 for i in range(n))
         # Desde la Fase 3 varias opciones pueden compartir tipo (p. ej. Formación y Certificaciones usan `list`)
-        check("4. Las 8 opciones tienen contenido propio", all_ok, f"tipos distintos: {len(types)}")
+        check(f"4. Las {n} opciones tienen contenido propio", all_ok, f"tipos distintos: {len(types)}")
 
         page.evaluate("goTo(6)")
         wait_settle(page)

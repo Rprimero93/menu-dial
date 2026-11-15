@@ -2,8 +2,8 @@
 tecnologia: Web
 tipo: herramienta
 proyecto: Menu_Dial
-estado: completo
-estado_resumen: "Cerrado — portafolio publicado en GitHub Pages (escritorio con dial + móvil con tarjeta-menú); Proyectos con Los Coches y la ESAP, teléfono en Contacto"
+estado: pendiente
+estado_resumen: "Reabierto (Mecanismo B, 2026-11-15) — Fase 6: al día con el portafolio PDF (Motion graphics, Plan de pagos, numeración, íconos, Behance) y foto de perfil"
 stack: "HTML + CSS + JS vainilla, sin frameworks (fuente Inter de Google Fonts)"
 descripcion: "Portafolio personal en forma de menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco) con panel de contenido por opción y medio dial; contenido en data.js"
 aliases: [Menu_Dial]
