@@ -284,7 +284,9 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 }
 /* Con foto (Fase 6): la foto sin fondo sobre el degradado azul, ampliada para que el rostro llene el círculo */
 .profile-avatar.has-photo { overflow: hidden; place-items: start center; background: radial-gradient(circle at 50% 35%, #3d6fb3, #23324a 75%); }
-.profile-avatar.has-photo img { width: 170%; height: auto; flex: none; }
+/* Foto subida para que el cabello quede al ras del borde del círculo: perfil.webp tiene 40 px vacíos arriba de sus
+   420 de ancho; a 170 % del ancho eso es 40 / 420 × 170 % ≈ 16,2 % del ancho del círculo (margin-top en % usa el ancho) */
+.profile-avatar.has-photo img { width: 170%; height: auto; flex: none; margin-top: -16.2%; }
 
 /* Sobre mí (Fase 6): tarjeta con la foto fundida con desenfoque hacia el texto (variante A de la referencia del
    usuario). En el panel de escritorio (440 de alto) va horizontal: foto a la derecha, texto a la izquierda; en la

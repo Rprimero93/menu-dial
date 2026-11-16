@@ -574,8 +574,8 @@ function buildMobile() {
   $('mSheetBody').addEventListener('click', (e) => {
     const act = e.target.closest('.m-nav [data-act]')?.dataset.act;
     if (!act || sheetIndex === null) return;
-    // ✕ y □ llevan a la página principal (la tarjeta-menú), pedido del usuario
-    if (act === 'close' || act === 'home') closeSheet();
+    // □ lleva a la página principal (la tarjeta-menú), pedido del usuario
+    if (act === 'home') closeSheet();
     else openSheet((sheetIndex + (act === 'next' ? 1 : -1) + N) % N);
   });
   // Atrás del navegador: cierra la hoja en lugar de salir del sitio
@@ -595,12 +595,12 @@ function openSheet(index) {
   wrap.dataset.type = item.content.type;
   wrap.dataset.index = index;
   wrap.innerHTML = RENDERERS[item.content.type](item.content);
-  // Fase 7: al final del contenido, los controles del escritorio en horizontal (✕ y □ a la página principal; ← anterior, → siguiente)
+  // Fase 7: al final del contenido, la píldora de controles del escritorio en horizontal (← anterior, □ a la página
+  // principal, → siguiente); la ✕ pasó al botón de arriba (pedido del usuario)
   const nav = document.createElement('nav');
   nav.className = 'm-nav';
   nav.setAttribute('aria-label', 'Navegación entre secciones');
   nav.innerHTML = `
-    <button class="ctl-round" data-act="close" aria-label="Volver al menú">${svgIcon('x')}</button>
     <div class="ctl-pill is-row">
       <button data-act="prev" aria-label="Sección anterior: ${ITEMS[(index - 1 + N) % N].label}">${svgIcon('left')}</button>
       <button data-act="home" aria-label="Ir a la página principal">${svgIcon('square')}</button>
