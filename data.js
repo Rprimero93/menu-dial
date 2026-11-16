@@ -62,8 +62,6 @@ const PORTFOLIO = {
         toolsTitle: 'Herramientas',
         tools: ['Excel', 'VBA', 'HTML', 'CSS', 'JavaScript', 'Python', 'SharePoint', 'Power Automate',
           'Illustrator', 'Photoshop', 'After Effects', 'Git', 'GitHub'],
-        // Debajo de las herramientas: los enlaces de Contacto (`contact.links`, hoy Behance) con este título
-        linksTitle: 'Behance',
       },
     },
     {
