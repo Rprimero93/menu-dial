@@ -649,6 +649,12 @@ body.compact .m-sheet.open { transform: none; visibility: visible; }
 .m-sheet-head h2 { font-size: 18px; font-weight: 600; }
 .m-sheet-head p { margin-top: 2px; font-size: 13px; color: var(--text-3); }
 .m-sheet-body { padding-bottom: 28px; user-select: text; }
+/* Controles al final de cada hoja (Fase 7): los del escritorio, en horizontal */
+.m-nav { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 28px; user-select: none; }
+.m-nav svg { width: 20px; height: 20px; }
+.m-nav .ctl-round { background: var(--surface); border: 1px solid var(--line); }
+.ctl-pill.is-row { flex-direction: row; }
+.ctl-pill.is-row button { width: 52px; height: 40px; }
 
 /* ===== Toast ===== */
 .toast {

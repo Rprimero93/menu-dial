@@ -15,6 +15,8 @@ const ICONS = {
   x: 'M6 6l12 12 M18 6L6 18',
   up: 'M12 19V5 M6 11l6-6 6 6',
   down: 'M12 5v14 M6 13l6 6 6-6',
+  left: 'M19 12H5 M11 6l-6 6 6 6',
+  right: 'M5 12h14 M13 6l6 6-6 6',
   square: 'M8 5h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z',
   briefcase: 'M4 8h16v11H4z M9 8V5h6v3 M4 13h16',
   trophy: 'M8 4h8v5a4 4 0 0 1-8 0z M8 6H5a3 3 0 0 0 3 4 M16 6h3a3 3 0 0 1-3 4 M12 13v4 M8 20h8 M10 17h4',
@@ -566,6 +568,14 @@ function buildMobile() {
   document.querySelectorAll('button.m-row').forEach((b) =>
     b.addEventListener('click', () => openSheet(Number(b.dataset.index))));
   $('mBack').addEventListener('click', () => closeSheet());
+  // Controles al final de cada hoja (Fase 7); las secciones se recorren en círculo, como en el dial
+  $('mSheetBody').addEventListener('click', (e) => {
+    const act = e.target.closest('.m-nav [data-act]')?.dataset.act;
+    if (!act || sheetIndex === null) return;
+    if (act === 'close') closeSheet();
+    else if (act === 'top') $('mSheetBody').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' });
+    else openSheet((sheetIndex + (act === 'next' ? 1 : -1) + N) % N);
+  });
   // Atrás del navegador: cierra la hoja en lugar de salir del sitio
   addEventListener('popstate', () => { if (sheetIndex !== null) closeSheet(false); });
   $('mSheet').inert = true;
@@ -583,7 +593,18 @@ function openSheet(index) {
   wrap.dataset.type = item.content.type;
   wrap.dataset.index = index;
   wrap.innerHTML = RENDERERS[item.content.type](item.content);
-  $('mSheetBody').replaceChildren(wrap);
+  // Fase 7: al final del contenido, los controles del escritorio en horizontal (✕ al menú; ← anterior, □ arriba, → siguiente)
+  const nav = document.createElement('nav');
+  nav.className = 'm-nav';
+  nav.setAttribute('aria-label', 'Navegación entre secciones');
+  nav.innerHTML = `
+    <button class="ctl-round" data-act="close" aria-label="Volver al menú">${svgIcon('x')}</button>
+    <div class="ctl-pill is-row">
+      <button data-act="prev" aria-label="Sección anterior: ${ITEMS[(index - 1 + N) % N].label}">${svgIcon('left')}</button>
+      <button data-act="top" aria-label="Volver al inicio de la sección">${svgIcon('square')}</button>
+      <button data-act="next" aria-label="Sección siguiente: ${ITEMS[(index + 1) % N].label}">${svgIcon('right')}</button>
+    </div>`;
+  $('mSheetBody').replaceChildren(wrap, nav);
   $('mSheetBody').scrollTop = 0;
   initMotion(wrap, $('mSheetBody'));
   document.querySelectorAll('.m-row').forEach((r) => r.classList.toggle('is-current', r.dataset.index === String(index)));
