@@ -107,4 +107,4 @@
 
     Pruebas: `validar_fase4.py` ya no lee `#mCount`, y en `validar_fase6.py` el total de piezas sale de `data.js` (son 11). En ambos casos el texto original queda citado. Validación: `validar_fase6.py` **15/15**, con la regresión de las Fases 1-4 incluida. Hay capturas a 1440 y 390 px.
 
-    Pendiente: republicar los ajustes 2-6 y el visto bueno del usuario.
+    Republicados los ajustes 2-6 el 2026-11-15, con la aprobación del usuario y el control de privacidad OK. Verificado con `validar_fase6.py --live` **16/16** (11 videos en línea). Los recursos nuevos responden en Pages con HTTP 200. Pendiente: el visto bueno del usuario sobre la versión publicada.
