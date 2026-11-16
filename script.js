@@ -349,7 +349,9 @@ const RENDERERS = {
   // con desenfoque hacia el nombre, la insignia, el rol, las cifras con ícono y el botón principal. Debajo, el
   // texto y las habilidades destacadas. Sin `photo` en data.js se muestran las iniciales.
   // `tools` (Fase 7): herramientas en casillas con su ícono (PORTFOLIO.techIcons), debajo de las habilidades
-  profile: ({ initials, photo, name, role, location, text, stats = [], actions = [], skillsTitle, skills = [], toolsTitle, tools = [] }) => {
+  profile: ({ initials, photo, name, role, location, text, stats = [], actions = [], skillsTitle, skills = [], toolsTitle, tools = [], linksTitle }) => {
+    // Enlaces de Contacto (Behance) repetidos al final de «Sobre mí»: una sola fuente de la URL en data.js
+    const links = linksTitle ? (ITEMS.find((it) => it.content.type === 'contact')?.content.links || []) : [];
     const [label, href] = actions[0] || [];
     return `
     <div class="profile-card">
@@ -378,11 +380,17 @@ const RENDERERS = {
         </ol>` : ''}
       ${tools.length ? `
         <div class="group-title skills-title">${toolsTitle || 'Herramientas'}</div>
-        <ul class="tools">${tools.map((t) => {
-          const src = PORTFOLIO.techIcons?.[t];
-          return `<li class="tool"><span class="tool-ico">${src ? `<img src="${src}" alt="" width="26" height="26">` : ''}</span>${t}</li>`;
-        }).join('')}
-        </ul>` : ''}
+        <div class="tools-marquee">
+          ${[0, 1].map((copy) => `<ul class="tools"${copy ? ' aria-hidden="true"' : ''}>${tools.map((t) => {
+            const src = PORTFOLIO.techIcons?.[t];
+            return `<li class="tool"><span class="tool-ico">${src ? `<img src="${src}" alt="" width="26" height="26">` : ''}</span>${t}</li>`;
+          }).join('')}</ul>`).join('')}
+        </div>` : ''}
+      ${links.length ? `
+        <div class="group-title skills-title">${linksTitle}</div>
+        ${links.map(([icon, label, value, href]) => `<a class="contact-row is-link" ${linkAttrs(href)}>
+          <span class="contact-ico">${svgIcon(icon, 18)}</span>
+          <div><span class="muted">${label}</span><strong>${value}</strong></div>${svgIcon('external', 14)}</a>`).join('')}` : ''}
     </div>`;
   },
 

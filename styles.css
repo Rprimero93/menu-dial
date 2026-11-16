@@ -368,8 +368,17 @@ button:focus-visible, .knob:focus-visible { outline: 2px solid rgba(var(--glow),
 .profile-text { margin: 16px 0 4px; line-height: 1.55; text-align: left; }
 .profile-card .skills-title { margin-top: 14px; }
 /* Herramientas (Fase 7): casillas claras con el ícono (varios son de trazo oscuro) y el nombre debajo */
-.tools { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 10px 6px; }
-.tool { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; line-height: 1.2; text-align: center; color: var(--text-2); }
+/* Tira en bucle (Fase 7): dos copias seguidas de la lista; la pista se corre media longitud y vuelve sin salto.
+   Bordes desvanecidos; se detiene al pasar el puntero; con movimiento reducido queda quieta y en varias filas. */
+.tools-marquee {
+  display: flex; width: 100%; overflow: hidden; padding: 4px 0 6px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.tools { list-style: none; flex: none; display: flex; gap: 6px; padding-right: 6px; animation: tools-loop 32s linear infinite; }
+.tools-marquee:hover .tools { animation-play-state: paused; }
+@keyframes tools-loop { to { transform: translateX(-100%); } }
+.tool { width: 72px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; line-height: 1.2; text-align: center; color: var(--text-2); }
 .tool-ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #eceef1; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
 /* Lista vertical: una habilidad por fila */
 .skills { list-style: none; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
@@ -675,5 +684,8 @@ body.compact .m-sheet.open { transform: none; visibility: visible; }
 
 @media (prefers-reduced-motion: reduce) {
   .toast, .panel, body.compact .m-sheet, .m-row, .hero-btn, .tl-chev { transition: none; }
-  .panel-content, .cmp-bar, .m-card { animation: none; }
+  .panel-content, .cmp-bar, .m-card, .tools { animation: none; }
+  .tools-marquee { -webkit-mask-image: none; mask-image: none; }
+  .tools { flex: 1; flex-wrap: wrap; row-gap: 10px; }
+  .tools[aria-hidden="true"] { display: none; }
 }
