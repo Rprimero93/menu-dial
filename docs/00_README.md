@@ -2,8 +2,8 @@
 tecnologia: Web
 tipo: herramienta
 proyecto: Menu_Dial
-estado: pendiente
-estado_resumen: "Reabierto (Mecanismo B, 2026-11-15) — Fase 6: al día con el portafolio PDF (Motion graphics, Plan de pagos, numeración, íconos, Behance) y foto de perfil"
+estado: completo
+estado_resumen: "Cerrado — Fase 6 (2026-11-15): al día con el portafolio PDF (Motion graphics, Plan de pagos, numeración, íconos, Behance), foto de perfil y ajustes del usuario"
 stack: "HTML + CSS + JS vainilla, sin frameworks (fuente Inter de Google Fonts)"
 descripcion: "Portafolio personal en forma de menú radial tipo dial (anillo de segmentos + perilla giratoria + lista en arco) con panel de contenido por opción y medio dial; contenido en data.js"
 aliases: [Menu_Dial]
@@ -12,7 +12,7 @@ aliases: [Menu_Dial]
 # Menu_Dial — README
 
 > Ubicación: `Herramientas/Web/` (herramienta).
-> Última revisión: 2026-11-05.
+> Última revisión: 2026-11-15.
 
 ## Propósito
 
@@ -41,9 +41,9 @@ Menu_Dial/
 ├── index.html   # estructura: anillo SVG, perilla, conector, lista, controles, panel de contenido
 ├── styles.css   # tokens en :root, dial, lista, controles, panel y sus contenidos, modo compacto
 ├── script.js    # opciones (ITEMS), íconos, geometría, render animado, arrastre/rueda/teclado, panel
-├── assets/      # esap_simbolo_negativo.svg (copiado del manual de marca ESAP)
-├── tests/       # validar_fase1-4.py (Playwright + Edge); capturas/ fuera de Git
-└── scripts/     # publicar_github.sh (espejo en GitHub)
+├── assets/      # esap_simbolo_negativo.svg, perfil.webp, tech/, motion/, entidades/ (copias preparadas)
+├── tests/       # validar_fase1-6.py (Playwright + Edge); capturas/ fuera de Git
+└── scripts/     # publicar_github.sh (espejo en GitHub), preparar_assets.py (recursos)
 ```
 
 El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`: etiqueta, ícono, descripción y contenido del panel); el anillo se recalcula solo según la cantidad de opciones.
@@ -56,7 +56,7 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 
 ## Pruebas
 
-`tests/validar_fase4.py` corre la suite completa (incluye las Fases 1-3): interacción del dial y del panel en escritorio, tarjeta-menú y hoja en móvil emulado (390 y 360 px), conteos calculados desde `data.js`, enlaces de contacto, `file://`, `prefers-reduced-motion`, privacidad (teléfono solo en `data.js`, sin PDF; antes de 2026-11-10: teléfono ausente), `data.js` sin claves repetidas y, con `--live`, el sitio publicado. **No cubre:** el aspecto visual, que se valida con el visto bueno del usuario, ni navegadores distintos de Edge.
+`tests/validar_fase6.py` corre la suite completa (incluye las Fases 1-4): foto de perfil, Motion graphics (videos a la vista, quietos con movimiento reducido), Plan de pagos, numeración, íconos, Behance, compatibilidad de `data.js` con el portafolio PDF y, además, interacción del dial y del panel en escritorio, tarjeta-menú y hoja en móvil emulado (390 y 360 px), conteos calculados desde `data.js`, enlaces de contacto, `file://`, `prefers-reduced-motion`, privacidad (teléfono solo en `data.js`, sin PDF; antes de 2026-11-10: teléfono ausente), `data.js` sin claves repetidas y, con `--live`, el sitio publicado. **No cubre:** el aspecto visual, que se valida con el visto bueno del usuario, ni navegadores distintos de Edge.
 
 ## Lecciones aprendidas
 
@@ -68,6 +68,11 @@ El contenido se edita solo en `data.js` (`PORTFOLIO.header` y `PORTFOLIO.items`:
 - **La sección Consumidores sirvió de lista de funciones nuevas (reapertura, 2026-11-10):** la Fase 5 cubrió justo lo que le había faltado a Portafolio_Menu_Dial (la lista de proyectos de Los Coches y la ESAP, y el teléfono). Al reabrir una herramienta, revisar primero esa sección.
 - **Dato sensible en pruebas, por huella y nunca en claro:** al pasar a publicar el teléfono, las pruebas cambiaron de «ausente» a «solo en `data.js`» y lo reconocen por su SHA-256. Escribir el número literal en una prueba la hizo fallar en la primera corrida (el propio control lo detectó).
 - Mini-retro de cierre de la reapertura (2026-11-10): el usuario no registró observaciones de proceso.
+- **Pruebas que no dependen de cuántas secciones hay (reapertura Fase 6, 2026-11-15):** la novena sección rompió las pruebas con «8» escrito a mano; ahora los conteos (opciones, piezas de Motion) salen de `data.js`. Y tras una animación se espera a que termine (tope 3 s), no un tiempo fijo: la novena tarjeta bajó los cuadros por segundo del navegador de prueba y la medida a 900 ms quedaba a mitad de camino.
+- **Recursos preparados por script, sin tocar las fuentes:** `scripts/preparar_assets.py` copia y recorta por pasos (`foto`, `tech`, `motion`, `entidades`, `infografias`), así cualquier recurso se regenera sin rehacer los demás.
+- **Logos SVG:** se recortan cambiando solo el `viewBox` de la etiqueta `<svg>` raíz (una expresión más amplia arriesgaba borrar medidas internas), y la vista previa se abre como archivo (`goto`), porque cargado como texto el escudo de la Javeriana salía en blanco.
+- **El PDF lee este `data.js`:** cada cambio de datos pasa por la guarda de compatibilidad (Sobre mí en `items[0]`, Logros en `items[5]`, `contact.rows` con tres filas, nombres sin «ESAP» ni «Los Coches»); las claves extra no le afectan.
+- Mini-retro de cierre de la reapertura (2026-11-15): el usuario no registró observaciones de proceso.
 
 ## Consumidores
 

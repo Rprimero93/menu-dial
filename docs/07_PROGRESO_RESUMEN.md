@@ -1,6 +1,6 @@
 ---
 fase_actual: 6
-estado_resumen: "Reabierto (Mecanismo B) — Fase 6 cerrada y publicada (2026-11-15); pendiente el cierre del proyecto"
+estado_resumen: "Cerrado — Fase 6 (2026-11-15): reapertura cerrada con el ciclo de aprendizaje"
 tolerancias_excedidas: 0
 fases_reabiertas: 0
 ---
@@ -18,7 +18,7 @@ fases_reabiertas: 0
 - Fase 4 (Versión móvil en tarjeta-menú): **cerrada** el 2026-11-05 — resultado en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 
 - Fase 5 (Proyectos con los datos del portafolio PDF): **cerrada** el 2026-11-10 (reapertura, Mecanismo B) — 15/15 local, republicada y verificada con `--live` (16/16), visto bueno del usuario. Detalle en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
-- Fase 6 (Al día con el portafolio PDF y foto de perfil): **cerrada** el 2026-11-15 (reapertura, Mecanismo B): foto de perfil, Motion graphics, Plan de pagos 2026, numeración, íconos de tecnologías y Behance. `validar_fase6.py` 15/15 local y 16/16 con `--live`; visto bueno del usuario y republicada. Ajustes del usuario tras el cierre: alineación de las cifras (publicada); logos en Certificaciones, sin píldoras superiores en móvil, «Herramientas» con íconos, Experiencia contraíble y «Piezas infográficas» en Motion (15/15 local; republicados y verificados con `--live` 16/16). Detalle en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
+- Fase 6 (Al día con el portafolio PDF y foto de perfil): **cerrada** el 2026-11-15 (reapertura, Mecanismo B): foto de perfil, Motion graphics, Plan de pagos 2026, numeración, íconos de tecnologías y Behance. `validar_fase6.py` 15/15 local y 16/16 con `--live`; visto bueno del usuario y republicada. Ajustes del usuario tras el cierre: alineación de las cifras (publicada); logos en Certificaciones, sin píldoras superiores en móvil, «Herramientas» con íconos, Experiencia contraíble y «Piezas infográficas» en Motion (15/15 local; republicados y verificados con `--live` 16/16); después, ajustes 7-9 (controles en las hojas del celular, tira de herramientas en bucle, foto al ras del círculo y ✕ arriba), también republicados (16/16). Detalle en [[Herramientas/Web/Menu_Dial/docs/06_IMPLEMENTATION|06_IMPLEMENTATION.md]].
 
 ## Bloqueos
 
@@ -26,4 +26,4 @@ fases_reabiertas: 0
 
 ## Siguiente paso
 
-Cierre del proyecto tras la reapertura de la Fase 6 (ciclo de aprendizaje, skill `cierre-proyecto`) para volver `estado` a completo en `00_README.md`.
+Proyecto cerrado el 2026-11-15 (ciclo de aprendizaje de la reapertura de la Fase 6; mini-retro sin observaciones). Lecciones en [[Herramientas/Web/Menu_Dial/docs/00_README|00_README.md]]. Una función nueva se agrega reabriendo por el Mecanismo B.
