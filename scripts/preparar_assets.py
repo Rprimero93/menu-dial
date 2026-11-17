@@ -2,8 +2,9 @@
 
   - assets/perfil.webp: foto de perfil (fondo transparente) del portafolio PDF, con el margen vacío de arriba recortado.
   - assets/tech/<nombre>.png: íconos de tecnologías (los mismos del PDF, 96 px).
-  - assets/motion/<clave>.mp4 + .jpg: las 9 piezas de Entregables/Motion reducidas a 360 × 640 (sin audio, en bucle
-    desde la web) y su póster (el cuadro clave elegido con el usuario para el PDF).
+  - assets/motion/<clave>.mp4 + .jpg: las 10 piezas de Entregables/Motion reducidas a 360 × 640 (sin audio, en bucle
+    desde la web) y su póster (el cuadro clave elegido con el usuario para el PDF, o el cuadro indicado en PIEZAS
+    para las piezas que solo están en la web).
   - assets/entidades/<clave>.svg|png: logos de las entidades certificadoras (los mismos del paso 7 del PDF), recortados
     a su símbolo para usarlos como ícono en «Certificaciones».
   - assets/motion/infografias_<serie>.mp4 + .jpg: el carrusel 3D de las infografías (página 11 de la variante Behance
@@ -32,17 +33,21 @@ TECH = [["Excel.png", "excel"], ["Sharepoint.png", "sharepoint"], ["Power automa
         ["programming.png", "vba"], ["illustrator.png", "illustrator"], ["photoshop.png", "photoshop"],
         ["aftereffects.png", "after-effects"], ["git.png", "git"], ["github.png", "github"]]
 
-# Piezas: [clave (igual que salida/motion/piezas.json del PDF), MP4 final en Entregables/Motion]
+# Piezas: [clave, MP4 final en Entregables/Motion, cuadro clave del póster]
+# Cuadro None: el póster es el cuadro clave elegido para el PDF (salida/motion/<clave>.png, misma clave que
+# piezas.json). Cuadro N: piezas que solo están en la web (ajuste 2026-11-17): el póster es el cuadro N de
+# salida/final/cuadros/ de la pieza (1080 × 1920).
 PIEZAS = [
-    ["puntos", "Logo_ESAP_Puntos/salida/final/logo_esap_puntos.mp4"],
-    ["particulas", "Logo_ESAP_Particulas/salida/final/logo_esap_particulas.mp4"],
-    ["radio", "Logo_ESAP_Particulas/salida/final/logo_radio_esap.mp4"],
-    ["radio_oscuro", "Logo_ESAP_Particulas/salida/final/logo_radio_esap_oscuro.mp4"],
-    ["rebote", "Logo_ESAP_Rebote/salida/final/logo_esap_rebote.mp4"],
-    ["gotas", "Logo_ESAP_Gotas/salida/final/logo_esap_gotas.mp4"],
-    ["pixeles", "Radio_ESAP_Pixeles/salida/final/radio_esap_pixeles.mp4"],
-    ["formas", "Logo_ESAP_Formas/salida/final/logo_esap_formas.mp4"],
-    ["fuegos", "Logo_ESAP_Fuegos/salida/final/logo_esap_fuegos.mp4"],
+    ["puntos", "Logo_ESAP_Puntos/salida/final/logo_esap_puntos.mp4", None],
+    ["radio", "Logo_ESAP_Particulas/salida/final/logo_radio_esap.mp4", None],
+    ["rebote", "Logo_ESAP_Rebote/salida/final/logo_esap_rebote.mp4", None],
+    ["gotas", "Logo_ESAP_Gotas/salida/final/logo_esap_gotas.mp4", None],
+    ["pixeles", "Radio_ESAP_Pixeles/salida/final/radio_esap_pixeles.mp4", None],
+    ["formas", "Logo_ESAP_Formas/salida/final/logo_esap_formas.mp4", None],
+    ["fuegos", "Logo_ESAP_Fuegos/salida/final/logo_esap_fuegos.mp4", None],
+    ["empuje", "Logo_ESAP_Empuje/salida/final/logo_esap_empuje.mp4", 120],      # la pirámide se arma sobre E·S·A·P
+    ["pulso", "Radio_ESAP_Pulso/salida/final/radio_esap_pulso.mp4", 66],        # el play translúcido con halos
+    ["lineas", "Radio_ESAP_Lineas/salida/final/radio_esap_lineas.mp4", 66],     # el micrófono de líneas
 ]
 
 # Logos de entidades: [archivo en el PDF, clave en assets/entidades, recorte al símbolo]
@@ -80,12 +85,14 @@ def tech():
 def motion():
     (ASSETS / "motion").mkdir(exist_ok=True)
     total = 0
-    for clave, rel in PIEZAS:
+    for clave, rel, cuadro in PIEZAS:
         mp4 = ASSETS / "motion" / f"{clave}.mp4"
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(MOTION / rel), "-an",
                         "-vf", "scale=360:640:flags=lanczos", "-c:v", "libx264", "-preset", "slow", "-crf", "28",
                         "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(mp4)], check=True)
-        poster = Image.open(PDF / "salida" / "motion" / f"{clave}.png").convert("RGB").resize((360, 640), Image.LANCZOS)
+        origen = (PDF / "salida" / "motion" / f"{clave}.png" if cuadro is None
+                  else (MOTION / rel).parent / "cuadros" / f"{cuadro:04d}.png")
+        poster = Image.open(origen).convert("RGB").resize((360, 640), Image.LANCZOS)
         poster.save(ASSETS / "motion" / f"{clave}.jpg", quality=82)
         total += mp4.stat().st_size + (ASSETS / "motion" / f"{clave}.jpg").stat().st_size
     print(f"motion: {len(PIEZAS)} piezas, {total / 1e6:.1f} MB en total")

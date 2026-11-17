@@ -230,14 +230,14 @@ const PORTFOLIO = {
         series: [
           {
             tag: '6 piezas · 9:16', title: 'Logo ESAP',
-            text: 'El símbolo se arma con partículas, un rebote, gotas, puntos, formas o fuegos artificiales y cierra en el logo oficial.',
-            pieces: [['Partículas', 6.7, 'particulas'], ['Rebote', 8.3, 'rebote'], ['Gotas', 8.5, 'gotas'],
+            text: 'El símbolo se arma con un empuje, un rebote, gotas, puntos, formas o fuegos artificiales y cierra en el logo oficial.',
+            pieces: [['Empuje', 8.1, 'empuje'], ['Rebote', 8.3, 'rebote'], ['Gotas', 8.5, 'gotas'],
               ['Puntos', 8.7, 'puntos'], ['Formas', 9.9, 'formas'], ['Fuegos', 11.6, 'fuegos']],
           },
           {
-            tag: '3 piezas · 9:16', title: 'Radio ESAP',
-            text: 'Partículas que forman una onda de voz y píxeles que arman el botón de play y el logo de Radio ESAP.',
-            pieces: [['Píxeles', 6.5, 'pixeles'], ['Partículas', 10.8, 'radio'], ['Partículas oscuro', 10.8, 'radio_oscuro']],
+            tag: '4 piezas · 9:16', title: 'Radio ESAP',
+            text: 'Píxeles que arman el botón de play, un pulso dentro de la O, líneas que forman un micrófono y una voz, y partículas que forman una onda de voz y el logo de Radio ESAP.',
+            pieces: [['Píxeles', 6.5, 'pixeles'], ['Pulso', 8.9, 'pulso'], ['Líneas', 10.4, 'lineas'], ['Partículas', 10.8, 'radio']],
           },
           // `wide`: piezas horizontales, dos por fila (el carrusel 3D de la variante Behance del PDF, recortado por serie)
           {
